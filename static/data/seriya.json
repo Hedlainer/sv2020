@@ -1,0 +1,111 @@
+{
+    "devichnik" : {
+      "id": "26",
+      "FileName": "",
+      "Title": "",
+      "Name": "Девичник",
+      "Route": "devichnik",
+      "Color": "#644d33",
+      "Descripion": "",
+      "EngDescription": "",
+      "Creator": "@Svobodinaphoto",
+      "Category": "Wedding"
+    },
+    "ekaterinapavel":{
+      "id": "25",
+      "FileName": "",
+      "Title": "",
+      "Name": "Екатерина и Павел",
+      "Route": "ekaterinapavel",
+      "Color": "#644d33",
+      "Descripion": "",
+      "EngDescription": "",
+      "Creator": "@Svobodinaphoto",
+      "Category": "Wedding"
+    },
+    "angelinaroman":{
+      "id": "24",
+      "FileName": "",
+      "Title": "",
+      "Name": "Ангелина и Роман",
+      "Route": "angelinaroman",
+      "Color": "#644d33",
+      "Descripion": "",
+      "EngDescription": "",
+      "Creator": "@Svobodinaphoto",
+      "Category": "Wedding"
+    },
+    "alexandravadim":{
+      "id": "23",
+      "FileName": "",
+      "Title": "",
+      "Name": "Александра и Вадим",
+      "Route": "alexandravadim",
+      "Color": "#677d33",
+      "Descripion": "",
+      "EngDescription": "",
+      "Creator": "@Svobodinaphoto",
+      "Category": "Wedding"
+    },
+    "lenanikita":{
+      "id": "22",
+      "FileName": "",
+      "Title": "",
+      "Name": "Лена и Никита",
+      "Route": "lenanikita",
+      "Color": "#644d33",
+      "Descripion": "",
+      "EngDescription": "",
+      "Creator": "@Svobodinaphoto",
+      "Category": "LoveStory"
+    },
+    "dashamaksim":{
+      "id": "21",
+      "FileName": "",
+      "Title": "",
+      "Name": "Даша и Максим",
+      "Route": "dashamaksim",
+      "Color": "#386383",
+      "Descripion": "",
+      "EngDescription": "",
+      "Creator": "@Svobodinaphoto",
+      "Category": "LoveStory"
+    },
+    "alenaalexsey":{
+      "id": "20",
+      "FileName": "",
+      "Title": "",
+      "Name": "Алёна и Алексей",
+      "Route": "alenaalexsey",
+      "Color": "#65412b",
+      "Descripion": "",
+      "EngDescription": "",
+      "Creator": "@Svobodinaphoto",
+      "Category": "Wedding"
+    },
+    "Rita-Vlad":{
+      "id": "19",
+      "FileName": "",
+      "Title": "",
+      "Name": "Рита и Влад",
+      "Route": "Rita-Vlad",
+      "Color": "#b28575",
+      "Descripion": "",
+      "EngDescription": "",
+      "Creator": "@Svobodinaphoto",
+      "Category": "Wedding"
+    },
+    "ivanirina":{
+      "id": "18",
+      "FileName": "",
+      "Title": "",
+      "Name": "Ирина и Иван",
+      "Route": "ivanirina",
+      "Color": "#f0d4ad",
+      "Descripion": "",
+      "EngDescription": "",
+      "Creator": "@Svobodinaphoto",
+      "Category": "Wedding"
+    }
+}
+  

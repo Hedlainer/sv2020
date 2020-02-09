@@ -1,0 +1,39 @@
+{
+  "name": "SvobodinaPhoto_v2.0",
+  "version": "1.0.0",
+  "description": "best web for best ph",
+  "author": "iasvobodin",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",
+    "build": "nuxt build",
+    "start": "cross-env NODE_ENV=production node server/index.js",
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore ."
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.9.5",
+    "fastify": "^2.12.0",
+    "justified-layout": "^3.0.0",
+    "nuxt": "^2.11.0",
+    "vue-fragment": "^1.5.1",
+    "vue-observe-visibility": "^0.4.6"
+  },
+  "devDependencies": {
+    "nuxt-compress": "^1.1.0",
+    "typescript": "^3.7.5",
+    "@babel/core": "^7.8.4",
+    "@nuxtjs/eslint-config": "^2.0.0",
+    "@nuxtjs/eslint-module": "^1.1.0",
+    "@nuxtjs/pwa": "^3.0.0-beta.20",
+    "@vue/test-utils": "^1.0.0-beta.31",
+    "babel-eslint": "^10.0.3",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "browser-env": "^3.3.0",
+    "cross-env": "^7.0.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-nuxt": ">=0.5.0",
+    "node-sass": "^4.13.1",
+    "nodemon": "^2.0.2",
+    "sass-loader": "^8.0.2"
+  }
+}
