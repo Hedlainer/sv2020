@@ -54,7 +54,16 @@ module.exports = {
    ** Nuxt.js dev-modules
    */
   buildModules: [
-    '@nuxtjs/eslint-module'
+    '@nuxtjs/eslint-module',
+    [
+      'nuxt-compress',
+      {
+        brotli: {
+          asset: '[path].br',
+          test: /\.(js|css)$/
+        }
+      }
+    ]
   ],
 
   eslint: {
@@ -66,16 +75,8 @@ module.exports = {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    '@nuxtjs/pwa',
-    [
-      'nuxt-compress',
-      {
-        brotli: {
-          asset: '[path].br',
-          test: /\.(js|css)$/
-        }
-      }
-    ]
+    '@nuxtjs/pwa'
+    
   ],
   /*
    ** Axios module configuration
