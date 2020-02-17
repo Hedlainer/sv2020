@@ -53,22 +53,22 @@ module.exports = {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: [
-    '@nuxtjs/eslint-module',
-    [
-      'nuxt-compress',
-      {
-        brotli: {
-          asset: '[path].br',
-          test: /\.(js|css)$/
-        }
-      }
-    ]
-  ],
+  // buildModules: [
+  //   '@nuxtjs/eslint-module',
+  //   [
+  //     'nuxt-compress',
+  //     {
+  //       brotli: {
+  //         asset: '[path].br',
+  //         test: /\.(js|css)$/
+  //       }
+  //     }
+  //   ]
+  // ],
 
-  eslint: {
-    fix: true
-  },
+  // eslint: {
+  //   fix: true
+  // },
   /*
    ** Nuxt.js modules
    */

@@ -24,6 +24,15 @@ functions:
     events:
       - http: ANY /
       - http: ANY /{proxy+}
+      - http:
+          path: /static/{proxy+}
+          method: any
+          integration: http-proxy
+          request:
+            uri: https://svobodinaphoto-image.s3.amazonaws.com/{proxy}
+            parameters:
+              paths:
+                proxy: true
 
 plugins:
   # - serverless-apigw-binary
@@ -33,10 +42,10 @@ plugins:
 
 custom:
   s3Sync:
-    - bucketName: nuxt-dist
-      bucketPrefix: image
-      localDir: static/image
-    - bucketName: nuxt-dist
+    # - bucketName: nuxt-dist
+    #   bucketPrefix: image
+    #   localDir: static/image
+    - bucketName: svobodinaphoto
       bucketPrefix: _nuxt
       localDir: .nuxt/dist/client
       params:
