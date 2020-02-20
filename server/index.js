@@ -1,5 +1,5 @@
 const { Nuxt, Builder } = require('nuxt')
-const fastify = require('fastify')({logger: true})
+const fastify = require('fastify')({ logger: true })
 
 // Import and Set Nuxt.js options
 const config = require('../nuxt.config.js')

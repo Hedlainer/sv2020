@@ -24,7 +24,7 @@ coverage
 
 # Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
-
+src
 # Bower dependency directory (https://bower.io/)
 bower_components
 
@@ -70,8 +70,8 @@ typings/
 .vscode
 # Nuxt generate
 dist
-src
 
+app
 # vuepress build output
 .vuepress/dist
 
