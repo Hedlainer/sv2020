@@ -3,8 +3,8 @@ module.exports = {
   /*
    ** Headers of the page
    */
-  // srcDir: 'src/',
-
+  srcDir: 'client',
+  buildDir: 'app',
   head: {
     htmlAttrs: {
       lang: 'ru'
@@ -34,12 +34,11 @@ module.exports = {
    ** Customize the progress-bar color
    */
   loading: {
-    color: '#fff'
+    color: '#03a9f4'
   },
   /*
    ** Global CSS
    */
-  // eslint-disable-next-line indent
   //  serverMiddleware: [
   //     '~/serverMiddleware/api'
   //   ],
@@ -53,22 +52,22 @@ module.exports = {
   /*
    ** Nuxt.js dev-modules
    */
-  // buildModules: [
-  //   '@nuxtjs/eslint-module',
-  //   [
-  //     'nuxt-compress',
-  //     {
-  //       brotli: {
-  //         asset: '[path].br',
-  //         test: /\.(js|css)$/
-  //       }
-  //     }
-  //   ]
-  // ],
+  buildModules: [
+    '@nuxtjs/eslint-module',
+    [
+      'nuxt-compress',
+      {
+        brotli: {
+          asset: '[path].br',
+          test: /\.(js|css)$/
+        }
+      }
+    ]
+  ],
 
-  // eslint: {
-  //   fix: true
-  // },
+  eslint: {
+    fix: true
+  },
   /*
    ** Nuxt.js modules
    */
@@ -76,7 +75,6 @@ module.exports = {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/pwa'
-    
   ],
   /*
    ** Axios module configuration
