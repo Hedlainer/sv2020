@@ -1,6 +1,5 @@
 <template>
   <div
-    ref="gallery"
     class="gallery"
   >
     <div
@@ -8,13 +7,13 @@
       :key="image.name"
       class="image_wrap"
       :style="{
-        transform: `translate(${Math.floor(image.left + Math.random() * width/100*1)}px,
-        ${ Math.floor(image.top +Math.random() * width/100*2)}px)`,
+        transform: `translate(${Math.floor(image.left + Math.random() * width/100*1)}px, ${ Math.floor(image.top +Math.random() * width/100*2)}px)`,
         width : `${Math.floor(image.width + Math.random() * width/100*1)}px`,
         height : `${Math.floor(image.height + Math.random() * height/100*1)}px`,
       }"
     >
       <lazyPicture :file="image.SeriesFileName" :width="image.width" />
+      <ParamsPhoto :spec="image.SeriesSpec" />
     </div>
   </div>
 </template>
@@ -35,7 +34,8 @@ if (process.browser) {
 
 export default {
   components: {
-    lazyPicture: () => import('~/components/lazy-picture.vue')
+    lazyPicture: () => import('~/components/lazy-picture.vue'),
+    ParamsPhoto: () => import('~/components/params-photo.vue')
   },
   data () {
     return {
@@ -53,7 +53,7 @@ export default {
         containerPadding: {
           top: 10,
           right: this.widthContainer,
-          bottom: 10,
+          bottom: 100,
           left: this.widthContainer
         },
         boxSpacing: {
@@ -62,8 +62,8 @@ export default {
         }
       })
       layout.boxes.forEach((element, index) => {
-        element.SeriesFileName = this.$store.state.SeriesFileName[index]
-        element.SeriesSpec = this.$store.state.SeriesSpec[index]
+        element.SeriesFileName = this.$store.state.Series.Props.ImageName[index]
+        element.SeriesSpec = this.$store.state.Series.Props.Spec[index]
       })
       return layout
     }
@@ -92,7 +92,7 @@ export default {
 <style lang="scss" scoped>
 .gallery {
   position: relative;
-  padding-bottom: 5vh;
+  margin-bottom: 5vh;
   height: auto;
 }
 .image_wrap {

@@ -1,13 +1,13 @@
 <template>
   <div>
-    <JustLoy />
+    <SeriesLayout />
   </div>
 </template>
 
 <script>
 export default {
   components: {
-    JustLoy: () => import('~/components/just-loy.vue')
+    SeriesLayout: () => import('~/components/series-layout.vue')
   },
   beforeCreate () {
     this.$store.dispatch('GET_SERIES', this.$route.params.Route)

@@ -33,13 +33,11 @@
 //   }
 // })
 export const state = () => ({
-  // photoseriesCover: fillterPhotoseries,
-  Fetch: [],
-  series: [],
   aws: [],
   SeriesAspect: [],
   SeriesFileName: [],
-  SeriesSpec: []
+  SeriesSpec: [],
+  Series: []
 })
 export const getters = {
   // aspect (ctx) {
@@ -58,6 +56,7 @@ export const mutations = {
     state.SeriesAspect = payload.Props.Aspect
     state.SeriesFileName = payload.Props.ImageName
     state.SeriesSpec = payload.Props.Spec
+    state.Series = payload
   }
 }
 
