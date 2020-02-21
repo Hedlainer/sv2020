@@ -24,10 +24,8 @@ const lightData = data.map((el) => {
     Keywords: el.Keywords
   }
 })
-const db2 = db
-db2.filter(el => el.Props.Type === 'Series')
-console.log(db2[1].Props.Type)
-
+const db2 = db.filter(el => el.Props.Type === 'Folio')
+console.log(db2)
 
 db.forEach((el) => {
   el.Props.ImageName = lightData
