@@ -24,23 +24,23 @@ const lightData = data.map((el) => {
     Keywords: el.Keywords
   }
 })
-const db2 = db
-db2.filter(el => el.Props.Type === 'Series')
-console.log(db2[1].Props.Type)
+// const db2 = db
+// db2.filter(el => el.Props.Type === 'Series')
+// console.log(db2[1].Props.Type)
 
 
 db.forEach((el) => {
-  el.Props.ImageName = lightData
+  el.ImageName = lightData
     .filter(image => image.Keywords.includes(el.Name))
     .map(image => image.Name)
-  el.Props.Aspect = lightData
+  el.Aspect = lightData
     .filter(image => image.Keywords.includes(el.Name))
     .map(image => image.Aspect)
-  el.Props.Cover = lightData
+  el.Cover = lightData
     .filter(image => image.Keywords.includes(el.Name))
     .filter(image => image.Keywords.includes('cover'))
     .map(e => e.Name)
-  el.Props.Spec = lightData.filter(image => image.Keywords.includes(el.Name))
+  el.Spec = lightData.filter(image => image.Keywords.includes(el.Name))
     .map(image => image.Params)
 
   try {
@@ -54,4 +54,4 @@ db.forEach((el) => {
 
 // записываем во второй файл, но возможно пока не надо
 // const data2 = JSON.stringify(map, null, 2)
-// fs.writeFileSync('./data2.json', data2)
+// fs.writeFileSync('./data2.json', d

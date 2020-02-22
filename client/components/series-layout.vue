@@ -7,9 +7,9 @@
       :key="image.name"
       class="image_wrap"
       :style="{
-        transform: `translate(${Math.floor(image.left + Math.random() * width/100*1)}px, ${ Math.floor(image.top +Math.random() * width/100*2)}px)`,
-        width : `${Math.floor(image.width + Math.random() * width/100*1)}px`,
-        height : `${Math.floor(image.height + Math.random() * height/100*1)}px`,
+        transform: `translate(${Math.floor(image.left + Math.random() * width*0.01)}px, ${ Math.floor(image.top +Math.random() * width*0.02)}px)`,
+        width : `${Math.floor(image.width + Math.random() * width*0.01)}px`,
+        height : `${Math.floor(image.height + Math.random() * height*0.01)}px`,
       }"
     >
       <lazyPicture :file="image.SeriesFileName" :width="image.width" />
@@ -37,11 +37,18 @@ export default {
     lazyPicture: () => import('~/components/lazy-picture.vue'),
     ParamsPhoto: () => import('~/components/params-photo.vue')
   },
+  props: {
+    objectName: {
+      required: true,
+      type: Array
+    }
+  },
   data () {
     return {
       width,
       height,
-      widthContainer
+      widthContainer,
+      hernya: this.$store.state.Series.Props
     }
   },
   computed: {
@@ -69,6 +76,7 @@ export default {
     }
   },
   beforeMount () {
+    console.log(Array.isArray(this.$store.state.SeriesAspect))
     window.addEventListener('resize', debounce(this.resize, 400))
   },
   beforeDestroy () {

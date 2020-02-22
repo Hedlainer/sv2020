@@ -1,6 +1,8 @@
 <template>
   <div>
-    <SeriesLayout />
+    <SeriesLayout
+      :object-name="$store.state.Series"
+    />
   </div>
 </template>
 

@@ -4,12 +4,16 @@
   "Props": {
     "ImageName": [],
     "Aspect": [],
-    "Spec": [],
+    "Spec": {},
     "Title": "Портфолио",
     "Descripion": "",
     "EngDescription": "",
     "Type": "Folio",
-    "Cover": [],
+    "Cover": "",
     "Color": "#644d33"
-  }
+  },
+  "ImageName": [],
+  "Aspect": [],
+  "Cover": [],
+  "Spec": []
 }
