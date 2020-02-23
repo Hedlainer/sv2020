@@ -7,6 +7,22 @@
     }"
     class="lazy"
   >
+    <div class="fixed">
+      <picture v-if="false" class="fullscreen">
+        <source
+          type="image/webp"
+          :srcset="`/image/webp/${setWidth}/${file}.webp`"
+        >
+        <source
+          type="image/jpg"
+          :srcset="`/image/jpg/${setWidth}/${file}.jpg`"
+        >
+        <img
+          :src="`/image/jpg/${setWidth}/${file}.jpg`"
+          alt="SvobodinaPhoto"
+        >
+      </picture>
+    </div>
     <transition name="fade" :css="true">
       <picture v-if="isVisible&phVisible" class="lazy__ph">
         <source
@@ -51,6 +67,10 @@ export default {
     width: {
       required: true,
       type: Number
+    },
+    fullwidth: {
+      required: true,
+      type: Number
     }
   },
   data () {
@@ -75,11 +95,25 @@ export default {
                   ? 1920
                   : 2560
       return size
+    },
+    setWidth () {
+      const setWidth =
+        this.fullwidth < 480
+          ? 480
+          : this.fullwidth < 720
+            ? 720
+            : this.fullwidth < 1024
+              ? 1024
+              : this.fullwidth < 1440
+                ? 1440
+                : this.fullwidth < 1920
+                  ? 1920
+                  : 2560
+      return setWidth
     }
   },
   methods: {
     imageLoad () {
-      // this.opacity = 1
       this.phVisible = false
     },
     visibilityChanged (isVisible) {
@@ -90,7 +124,7 @@ export default {
 </script>
 <style>
 .fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+  transition: opacity 2.5s;
 }
 .fade-enter, .fade-leave-to {
   opacity: 0;

@@ -1,17 +1,9 @@
 {
-  "id": "23",
+  "id": "6",
   "Name": "AlexandraVadim",
-  "Props": {
-    "ImageName": [],
-    "Aspect": [],
-    "Spec": {},
-    "Title": "Александра и Вадим",
-    "Descripion": "",
-    "EngDescription": "",
-    "Type": "Series",
-    "Cover": "",
-    "Color": "#677d33"
-  },
+  "Title": "Александра и Вадим",
+  "Descripion": "",
+  "EngDescription": "",
   "ImageName": [
     "19-08-24-16-35-35",
     "19-08-24-16-37-40",
@@ -64,9 +56,20 @@
     1.498,
     1.498
   ],
-  "Cover": [
-    "19-08-24-16-57-52"
-  ],
+  "Cover": {
+    "Name": "19-08-24-16-57-52",
+    "Params": {
+      "Sh": "1/160",
+      "F": 2.8,
+      "Fl": 58
+    },
+    "Aspect": 1.498,
+    "Keywords": [
+      "wedding",
+      "cover",
+      "AlexandraVadim"
+    ]
+  },
   "Spec": [
     {
       "Sh": "1/200",

@@ -1,17 +1,9 @@
 {
-  "id": "22",
+  "id": "5",
   "Name": "ElenaNikita",
-  "Props": {
-    "ImageName": [],
-    "Aspect": [],
-    "Spec": {},
-    "Title": "Лена и Никита",
-    "Descripion": "",
-    "EngDescription": "",
-    "Type": "Series",
-    "Cover": "",
-    "Color": "#644d33"
-  },
+  "Title": "Лена и Никита",
+  "Descripion": "",
+  "EngDescription": "",
   "ImageName": [
     "19-05-10-16-57-23",
     "19-05-10-16-58-17",
@@ -82,9 +74,19 @@
     1.498,
     1.498
   ],
-  "Cover": [
-    "19-05-10-17-43-45"
-  ],
+  "Cover": {
+    "Name": "19-05-10-17-43-45",
+    "Params": {
+      "Sh": "1/200",
+      "F": 5,
+      "Fl": 24
+    },
+    "Aspect": 1.498,
+    "Keywords": [
+      "cover",
+      "ElenaNikita"
+    ]
+  },
   "Spec": [
     {
       "Sh": "1/250",

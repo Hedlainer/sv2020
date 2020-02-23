@@ -1,17 +1,9 @@
 {
-  "id": "19",
+  "id": "2",
   "Name": "RitaVlad",
-  "Props": {
-    "ImageName": [],
-    "Aspect": [],
-    "Spec": {},
-    "Title": "Рита и Влад",
-    "Descripion": "",
-    "EngDescription": "",
-    "Type": "Series",
-    "Cover": "",
-    "Color": "#b28575"
-  },
+  "Title": "Рита и Влад",
+  "Descripion": "",
+  "EngDescription": "",
   "ImageName": [
     "19-06-15-08-41-50",
     "19-06-15-08-52-03",
@@ -214,9 +206,19 @@
     1.498,
     1.498
   ],
-  "Cover": [
-    "19-06-15-11-55-28"
-  ],
+  "Cover": {
+    "Name": "19-06-15-11-55-28",
+    "Params": {
+      "Sh": "1/200",
+      "F": 4,
+      "Fl": 24
+    },
+    "Aspect": 1.498,
+    "Keywords": [
+      "cover",
+      "RitaVlad"
+    ]
+  },
   "Spec": [
     {
       "Sh": "1/250",

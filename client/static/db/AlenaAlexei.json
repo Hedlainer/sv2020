@@ -1,17 +1,9 @@
 {
-  "id": "20",
+  "id": "3",
   "Name": "AlenaAlexei",
-  "Props": {
-    "ImageName": [],
-    "Aspect": [],
-    "Spec": {},
-    "Title": "Алёна и Алексей",
-    "Descripion": "",
-    "EngDescription": "",
-    "Type": "Series",
-    "Cover": "",
-    "Color": "#65412b"
-  },
+  "Title": "Алёна и Алексей",
+  "Descripion": "",
+  "EngDescription": "",
   "ImageName": [
     "19-07-27-08-02-50",
     "19-07-27-08-17-47",
@@ -180,9 +172,21 @@
     1.498,
     1.498
   ],
-  "Cover": [
-    "19-07-27-18-08-26"
-  ],
+  "Cover": {
+    "Name": "19-07-27-18-08-26",
+    "Params": {
+      "Sh": "1/200",
+      "F": 4,
+      "Fl": 70
+    },
+    "Aspect": 1.498,
+    "Keywords": [
+      "банкет",
+      "wedding",
+      "cover",
+      "AlenaAlexei"
+    ]
+  },
   "Spec": [
     {
       "Sh": "1/320",

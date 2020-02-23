@@ -1,4 +1,6 @@
 const fs = require('fs')
+const resolve = require('path').resolve
+const lqip = require('lqip')
 
 const data = JSON.parse(fs.readFileSync('src/db/data.json'))
 const db = JSON.parse(fs.readFileSync('src/db/db.json'))
@@ -26,10 +28,8 @@ const lightData = data.map((el) => {
 })
 // const db2 = db
 // db2.filter(el => el.Props.Type === 'Series')
-// console.log(db2[1].Props.Type)
 
-
-db.forEach((el) => {
+db.Series.forEach((el) => {
   el.ImageName = lightData
     .filter(image => image.Keywords.includes(el.Name))
     .map(image => image.Name)
@@ -38,8 +38,8 @@ db.forEach((el) => {
     .map(image => image.Aspect)
   el.Cover = lightData
     .filter(image => image.Keywords.includes(el.Name))
-    .filter(image => image.Keywords.includes('cover'))
-    .map(e => e.Name)
+    .find(image => image.Keywords.includes('cover'))
+    // .map(e => e.Name)[0]
   el.Spec = lightData.filter(image => image.Keywords.includes(el.Name))
     .map(image => image.Params)
 
@@ -51,6 +51,30 @@ db.forEach((el) => {
   }
   // const data2 = JSON.stringify(map, null, 2)
 })
+
+// const hernya = db.Series.map(el => el.Cover)
+const hernya2 = db.Series.map((el, index) => {
+  return {
+    Id: index,
+    Route: el.Name,
+    Title: el.Title,
+    FileName: el.Cover.Name,
+    Aspect: el.Cover.Aspect
+  }
+})
+
+try {
+  fs.writeFileSync('client/static/db/Photoseries.json', JSON.stringify(hernya2, null, 2))
+  console.log('file Photoseries.json is redy')
+} catch (error) {
+  console.log(error)
+}
+// const aaa = hernya.map(e => e.Name === '19-05-05-15-24-54')
+// => lightData.find(e => e.Name === element))
+
+// console.log(hernya)
+console.log(hernya2)
+// console.log(aaa)
 
 // записываем во второй файл, но возможно пока не надо
 // const data2 = JSON.stringify(map, null, 2)

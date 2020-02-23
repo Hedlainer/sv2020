@@ -6,13 +6,13 @@
       v-for="image in GetjustifiedLayout.boxes"
       :key="image.name"
       class="image_wrap"
-      :style="{
-        transform: `translate(${Math.floor(image.left + Math.random() * width*0.01)}px, ${ Math.floor(image.top +Math.random() * width*0.02)}px)`,
-        width : `${Math.floor(image.width + Math.random() * width*0.01)}px`,
-        height : `${Math.floor(image.height + Math.random() * height*0.01)}px`,
-      }"
+      :style="layoutStyle (image)"
     >
-      <lazyPicture :file="image.SeriesFileName" :width="image.width" />
+      <lazyPicture
+        :file="image.SeriesFileName"
+        :width="image.width"
+        :fullwidth="width"
+      />
       <ParamsPhoto :spec="image.SeriesSpec" />
     </div>
   </div>
@@ -26,7 +26,7 @@ if (process.browser) {
   height = window.innerHeight
   width = window.innerWidth
   if (width / height < 1) {
-    widthContainer = width * 0.05
+    widthContainer = width * 0.03
   } else {
     widthContainer = width * 0.125
   }
@@ -37,18 +37,17 @@ export default {
     lazyPicture: () => import('~/components/lazy-picture.vue'),
     ParamsPhoto: () => import('~/components/params-photo.vue')
   },
-  props: {
-    objectName: {
-      required: true,
-      type: Array
-    }
-  },
+  // props: {
+  //   objectName: {
+  //     required: true,
+  //     type: Array
+  //   }
+  // },
   data () {
     return {
       width,
       height,
-      widthContainer,
-      hernya: this.$store.state.Series.Props
+      widthContainer
     }
   },
   computed: {
@@ -64,19 +63,18 @@ export default {
           left: this.widthContainer
         },
         boxSpacing: {
-          horizontal: (this.width / 100) * 4,
-          vertical: (this.height / 100) * 8
+          horizontal: this.width * 0.04,
+          vertical: this.height * 0.08
         }
       })
       layout.boxes.forEach((element, index) => {
-        element.SeriesFileName = this.$store.state.Series.Props.ImageName[index]
-        element.SeriesSpec = this.$store.state.Series.Props.Spec[index]
+        element.SeriesFileName = this.$store.state.Series.ImageName[index]
+        element.SeriesSpec = this.$store.state.Series.Spec[index]
       })
       return layout
     }
   },
   beforeMount () {
-    console.log(Array.isArray(this.$store.state.SeriesAspect))
     window.addEventListener('resize', debounce(this.resize, 400))
   },
   beforeDestroy () {
@@ -84,11 +82,23 @@ export default {
   },
 
   methods: {
+    layoutStyle (image) {
+      const plusOrMinus = Math.random() < 0.5 ? -1 : 1
+      const coefWidth = Math.floor(Math.random() * this.width * 0.019 * plusOrMinus)
+      const coefHeight = Math.floor(Math.random() * this.height * 0.03 * plusOrMinus)
+      return {
+        left: `${image.left}px`,
+        top: `${image.top}px`,
+        width: `${image.width}px`,
+        height: `${image.height}px`,
+        transform: `translate(${coefWidth}px, ${coefHeight}px)`
+      }
+    },
     resize () {
       this.width = window.innerWidth
       this.height = window.innerHeight
       if (this.width / this.height < 1) {
-        this.widthContainer = this.width * 0.05
+        this.widthContainer = this.width * 0.03
       } else {
         this.widthContainer = this.width * 0.125
       }
@@ -100,7 +110,6 @@ export default {
 <style lang="scss" scoped>
 .gallery {
   position: relative;
-  margin-bottom: 5vh;
   height: auto;
 }
 .image_wrap {

@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import photoseries from '~/static/data/photoseries.json'
+import photoseries from '~/static/db/Photoseries.json'
 export default {
   components: {
     photoseriesImage: () =>

@@ -1,17 +1,9 @@
 {
-  "id": "18",
+  "id": "1",
   "Name": "IrinaIvan",
-  "Props": {
-    "ImageName": [],
-    "Aspect": [],
-    "Spec": {},
-    "Title": "Ирина и Иван",
-    "Descripion": "",
-    "EngDescription": "",
-    "Type": "Series",
-    "Cover": "",
-    "Color": "#f0d4ad"
-  },
+  "Title": "Ирина и Иван",
+  "Descripion": "",
+  "EngDescription": "",
   "ImageName": [
     "19-03-02-10-37-05",
     "19-03-02-10-40-40",
@@ -244,9 +236,20 @@
     1.498,
     0.668
   ],
-  "Cover": [
-    "19-03-02-17-25-38"
-  ],
+  "Cover": {
+    "Name": "19-03-02-17-25-38",
+    "Params": {
+      "Sh": "1/200",
+      "F": 3.5,
+      "Fl": 46
+    },
+    "Aspect": 1.498,
+    "Keywords": [
+      "банкет",
+      "cover",
+      "IrinaIvan"
+    ]
+  },
   "Spec": [
     {
       "Sh": "1/160",

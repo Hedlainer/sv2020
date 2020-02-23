@@ -1,17 +1,9 @@
 {
-  "id": "26",
+  "id": "9",
   "Name": "bacheloretteParty",
-  "Props": {
-    "ImageName": [],
-    "Aspect": [],
-    "Spec": {},
-    "Title": "Девичник",
-    "Descripion": "",
-    "EngDescription": "",
-    "Type": "Series",
-    "Cover": "",
-    "Color": "#644d33"
-  },
+  "Title": "Девичник",
+  "Descripion": "",
+  "EngDescription": "",
   "ImageName": [
     "19-05-05-15-24-20",
     "19-05-05-15-24-31",
@@ -64,9 +56,20 @@
     1.498,
     1.498
   ],
-  "Cover": [
-    "19-05-05-15-24-54"
-  ],
+  "Cover": {
+    "Name": "19-05-05-15-24-54",
+    "Params": {
+      "Sh": "1/250",
+      "F": 4,
+      "Fl": 52
+    },
+    "Aspect": 1.498,
+    "Keywords": [
+      "wedding",
+      "cover",
+      "bacheloretteParty"
+    ]
+  },
   "Spec": [
     {
       "Sh": "1/250",

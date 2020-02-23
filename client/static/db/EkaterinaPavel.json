@@ -1,17 +1,9 @@
 {
-  "id": "25",
+  "id": "8",
   "Name": "EkaterinaPavel",
-  "Props": {
-    "ImageName": [],
-    "Aspect": [],
-    "Spec": {},
-    "Title": "Екатерина и Павел",
-    "Descripion": "",
-    "EngDescription": "",
-    "Type": "Series",
-    "Cover": "",
-    "Color": "#644d33"
-  },
+  "Title": "Екатерина и Павел",
+  "Descripion": "",
+  "EngDescription": "",
   "ImageName": [
     "19-05-01-11-02-36",
     "19-05-01-11-03-39",
@@ -92,9 +84,20 @@
     1.498,
     1.498
   ],
-  "Cover": [
-    "19-05-01-12-24-16"
-  ],
+  "Cover": {
+    "Name": "19-05-01-12-24-16",
+    "Params": {
+      "Sh": "1/200",
+      "F": 8,
+      "Fl": 38
+    },
+    "Aspect": 1.498,
+    "Keywords": [
+      "wedding",
+      "cover",
+      "EkaterinaPavel"
+    ]
+  },
   "Spec": [
     {
       "Sh": "1/320",

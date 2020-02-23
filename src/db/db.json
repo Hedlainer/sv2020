@@ -1,131 +1,76 @@
-[{
+{
+  "Series": [
+    {
+      "id": "9",
+      "Name": "bacheloretteParty",
+      "Title": "Девичник",
+      "Descripion": "",
+      "EngDescription": ""
+    },
+    {
+      "id": "8",
+      "Name": "EkaterinaPavel",
+      "Title": "Екатерина и Павел",
+      "Descripion": "",
+      "EngDescription": ""
+    },
+    {
+      "id": "7",
+      "Name": "AngelinaRoman",
+      "Title": "Ангелина и Роман",
+      "Descripion": "",
+      "EngDescription": ""
+    },
+    {
+      "id": "6",
+      "Name": "AlexandraVadim",
+      "Title": "Александра и Вадим",
+      "Descripion": "",
+      "EngDescription": ""
+    },
+    {
+      "id": "5",
+      "Name": "ElenaNikita",
+      "Title": "Лена и Никита",
+      "Descripion": "",
+      "EngDescription": ""
+    },
+    {
+      "id": "4",
+      "Name": "DashaMaksim",
+      "Title": "Даша и Максим",
+      "Descripion": "",
+      "EngDescription": ""
+    },
+    {
+      "id": "3",
+      "Name": "AlenaAlexei",
+      "Title": "Алёна и Алексей",
+      "Descripion": "",
+      "EngDescription": ""
+    },
+    {
+      "id": "2",
+      "Name": "RitaVlad",
+      "Title": "Рита и Влад",
+      "Descripion": "",
+      "EngDescription": ""
+    },
+    {
+      "id": "1",
+      "Name": "IrinaIvan",
+      "Title": "Ирина и Иван",
+      "Descripion": "",
+      "EngDescription": ""
+    }
+  ],
+  "Folio": [
+    {
     "id": "27",
     "Name": "Portfolio",
-    "ImageName": [],
-    "Aspect": [],
-    "Spec": {},
     "Title": "Портфолио",
     "Descripion": "",
-    "EngDescription": "",
-    "Type": "Folio",
-    "Cover": "",
-    "Color": "#644d33"
-  },
-  {
-    "id": "26",
-    "Name": "bacheloretteParty",
-    "ImageName": [],
-    "Aspect": [],
-    "Spec": {},
-    "Title": "Девичник",
-    "Descripion": "",
-    "EngDescription": "",
-    "Type": "Series",
-    "Cover": "",
-    "Color": "#644d33"
-  },
-  {
-    "id": "25",
-    "Name": "EkaterinaPavel",
-    "ImageName": [],
-    "Aspect": [],
-    "Spec": {},
-    "Title": "Екатерина и Павел",
-    "Descripion": "",
-    "EngDescription": "",
-    "Type": "Series",
-    "Cover": "",
-    "Color": "#644d33"
-  },
-  {
-    "id": "24",
-    "Name": "AngelinaRoman",
-    "ImageName": [],
-    "Aspect": [],
-    "Spec": {},
-    "Title": "Ангелина и Роман",
-    "Descripion": "",
-    "EngDescription": "",
-    "Type": "Series",
-    "Cover": "",
-    "Color": "#644d33"
-  },
-  {
-    "id": "23",
-    "Name": "AlexandraVadim",
-    "ImageName": [],
-    "Aspect": [],
-    "Spec": {},
-    "Title": "Александра и Вадим",
-    "Descripion": "",
-    "EngDescription": "",
-    "Type": "Series",
-    "Cover": "",
-    "Color": "#677d33"
-  },
-  {
-    "id": "22",
-    "Name": "ElenaNikita",
-    "ImageName": [],
-    "Aspect": [],
-    "Spec": {},
-    "Title": "Лена и Никита",
-    "Descripion": "",
-    "EngDescription": "",
-    "Type": "Series",
-    "Cover": "",
-    "Color": "#644d33"
-  },
-  {
-    "id": "21",
-    "Name": "DashaMaksim",
-    "ImageName": [],
-    "Aspect": [],
-    "Spec": {},
-    "Title": "Даша и Максим",
-    "Descripion": "",
-    "EngDescription": "",
-    "Type": "Series",
-    "Cover": "",
-    "Color": "#386383"
-  },
-  {
-    "id": "20",
-    "Name": "AlenaAlexei",
-    "ImageName": [],
-    "Aspect": [],
-    "Spec": {},
-    "Title": "Алёна и Алексей",
-    "Descripion": "",
-    "EngDescription": "",
-    "Type": "Series",
-    "Cover": "",
-    "Color": "#65412b"
-  },
-  {
-    "id": "19",
-    "Name": "RitaVlad",
-    "ImageName": [],
-    "Aspect": [],
-    "Spec": {},
-    "Title": "Рита и Влад",
-    "Descripion": "",
-    "EngDescription": "",
-    "Type": "Series",
-    "Cover": "",
-    "Color": "#b28575"
-  },
-  {
-    "id": "18",
-    "Name": "IrinaIvan",
-    "ImageName": [],
-    "Aspect": [],
-    "Spec": {},
-    "Title": "Ирина и Иван",
-    "Descripion": "",
-    "EngDescription": "",
-    "Type": "Series",
-    "Cover": "",
-    "Color": "#f0d4ad"
+    "EngDescription": ""
   }
 ]
+}

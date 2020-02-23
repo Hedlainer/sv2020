@@ -1,17 +1,9 @@
 {
-  "id": "24",
+  "id": "7",
   "Name": "AngelinaRoman",
-  "Props": {
-    "ImageName": [],
-    "Aspect": [],
-    "Spec": {},
-    "Title": "Ангелина и Роман",
-    "Descripion": "",
-    "EngDescription": "",
-    "Type": "Series",
-    "Cover": "",
-    "Color": "#644d33"
-  },
+  "Title": "Ангелина и Роман",
+  "Descripion": "",
+  "EngDescription": "",
   "ImageName": [
     "19-05-05-16-01-00",
     "19-05-05-16-02-05",
@@ -84,9 +76,20 @@
     1.498,
     1.498
   ],
-  "Cover": [
-    "19-05-05-16-11-45"
-  ],
+  "Cover": {
+    "Name": "19-05-05-16-11-45",
+    "Params": {
+      "Sh": "1/250",
+      "F": 4.5,
+      "Fl": 70
+    },
+    "Aspect": 1.498,
+    "Keywords": [
+      "wedding",
+      "cover",
+      "AngelinaRoman"
+    ]
+  },
   "Spec": [
     {
       "Sh": "1/250",

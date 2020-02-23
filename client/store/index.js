@@ -37,7 +37,7 @@ export const state = () => ({
   SeriesAspect: [],
   SeriesFileName: [],
   SeriesSpec: [],
-  Series: []
+  Series: {}
 })
 export const getters = {
   // aspect (ctx) {
@@ -53,9 +53,9 @@ export const mutations = {
     state.Fetch = payload
   },
   change_series (state, payload) {
-    state.SeriesAspect = payload.Props.Aspect
-    state.SeriesFileName = payload.Props.ImageName
-    state.SeriesSpec = payload.Props.Spec
+    state.SeriesAspect = payload.Aspect
+    state.SeriesFileName = payload.ImageName
+    state.SeriesSpec = payload.Spec
     state.Series = payload
   }
 }

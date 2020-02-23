@@ -1,17 +1,9 @@
 {
-  "id": "21",
+  "id": "4",
   "Name": "DashaMaksim",
-  "Props": {
-    "ImageName": [],
-    "Aspect": [],
-    "Spec": {},
-    "Title": "Даша и Максим",
-    "Descripion": "",
-    "EngDescription": "",
-    "Type": "Series",
-    "Cover": "",
-    "Color": "#386383"
-  },
+  "Title": "Даша и Максим",
+  "Descripion": "",
+  "EngDescription": "",
   "ImageName": [
     "19-05-07-19-29-25",
     "19-05-07-19-30-12",
@@ -64,9 +56,19 @@
     1.498,
     1.498
   ],
-  "Cover": [
-    "19-05-07-19-32-56"
-  ],
+  "Cover": {
+    "Name": "19-05-07-19-32-56",
+    "Params": {
+      "Sh": "1/250",
+      "F": 5,
+      "Fl": 24
+    },
+    "Aspect": 1.498,
+    "Keywords": [
+      "cover",
+      "DashaMaksim"
+    ]
+  },
   "Spec": [
     {
       "Sh": "1/250",
