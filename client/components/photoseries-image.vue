@@ -7,7 +7,7 @@
         @mouseenter="$emit('color', objectName.Color)"
       />
     </nuxt-link>
-    <lazyPicture class="photoseries__wrapper" :file="objectName.FileName" :width="720" />
+    <lazyPicture class="photoseries__wrapper" :file="objectName.FileName" :width="720" :fullwidth="width" />
     <transition name="fade">
       <div v-if="show" class="name__wrapper" :style="{transform: `translateY(${moveY-30}px)`}">
         <h2>{{ objectName.Name }}</h2>
@@ -17,6 +17,11 @@
 </template>
 
 <script>
+let width, height
+if (process.browser) {
+  height = window.innerHeight
+  width = window.innerWidth
+}
 export default {
   components: {
     lazyPicture: () => import('~/components/lazy-picture.vue')
@@ -29,6 +34,8 @@ export default {
   },
   data () {
     return {
+      width,
+      height,
       color: null,
       show: false,
       moveY: 0
@@ -86,7 +93,6 @@ color: transparent;
   font-weight: 700;
   margin-top: 0px;
   margin-bottom: 0px;
-  background-image: url(https://svobodinaphoto.ru/wp-content/uploads/copy_texture_1_large.jpg);
     // margin: 0;
     // font-size: 10vh;
     // color: #03a9f4;

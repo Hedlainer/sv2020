@@ -3,6 +3,7 @@ const resolve = require('path').resolve
 const lqip = require('lqip')
 
 const data = JSON.parse(fs.readFileSync('src/db/data.json'))
+const color = JSON.parse(fs.readFileSync('src/db/color.json'))
 const db = JSON.parse(fs.readFileSync('src/db/db.json'))
 
 // сортируем все фотки по названию
@@ -18,6 +19,7 @@ const lightData = data.map((el) => {
   return {
     Name: el.FileName.slice(0, -4),
     Params: {
+      Color: color.find(e => e.Name === el.FileName).color[0],
       Sh: el.ShutterSpeedValue,
       F: el.ApertureValue,
       Fl: +el.FocalLength.slice(0, -3)
@@ -52,14 +54,14 @@ db.Series.forEach((el) => {
   // const data2 = JSON.stringify(map, null, 2)
 })
 
-// const hernya = db.Series.map(el => el.Cover)
 const hernya2 = db.Series.map((el, index) => {
   return {
     Id: index,
     Route: el.Name,
     Title: el.Title,
     FileName: el.Cover.Name,
-    Aspect: el.Cover.Aspect
+    Aspect: el.Cover.Aspect,
+    Color: el.Cover.Params.Color
   }
 })
 
@@ -69,13 +71,3 @@ try {
 } catch (error) {
   console.log(error)
 }
-// const aaa = hernya.map(e => e.Name === '19-05-05-15-24-54')
-// => lightData.find(e => e.Name === element))
-
-// console.log(hernya)
-console.log(hernya2)
-// console.log(aaa)
-
-// записываем во второй файл, но возможно пока не надо
-// const data2 = JSON.stringify(map, null, 2)
-// fs.writeFileSync('./data2.json', d

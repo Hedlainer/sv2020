@@ -4,62 +4,71 @@
     "Route": "bacheloretteParty",
     "Title": "Девичник",
     "FileName": "19-05-05-15-24-54",
-    "Aspect": 1.498
+    "Aspect": 1.498,
+    "Color": "#534132"
   },
   {
     "Id": 1,
     "Route": "EkaterinaPavel",
     "Title": "Екатерина и Павел",
     "FileName": "19-05-01-12-24-16",
-    "Aspect": 1.498
+    "Aspect": 1.498,
+    "Color": "#434542"
   },
   {
     "Id": 2,
     "Route": "AngelinaRoman",
     "Title": "Ангелина и Роман",
     "FileName": "19-05-05-16-11-45",
-    "Aspect": 1.498
+    "Aspect": 1.498,
+    "Color": "#593828"
   },
   {
     "Id": 3,
     "Route": "AlexandraVadim",
     "Title": "Александра и Вадим",
     "FileName": "19-08-24-16-57-52",
-    "Aspect": 1.498
+    "Aspect": 1.498,
+    "Color": "#a48b6b"
   },
   {
     "Id": 4,
     "Route": "ElenaNikita",
     "Title": "Лена и Никита",
     "FileName": "19-05-10-17-43-45",
-    "Aspect": 1.498
+    "Aspect": 1.498,
+    "Color": "#4a4237"
   },
   {
     "Id": 5,
     "Route": "DashaMaksim",
     "Title": "Даша и Максим",
     "FileName": "19-05-07-19-32-56",
-    "Aspect": 1.498
+    "Aspect": 1.498,
+    "Color": "#487fab"
   },
   {
     "Id": 6,
     "Route": "AlenaAlexei",
     "Title": "Алёна и Алексей",
     "FileName": "19-07-27-18-08-26",
-    "Aspect": 1.498
+    "Aspect": 1.498,
+    "Color": "#46242e"
   },
   {
     "Id": 7,
     "Route": "RitaVlad",
     "Title": "Рита и Влад",
     "FileName": "19-06-15-11-55-28",
-    "Aspect": 1.498
+    "Aspect": 1.498,
+    "Color": "#4c372c"
   },
   {
     "Id": 8,
     "Route": "IrinaIvan",
     "Title": "Ирина и Иван",
     "FileName": "19-03-02-17-25-38",
-    "Aspect": 1.498
+    "Aspect": 1.498,
+    "Color": "#503a2c"
   }
 ]
