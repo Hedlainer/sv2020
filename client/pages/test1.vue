@@ -3,7 +3,7 @@
     <div id="webgl" ref="webgl" />
     <!-- <div id="fixed"></div> -->
     <main class="seriya__wrapper" @scroll.passive="e">
-      <div v-for="seriya in photoseries" ref="vforest" :key="seriya.Id" class="seriya__container">
+      <div v-for="seriya in photoseries" ref="CurtainsPlanes" :key="seriya.Id" class="seriya__container">
         <!-- <h2 style="color:white">{{seriya.Name}}</h2> -->
         <img class="plane-image" crossorigin="use-credentials" :src="`/image/jpg/480/${seriya.FileName}.jpg`">
         <img class="plane-image" crossorigin="use-credentials" :src="`/image/jpg/1920/${seriya.FileName}.jpg`">
@@ -60,9 +60,9 @@ export default {
         pixelRatio: window.devicePixelRatio,
         watchScroll: false
       })
-      for (let i = 0; i < this.$refs.vforest.length; i++) {
+      for (let i = 0; i < this.$refs.CurtainsPlanes.length; i++) {
         this.planes.push(
-          this.curtains.addPlane(this.$refs.vforest[i], this.params)
+          this.curtains.addPlane(this.$refs.CurtainsPlanes[i], this.params)
         )
         this.handlePlanes(i)
       }
@@ -175,7 +175,7 @@ export default {
         ev.target.scrollTop,
         ev.target.scrollLeft
       )
-      for (let i = 0; i < this.$refs.vforest.length; i++) {
+      for (let i = 0; i < this.$refs.CurtainsPlanes.length; i++) {
         this.curtains.planes[i].updateScrollPosition()
       }
     }

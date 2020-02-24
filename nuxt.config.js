@@ -85,6 +85,11 @@ module.exports = {
    ** Build configuration
    */
   build: {
+    vendor: [
+      'curtainsjs',
+      'animejs/lib/anime.es.js',
+      'justified-layout'
+    ],
     filenames: {
       chunk: ({
         isDev
