@@ -85,11 +85,11 @@ module.exports = {
    ** Build configuration
    */
   build: {
-    vendor: [
-      'curtainsjs',
-      'animejs/lib/anime.es.js',
-      'justified-layout'
-    ],
+    // vendor: [
+    //   'curtainsjs',
+    //   'animejs/lib/anime.es.js',
+    //   'justified-layout'
+    // ],
     filenames: {
       chunk: ({
         isDev
@@ -99,6 +99,21 @@ module.exports = {
     /*
      ** You can extend webpack config here
      */
-    extend (config, ctx) {}
+    // extend (config, ctx) {}
+
+    extend (config) {
+      config.module.rules.push(
+        {
+
+          test: /\.(glsl|vs|fs|vert|frag)$/,
+          exclude: /node_modules/,
+          use: [
+            'raw-loader',
+            'glslify-loader'
+          ]
+
+        }
+      )
+    }
   }
 }

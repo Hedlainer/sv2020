@@ -2,10 +2,10 @@
   <div class="page">
     <div id="webgl" ref="webgl" />
     <!-- <div id="fixed"></div> -->
-    <main class="seriya__wrapper" @scroll.passive="e">
+    <main class="seriya__wrapper" @scroll.passive="updateScroll">
       <div v-for="seriya in photoseries" ref="CurtainsPlanes" :key="seriya.Id" class="seriya__container">
         <!-- <h2 style="color:white">{{seriya.Name}}</h2> -->
-        <img class="plane-image" crossorigin="use-credentials" :src="`/image/jpg/480/${seriya.FileName}.jpg`">
+        <img class="plane-image" crossorigin="use-credentials" :src="`/image/jpg/720/${seriya.FileName}.jpg`" @click="route(seriya.Route)">
         <img class="plane-image" crossorigin="use-credentials" :src="`/image/jpg/1920/${seriya.FileName}.jpg`">
       </div>
     </main>
@@ -21,11 +21,12 @@ export default {
   data () {
     return {
       photoseries,
-      scrollX: 0,
-      scrollY: 0,
+      // scrollX: 0,
+      // scrollY: 0,
       animating: true,
       duration: 1700,
       curtains: null,
+      // координаты мыши для пересчёта в шейдер
       mouseNormalized: { x: 0, y: 0 },
       planes: [],
       params: {
@@ -48,11 +49,11 @@ export default {
   },
   mounted () {
     this.initCurtains()
-    console.log(this.curtains.planes[0])
+    // console.log(this.curtains.planes[0])
   },
   methods: {
-    q (ev) {
-      console.log(ev)
+    route (a) {
+      this.$router.push(`photoseries/${a}`)
     },
     initCurtains () {
       this.curtains = new Curtains({
@@ -71,12 +72,8 @@ export default {
       const plane = this.planes[i]
       plane.onReady(() => {
         plane.htmlElement.addEventListener('click', () => this.toFullscreen(i))
-        plane.htmlElement.addEventListener('mousemove', e =>
-          this.mouseEv(e, i)
-        )
-        plane.htmlElement.addEventListener('touchmove', e =>
-          this.mouseEv(e, i)
-        )
+        plane.htmlElement.addEventListener('mousemove', e => this.mouseEv(e, i))
+        plane.htmlElement.addEventListener('touchmove', e => this.mouseEv(e, i))
       })
     },
     getUnifors (i) {
@@ -110,22 +107,15 @@ export default {
       plane.uniforms.uResolution.value = [xNormalized, yNormalized]
     },
     mouseEv (e, i) {
-      console.log(e)
+      // console.log(e)
       const plane = this.planes[i]
       const rectPlane = plane.getBoundingRect()
       if (e.targetTouches) {
-        this.mouseNormalized.x =
-          (e.targetTouches[0].offsetX / rectPlane.width) *
-          this.curtains.pixelRatio
-        this.mouseNormalized.y =
-          1 -
-          (e.targetTouches[0].offsetY / rectPlane.height) *
-            this.curtains.pixelRatio
+        this.mouseNormalized.x = (e.targetTouches[0].offsetX / rectPlane.width) * this.curtains.pixelRatio
+        this.mouseNormalized.y = 1 - (e.targetTouches[0].offsetY / rectPlane.height) * this.curtains.pixelRatio
       } else {
-        this.mouseNormalized.x =
-          (e.offsetX / rectPlane.width) * this.curtains.pixelRatio
-        this.mouseNormalized.y =
-          1 - (e.offsetY / rectPlane.height) * this.curtains.pixelRatio
+        this.mouseNormalized.x = (e.offsetX / rectPlane.width) * this.curtains.pixelRatio
+        this.mouseNormalized.y = 1 - (e.offsetY / rectPlane.height) * this.curtains.pixelRatio
       }
       plane.uniforms.uMouse.value = [
         this.mouseNormalized.x,
@@ -170,10 +160,10 @@ export default {
         })
       tl.play()
     },
-    e (ev) {
+    updateScroll (event) {
       this.curtains.updateScrollValues(
-        ev.target.scrollTop,
-        ev.target.scrollLeft
+        event.target.scrollTop,
+        event.target.scrollLeft
       )
       for (let i = 0; i < this.$refs.CurtainsPlanes.length; i++) {
         this.curtains.planes[i].updateScrollPosition()
@@ -243,7 +233,7 @@ img {
   /* opacity: 1.3; */
 }
 .plane-image {
-  display: none;
-  opacity: 0.5;
+ // display: none;
+  opacity: 1;
 }
 </style>
