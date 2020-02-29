@@ -1,4 +1,4 @@
-// import imageData from '~/static/data/472base.json'
+import all from '~/static/db/all.json'
 // import photoseries from '~/static/data/photoseries.json'
 
 // imageData.sort(function (a, b) {
@@ -37,7 +37,8 @@ export const state = () => ({
   SeriesAspect: [],
   SeriesFileName: [],
   SeriesSpec: [],
-  Series: {}
+  Series: {},
+  hernya: []
 })
 export const getters = {
   // aspect (ctx) {
@@ -45,12 +46,12 @@ export const getters = {
   // }
 }
 export const mutations = {
+  HERNYA (state, payload) {
+    state.hernya = all.find(el => el.Name === payload)
+  },
   AWS (state, payload) {
     state.aspectJL = payload.map(el => el.Aspect)
     state.nameJL = payload.map(el => el.Name)
-  },
-  FetchSome (state, payload) {
-    state.Fetch = payload
   },
   change_series (state, payload) {
     state.SeriesAspect = payload.Aspect

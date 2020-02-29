@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h1>{{ $store.state.Series.Title }}</h1>
+    <!-- <h1>{{ $store.state.Series.Title }}</h1> -->
+    <h1>{{ $store.state.hernya.Title }}</h1>
     <SeriesLayout />
   </div>
 </template>
@@ -10,8 +11,9 @@ export default {
   components: {
     SeriesLayout: () => import('~/components/series-layout.vue')
   },
-  async fetch ({ store, params }) {
-    await store.dispatch('GET_SERIES', params.Route)
+  fetch ({ store, params }) {
+    // await store.dispatch('GET_SERIES', params.Route)
+    store.commit('HERNYA', params.Route)
   }
   // beforeCreate () {
   //   this.$store.dispatch('GET_SERIES', this.$route.params.Route)

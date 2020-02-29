@@ -20,6 +20,7 @@
     "@nuxtjs/pwa": "^3.0.0-beta.20",
     "animejs": "^3.1.0",
     "curtainsjs": "^5.0.0",
+    "dotenv": "^8.2.0",
     "glslify-loader": "^2.0.0",
     "justified-layout": "^3.0.0",
     "nuxt-start": "^2.11.0",

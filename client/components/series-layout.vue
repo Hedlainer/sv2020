@@ -52,7 +52,8 @@ export default {
   },
   computed: {
     GetjustifiedLayout () {
-      const layout = justifiedLayout(this.$store.state.SeriesAspect, {
+      const map = this.$store.state.hernya.Aspect.map(el => el)
+      const layout = justifiedLayout(map, {
         fullWidthBreakoutRowCadence: 3,
         targetRowHeight: (this.height / 100) * 55,
         containerWidth: this.width,
@@ -68,8 +69,8 @@ export default {
         }
       })
       layout.boxes.forEach((element, index) => {
-        element.SeriesFileName = this.$store.state.Series.ImageName[index]
-        element.SeriesSpec = this.$store.state.Series.Spec[index]
+        element.SeriesFileName = this.$store.state.hernya.ImageName[index]
+        element.SeriesSpec = this.$store.state.hernya.Spec[index]
       })
       return layout
     }

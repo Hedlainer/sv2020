@@ -1,15 +1,10 @@
 <template>
   <main class="wrapper" @mousewheel.passive="changeSpeed">
-    <div class="measure">
-      <div class="m1" />
-      <div class="m2" />
-      <div class="m3" />
-      <div class="dot" />
-    </div>
+    <!-- <img crossorigin="anonymous" :src="`/image/jpg/1024/${gallery[activeTextureIndex]}.jpg`" alt> -->
     <div id="canvas" ref="webgl" />
-    <!-- div used to create our plane -->
     <div ref="plane" class="plane" @click="changeImage">
-      <!-- image that will be used as texture by our plane -->
+      <h1>{{ position }}</h1>
+
       <img crossorigin="anonymous" src="/image/jpg/1024/19-03-02-21-06-25.jpg" alt>
       <img crossorigin="anonymous" src="/image/jpg/1024/19-03-02-13-46-07.jpg" alt>
       <img crossorigin="anonymous" src="/image/jpg/1024/19-03-02-21-55-28.jpg" alt>
@@ -65,12 +60,18 @@ export default {
   },
   methods: {
     changeSpeed ($event) {
-      this.speed += $event.deltaY * 0.00025
+      this.speed += $event.deltaY * 0.0006
     },
     raf () {
+    //   console.log(this.speed)
       this.position += this.speed
-      this.speed *= 0.85
-
+      this.speed *= 0.9
+      if (this.speed < 0.00001) {
+        this.speed = 0
+      }
+      if (this.speed > -0.00001) {
+        this.speed = 0
+      }
       const i = Math.round(this.position)
       const dif = i - this.position
 
@@ -79,12 +80,12 @@ export default {
         this.position = i
       }
 
-      const tl = anime.timeline()
-      tl.add({
-        targets: '.dot',
-        translateY: this.position * 200
-      })
-      this.plane.uniforms.progress.value = this.position
+      //   const tl = anime.timeline()
+      //   tl.add({
+      //     targets: '.dot',
+      //     translateY: this.position * 200
+      //   })
+      //   this.plane.uniforms.progress.value = this.position
 
       this.activeTextureIndex =
         (Math.floor(this.position) - 1 + this.plane.images.length) % this.plane.images.length
@@ -92,14 +93,14 @@ export default {
         (((Math.floor(this.position) + 1) % this.plane.images.length) - 1 + this.plane.images.length) %
         this.plane.images.length
 
-      this.plane.userData.nextTex.setSource(
-        this.plane.images[this.nextTextureIndex]
-      )
-      this.plane.userData.activeTex.setSource(
-        this.plane.images[this.activeTextureIndex]
-      )
+      //   this.plane.userData.nextTex.setSource(
+      //     this.plane.images[this.nextTextureIndex]
+      //   )
+      //   this.plane.userData.activeTex.setSource(
+      //     this.plane.images[this.activeTextureIndex]
+      //   )
 
-      window.requestAnimationFrame(this.raf)
+      requestAnimationFrame(this.raf)
     },
     changeImage () {
       const tl = anime.timeline()
@@ -125,18 +126,27 @@ export default {
           nextTex: this.plane.createTexture('nextTex')
         }
         this.plane.onReady(() => {
-          // we set our very first image as the active texture
-          this.plane.userData.activeTex.setSource(
-            this.plane.images[this.activeTextureIndex]
-          )
-          // we set the second image as next texture but this is not mandatory
-          // as we will reset the next texture on slide change
-          this.plane.userData.nextTex.setSource(
-            this.plane.images[this.nextTextureIndex]
-          )
+        //   this.curtains.disableDrawing()
+          this.setTexture()
+        }).onRender(() => {
+          //   console.log("I'm render")
+          if ((this.position ^ 0) !== this.position) {
+            // console.log(this.curtains)
+            // this.curtains.enableDrawing()
+            this.plane.uniforms.progress.value = this.position
+            this.setTexture()
+          }
         })
+        //   .onLoading(() => console.log("I'm load"))
       }
-      console.log(this.plane.images[this.activeTextureIndex])
+    },
+    setTexture () {
+      this.plane.userData.activeTex.setSource(
+        this.plane.images[this.activeTextureIndex]
+      )
+      this.plane.userData.nextTex.setSource(
+        this.plane.images[this.nextTextureIndex]
+      )
     }
   }
 }
@@ -186,9 +196,9 @@ export default {
   z-index: -1;
 }
 .plane {
-  width: 80%;
-  height: 80vh;
-  margin: 10vh auto;
+  width: 100%;
+  height: 100vh;
+//   margin: 10vh auto;
 }
 .plane img {
     height: 100%;

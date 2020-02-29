@@ -53,16 +53,16 @@ module.exports = {
    ** Nuxt.js dev-modules
    */
   buildModules: [
-    '@nuxtjs/eslint-module',
-    [
-      'nuxt-compress',
-      {
-        brotli: {
-          asset: '[path].br',
-          test: /\.(js|css)$/
-        }
-      }
-    ]
+    // '@nuxtjs/eslint-module',
+    // [
+    //   'nuxt-compress',
+    //   {
+    //     brotli: {
+    //       asset: '[path].br',
+    //       test: /\.(js|css)$/
+    //     }
+    //   }
+    // ]
   ],
 
   eslint: {
@@ -85,6 +85,7 @@ module.exports = {
    ** Build configuration
    */
   build: {
+    // publicPath: 'https://d30t0rgqkaw2x1.cloudfront.net/_nuxt',
     // vendor: [
     //   'curtainsjs',
     //   'animejs/lib/anime.es.js',

@@ -21,8 +21,6 @@ export default {
   data () {
     return {
       photoseries,
-      // scrollX: 0,
-      // scrollY: 0,
       animating: true,
       duration: 1700,
       curtains: null,

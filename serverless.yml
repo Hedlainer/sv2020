@@ -11,7 +11,7 @@ package:
     - ./**
 
   include:
-    - .nuxt/dist/server/**
+    - app/dist/server/**
     - index.js
     - nuxt.js
     - nuxt.config.js
@@ -24,15 +24,6 @@ functions:
     events:
       - http: ANY /
       - http: ANY /{proxy+}
-      - http:
-          path: /static/{proxy+}
-          method: any
-          integration: http-proxy
-          request:
-            uri: https://svobodinaphoto-image.s3.amazonaws.com/{proxy}
-            parameters:
-              paths:
-                proxy: true
 
 plugins:
   # - serverless-apigw-binary
@@ -42,12 +33,12 @@ plugins:
 
 custom:
   s3Sync:
-    # - bucketName: nuxt-dist
-    #   bucketPrefix: image
-    #   localDir: static/image
-    - bucketName: svobodinaphoto
+    - bucketName: svobodinaphotoclient
+      bucketPrefix: db
+      localDir: client/static/db
+    - bucketName: svobodinaphotoclient
       bucketPrefix: _nuxt
-      localDir: .nuxt/dist/client
+      localDir: app/dist/client
       params:
         - "*.br":
             CacheControl: 'public, max-age=31536000, immutable'
