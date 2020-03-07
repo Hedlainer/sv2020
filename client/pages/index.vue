@@ -1,62 +1,105 @@
 <template>
-  <div class="container">
-    <div>
-      <logo />
-      <h1 class="title">
-        SvobodinaPhoto
-      </h1>
-      <h2 class="subtitle">
-        the best photographer ever
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <nuxt-link class="button--green" to="/photoseries">
-          Фотосерии
-        </nuxt-link>
+  <section>
+    <div class="container">
+      <div class="wrapper">
+        <img src="/image/jpg/1920/19-03-02-16-16-38.jpg" alt="">
+      </div>
+      <div class="text">
+        <h2 class="title">
+          До
+        </h2>
+        <p class="subtitle">
+          Первые фотографии на следующий день <br>
+          Все фотографии через 21 день или меньше
+        </p>
+      </div>
+
+      <div>
+        <!-- <nuxt-link class="button--green" to="/photoseries">
+        Фотосерии
+      </nuxt-link> -->
       </div>
     </div>
-  </div>
+    <div class="container">
+      <div class="wrapper">
+        <img src="/image/jpg/1920/19-03-02-16-16-38.jpg" alt="">
+      </div>
+      <div class="text">
+        <h2 class="title">
+          Во время
+        </h2>
+        <p class="subtitle">
+          Первые фотографии на следующий день <br>
+          Все фотографии через 21 день или меньше
+        </p>
+      </div>
+
+      <div>
+        <!-- <nuxt-link class="button--green" to="/photoseries">
+        Фотосерии
+      </nuxt-link> -->
+      </div>
+    </div>
+    <div class="container">
+      <div class="wrapper">
+        <img src="/image/jpg/1920/19-03-02-16-16-38.jpg" alt="">
+      </div>
+      <div class="text">
+        <h2 class="title">
+          После
+        </h2>
+        <p class="subtitle">
+          - Несколько фотографии на следующий день <br>
+          - Качественная, а не "авторская" обработка всех кадров <br>
+          - Все фото меньше, чем за 21 день
+        </p>
+      </div>
+
+      <div>
+        <!-- <nuxt-link class="button--green" to="/photoseries">
+        Фотосерии
+      </nuxt-link> -->
+      </div>
+    </div>
+  </section>
 </template>
 
 <script>
 // import { TweenMax, Power2 } from 'gsap'
-import Logo from '~/components/Logo.vue'
 
 export default {
-  transition: {
-    name: 'bounce',
-    mode: 'in-out'
-  },
-  components: {
-    Logo
-  }
+
 }
 </script>
 
 <style>
-.bounce-enter, .bounce-leave-to{
-  transform: translateY(-100%);
+.wrapper img{
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
 }
-/* .bounce-enter-to, .bounce-leave{
-  transform: translateY(100%);
-} */
-.bounce-enter-active, .bounce-leave-active {
-  transition: all 1s ease;
+.wrapper{
+  position: absolute;
+  top: 10vh;
+  left:10vw;
+  width: 80%;
+  height: 80vh;
 }
-
+.text{
+  position: absolute;
+  width: 50vw;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(5, 5, 5, 0.711);
+  padding: 20px;
+    overflow: hidden;
+  border-radius: 6px;
+}
 .container {
-  margin: 0 auto;
+  position: relative;
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+  width: 100%;
 }
 
 .title {
@@ -65,14 +108,14 @@ export default {
   display: block;
   font-weight: 300;
   font-size: 100px;
-  color: #35495e;
+  color:#03a9f4;
   letter-spacing: 1px;
 }
 
 .subtitle {
   font-weight: 300;
   font-size: 42px;
-  color: #526488;
+  color: #ffffff;
   word-spacing: 5px;
   padding-bottom: 15px;
 }

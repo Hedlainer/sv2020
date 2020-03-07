@@ -6,6 +6,8 @@
       once: true
     }"
     class="lazy"
+    :style="{ boxShadow: `inset 0px 0px 0px 1px ${color}`,
+              backgroundColor: hex2rgba(color, .3) }"
   >
     <div class="fixed">
       <picture v-if="false" class="fullscreen">
@@ -23,7 +25,7 @@
         >
       </picture>
     </div>
-    <transition name="fade" :css="true">
+    <!-- <transition name="fade" :css="true">
       <picture v-if="isVisible&phVisible" class="lazy__ph">
         <source
           type="image/webp"
@@ -38,7 +40,7 @@
           alt="SvobodinaPhoto"
         >
       </picture>
-    </transition>
+    </transition> -->
     <picture v-if="isVisible" class="lazy__original" :style="{opacity: opacity}">
       <source
         type="image/webp"
@@ -58,6 +60,8 @@
 </template>
 
 <script>
+// :style="{box-shadow: `inset 0px 0px 0px 1px #03a9f4`};"
+
 export default {
   props: {
     file: {
@@ -71,6 +75,10 @@ export default {
     fullwidth: {
       required: true,
       type: Number
+    },
+    color: {
+      required: true,
+      type: String
     }
   },
   data () {
@@ -116,6 +124,10 @@ export default {
     imageLoad () {
       this.phVisible = false
     },
+    hex2rgba (hex, alpha = 1) {
+      const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16))
+      return `rgba(${r},${g},${b},${alpha})`
+    },
     visibilityChanged (isVisible) {
       this.isVisible = isVisible
     }
@@ -136,7 +148,8 @@ export default {
   overflow: hidden;
   width: 100%;
   height: 100%;
-
+  border-radius: 4px;
+  transition: transform 1s;
   &>* {
     position: absolute;
     top: 0;

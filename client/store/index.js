@@ -1,4 +1,4 @@
-import all from '~/static/db/all.json'
+// import all from '~/static/db/all.json'
 // import photoseries from '~/static/data/photoseries.json'
 
 // imageData.sort(function (a, b) {
@@ -47,16 +47,16 @@ export const getters = {
 }
 export const mutations = {
   HERNYA (state, payload) {
-    state.hernya = all.find(el => el.Name === payload)
+    // state.hernya = all.find(el => el.Name === payload)
   },
   AWS (state, payload) {
     state.aspectJL = payload.map(el => el.Aspect)
     state.nameJL = payload.map(el => el.Name)
   },
   change_series (state, payload) {
-    state.SeriesAspect = payload.Aspect
-    state.SeriesFileName = payload.ImageName
-    state.SeriesSpec = payload.Spec
+    // state.SeriesAspect = payload.Aspect
+    // state.SeriesFileName = payload.ImageName
+    // state.SeriesSpec = payload.Spec
     state.Series = payload
   }
 }

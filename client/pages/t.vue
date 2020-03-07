@@ -12,9 +12,8 @@
         :file="image.SeriesFileName"
         :width="image.width"
         :fullwidth="width"
-        :color="image.SeriesSpec.Color"
+        :color="image.Color"
       />
-      <ParamsPhoto :spec="image.SeriesSpec" />
     </div>
   </div>
 </template>
@@ -22,6 +21,7 @@
 <script>
 import debounce from 'lodash/debounce'
 import justifiedLayout from 'justified-layout'
+import photoseries from '~/static/db/Photoseries.json'
 let width, height, widthContainer
 if (process.browser) {
   height = window.innerHeight
@@ -35,8 +35,7 @@ if (process.browser) {
 
 export default {
   components: {
-    lazyPicture: () => import('~/components/lazy-picture.vue'),
-    ParamsPhoto: () => import('~/components/params-photo.vue')
+    lazyPicture: () => import('~/components/lazy-picture.vue')
   },
   // props: {
   //   objectName: {
@@ -46,6 +45,7 @@ export default {
   // },
   data () {
     return {
+      photoseries,
       width,
       height,
       widthContainer
@@ -53,13 +53,13 @@ export default {
   },
   computed: {
     GetjustifiedLayout () {
-      const aspect = this.$store.state.Series.Aspect.map(el => el)
+      const aspect = this.photoseries.map(el => el.Aspect)
       const layout = justifiedLayout(aspect, {
         fullWidthBreakoutRowCadence: 3,
-        targetRowHeight: (this.height / 100) * 55,
-        containerWidth: this.width,
+        targetRowHeight: (this.height / 100) * 65,
+        // containerWidth: this.width,
         containerPadding: {
-          top: 10,
+          top: 100,
           right: this.widthContainer,
           bottom: 100,
           left: this.widthContainer
@@ -70,8 +70,10 @@ export default {
         }
       })
       layout.boxes.forEach((element, index) => {
-        element.SeriesFileName = this.$store.state.Series.ImageName[index]
-        element.SeriesSpec = this.$store.state.Series.Spec[index]
+        const FileName = this.photoseries.map(el => el.FileName)
+        const Color = this.photoseries.map(el => el.Color)
+        element.SeriesFileName = FileName[index]
+        element.Color = Color[index]
       })
       return layout
     }
@@ -85,15 +87,15 @@ export default {
 
   methods: {
     layoutStyle (image) {
-      const plusOrMinus = Math.random() < 0.5 ? -1 : 1
-      const coefWidth = Math.floor(Math.random() * this.width * 0.019 * plusOrMinus)
-      const coefHeight = Math.floor(Math.random() * this.height * 0.03 * plusOrMinus)
+      // const plusOrMinus = Math.random() < 0.5 ? -1 : 1
+      // const coefWidth = Math.floor(Math.random() * this.width * 0.019 * plusOrMinus)
+      // const coefHeight = Math.floor(Math.random() * this.height * 0.03 * plusOrMinus)
       return {
         left: `${image.left}px`,
         top: `${image.top}px`,
         width: `${image.width}px`,
-        height: `${image.height}px`,
-        transform: `translate(${coefWidth}px, ${coefHeight}px)`
+        height: `${image.height}px`
+        // transform: `translate(${coefWidth}px, ${coefHeight}px)`
       }
     },
     resize () {
@@ -111,14 +113,16 @@ export default {
 
 <style lang="scss" scoped>
 .gallery {
-  position: relative;
-  height: auto;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  width: auto;
+  align-items:center;
 }
 .image_wrap {
-  position: absolute;
-  // overflow: hidden;
-  // border-radius: 4px;
+  align-self: center;
+  // position: absolute;
   transition: transform 1s;
-  // box-shadow: inset 0px 0px 0px 1px #03a9f4;
 }
 </style>

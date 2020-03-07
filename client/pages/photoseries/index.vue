@@ -43,7 +43,7 @@ export default {
     }
   },
   mounted () {
-    // this.resize()
+    console.log(this.photoseries.map(el => el.Aspect))
   },
   beforeMount () {
     window.addEventListener('resize', this.resize)
@@ -113,7 +113,6 @@ export default {
     position: absolute;
     &__img {
       display: block;
-      box-shadow: inset 0px 0px 0px 1px #03a9f4;
       border-radius: 3px;
       &:nth-child(odd) {
         width: calc(33vh * 1.5);

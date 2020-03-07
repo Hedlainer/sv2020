@@ -7,7 +7,7 @@
         @mouseenter="$emit('color', objectName.Color)"
       />
     </nuxt-link>
-    <lazyPicture class="photoseries__wrapper" :file="objectName.FileName" :width="720" :fullwidth="width" />
+    <lazyPicture class="photoseries__wrapper" :color="objectName.Color" :file="objectName.FileName" :width="720" :fullwidth="width" />
     <transition name="fade">
       <div v-if="show" class="name__wrapper" :style="{transform: `translateY(${moveY-30}px)`}">
         <h2>{{ objectName.Name }}</h2>

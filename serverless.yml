@@ -1,4 +1,4 @@
-service: svobodinaphoto
+service: sv2020
 
 provider:
   name: aws
@@ -33,10 +33,10 @@ plugins:
 
 custom:
   s3Sync:
-    - bucketName: svobodinaphotoclient
+    - bucketName: svobodinaphoto
       bucketPrefix: db
       localDir: client/static/db
-    - bucketName: svobodinaphotoclient
+    - bucketName: svobodinaphoto
       bucketPrefix: _nuxt
       localDir: app/dist/client
       params:

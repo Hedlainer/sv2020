@@ -21,7 +21,10 @@
               "node": "current"
             }
           }
-        ]
+        ],
+        ["env", {
+          "modules": false
+        }]
       ]
     }
   }

@@ -5,7 +5,7 @@
     <main class="seriya__wrapper" @scroll.passive="updateScroll">
       <div v-for="seriya in photoseries" ref="CurtainsPlanes" :key="seriya.Id" class="seriya__container">
         <!-- <h2 style="color:white">{{seriya.Name}}</h2> -->
-        <img class="plane-image" crossorigin="use-credentials" :src="`/image/jpg/720/${seriya.FileName}.jpg`" @click="route(seriya.Route)">
+        <img class="plane-image" crossorigin="use-credentials" :src="`/image/jpg/720/${seriya.FileName}.jpg`">
         <img class="plane-image" crossorigin="use-credentials" :src="`/image/jpg/1920/${seriya.FileName}.jpg`">
       </div>
     </main>
@@ -50,9 +50,9 @@ export default {
     // console.log(this.curtains.planes[0])
   },
   methods: {
-    route (a) {
-      this.$router.push(`photoseries/${a}`)
-    },
+    // route (a) {
+    //   this.$router.push(`photoseries/${a}`)
+    // },
     initCurtains () {
       this.curtains = new Curtains({
         container: this.$refs.webgl,

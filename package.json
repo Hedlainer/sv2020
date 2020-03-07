@@ -16,6 +16,7 @@
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore ."
   },
   "dependencies": {
+    "@glidejs/glide": "^3.4.1",
     "@nuxtjs/axios": "^5.9.5",
     "@nuxtjs/pwa": "^3.0.0-beta.20",
     "animejs": "^3.1.0",
@@ -31,17 +32,10 @@
     "sqip-plugin-data-uri": "^1.0.0-alpha.32",
     "sqip-plugin-primitive": "^1.0.0-alpha.33",
     "sqip-plugin-svgo": "^1.0.0-alpha.32",
+    "vue-glide": "^0.4.0",
     "vue-observe-visibility": "^0.4.6"
   },
   "devDependencies": {
-    "lqip": "^2.1.0",
-    "fastify": "^2.12.0",
-    "nuxt": "^2.11.0",
-    "vue-fragment": "^1.5.1",
-    "serverless-s3-sync": "^1.10.3",
-    "serverless-offline": "^5.12.1",
-    "nuxt-compress": "^1.1.0",
-    "typescript": "^3.7.5",
     "@babel/core": "^7.8.4",
     "@nuxtjs/eslint-config": "^2.0.2",
     "@nuxtjs/eslint-module": "^1.1.0",
@@ -52,8 +46,16 @@
     "cross-env": "^7.0.0",
     "eslint": "^6.8.0",
     "eslint-plugin-nuxt": ">=0.5.1",
+    "fastify": "^2.12.0",
+    "lqip": "^2.1.0",
     "node-sass": "^4.13.1",
     "nodemon": "^2.0.2",
-    "sass-loader": "^8.0.2"
+    "nuxt": "^2.11.0",
+    "nuxt-compress": "^1.1.0",
+    "sass-loader": "^8.0.2",
+    "serverless-offline": "^5.12.1",
+    "serverless-s3-sync": "^1.10.3",
+    "typescript": "^3.7.5",
+    "vue-fragment": "^1.5.1"
   }
 }
