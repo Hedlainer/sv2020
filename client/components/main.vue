@@ -1,45 +1,49 @@
 <template>
   <div>
-    <div class="review">
+    <div
+      v-for="m in main"
+      :key="m.id"
+      class="review"
+    >
       <div class="image__holder">
-        <img :src="`/${counter}.jpg`" alt>
+        <img alt="" src="/image/jpg/1920/19-03-02-16-16-38.jpg" />
       </div>
       <div class="name__holder">
         <h3 class="review__name">
-          {{ reviews[counter].Title }}
+          {{ m.Title }}
         </h3>
       </div>
       <div class="review__holder">
-        <p class="review__body">
-          {{ reviews[counter].Subtitle }}
-        </p>
+        <!-- eslint-disable-next-line vue/singleline-html-element-content-newline -->
+        <p class="review__body">{{ m.Subtitle }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import reviews from '~/static/data/main.json'
+import main from '~/static/db/main.json'
 export default {
   data () {
     return {
-      reviews,
-      counter: 1
+      main,
+      c: 1
     }
   },
   computed: {
-    randomReviews () {
-      const counter = Math.floor(this.reviews.length * Math.random())
-      return this.reviews[counter]
+    randommain () {
+      const c = Math.floor(this.main.length * Math.random())
+      // eslint-disable-next-line security/detect-object-injection
+      return this.main[c]
     }
   },
   mounted () {
-    this.rReviews()
+    this.rmain()
   },
   methods: {
-    rReviews () {
+    rmain () {
       setInterval(() => {
-        this.counter = Math.floor(this.reviews.length * Math.random())
+        this.c = Math.floor(this.main.length * Math.random())
       }, 12000)
     }
   }
@@ -61,51 +65,43 @@ export default {
   left: 10%;
   width: 80%;
   height: 80vh;
-  & > img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-    object-position: 50% 50%;
-  }
 }
 .review {
   position: relative;
   height: 100vh;
   width: 100%;
-  max-width: 100%;
   margin-left: auto;
   margin-right: auto;
   &__name {
+    text-shadow: white 1px 1px 0;
+    font-family: Roboto, sans-serif;
     margin: 0;
-    font-size: 20vw;
-    line-height: 20vw;
+    font-size: 120px;
+    line-height: 120px;
     font-weight: 700;
     color: #03a9f4;
-    opacity: 0.2;
+    opacity: 0.3;
   }
   &__body {
-    font-weight: 200;
+    font-family: Roboto, sans-serif;
+    font-weight: 300;
     color: white;
-    margin: 0;
-    padding: 5px;
+    padding: 15px;
     font-size: 26px;
-    white-space: pre-wrap;
     background-color: rgba(0, 0, 0, 0.705);
   }
   &__holder {
+    white-space: pre-wrap;
     display: flex;
     align-items: flex-end;
     position: absolute;
     border-color: #03a9f4;
-    /* border-style: solid; */
-    /* border-width: 1px; */
     border-radius: 5px;
-    /* background-color: #fff; */
-    width: 40%;
+    width: 55%;
     height: auto;
     overflow-y: auto;
-    bottom: 0;
-    right: 0;
+    bottom: 2%;
+    right: 2%;
   }
 }
 .name__holder {
@@ -115,7 +111,7 @@ export default {
   width: 80vw;
   overflow: hidden;
   left: 2%;
-  top: -14vw;
+  top: 2%;
 }
 p {
   margin-block-start: 0;

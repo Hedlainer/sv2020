@@ -9,88 +9,69 @@
     :style="{ boxShadow: `inset 0px 0px 0px 1px ${color}`,
               backgroundColor: hex2rgba(color, .3) }"
   >
-    <div class="fixed">
-      <picture v-if="false" class="fullscreen">
-        <source
-          type="image/webp"
-          :srcset="`/image/webp/${setWidth}/${file}.webp`"
-        >
-        <source
-          type="image/jpg"
-          :srcset="`/image/jpg/${setWidth}/${file}.jpg`"
-        >
-        <img
-          :src="`/image/jpg/${setWidth}/${file}.jpg`"
-          alt="SvobodinaPhoto"
-        >
-      </picture>
-    </div>
-    <!-- <transition name="fade" :css="true">
-      <picture v-if="isVisible&phVisible" class="lazy__ph">
-        <source
-          type="image/webp"
-          :srcset="`/image/webp/10/${file}.webp`"
-        >
-        <source
-          type="image/jpg"
-          :srcset="`/image/jpg/10/${file}.jpg`"
-        >
-        <img
-          :src="`/image/jpg/10/${file}.jpg`"
-          alt="SvobodinaPhoto"
-        >
-      </picture>
-    </transition> -->
-    <picture v-if="isVisible" class="lazy__original" :style="{opacity: opacity}">
+    <picture
+      v-if="isVisible"
+      class="lazy__original"
+    >
       <source
+        :srcset="`/image/webp/${ImageSize}/${file}.webp`"
         type="image/webp"
-        :srcset="`/image/webp/${size}/${file}.webp`"
-      >
+      />
       <source
+        :srcset="`/image/jpg/${ImageSize}/${file}.jpg`"
         type="image/jpg"
-        :srcset="`/image/jpg/${size}/${file}.jpg`"
-      >
+      />
       <img
-        :src="`/image/jpg/${size}/${file}.jpg`"
+        ref="img"
         alt="SvobodinaPhoto"
-        @load="imageLoad"
-      >
+        crossorigin="anonimous"
+        :src="`/image/jpg/${ImageSize}/${file}.jpg`"
+      />
+    </picture>
+    <picture v-if="fullScreen&isVisible" class="lazy__fullscreen">
+      <source
+        :srcset="`/image/webp/${FullSize}/${file}.webp`"
+        type="image/webp"
+      />
+      <source
+        :srcset="`/image/jpg/${FullSize}/${file}.jpg`"
+        type="image/jpg"
+      />
+      <img
+        alt="SvobodinaPhoto"
+        crossorigin="anonimous"
+        :src="`/image/jpg/${FullSize}/${file}.jpg`"
+      />
     </picture>
   </div>
 </template>
 
 <script>
-// :style="{box-shadow: `inset 0px 0px 0px 1px #03a9f4`};"
-
+let width, height
+if (process.browser) {
+  height = window.innerHeight
+  width = window.innerWidth
+}
 export default {
   props: {
-    file: {
-      required: true,
-      type: String
-    },
-    width: {
-      required: true,
-      type: Number
-    },
-    fullwidth: {
-      required: true,
-      type: Number
-    },
-    color: {
-      required: true,
-      type: String
-    }
+    fullScreen: { type: Boolean, default: false },
+    file: { required: true, type: String },
+    width: { required: true, type: Number },
+    k: { default: 0, type: Number },
+    color: { required: true, type: String }
   },
   data () {
     return {
+      height,
+      fullwidth: width,
       phVisible: true,
       opacity: 1,
       isVisible: false
     }
   },
   computed: {
-    size () {
-      const size =
+    ImageSize () {
+      const ImageSize =
         this.width < 480
           ? 480
           : this.width < 720
@@ -102,10 +83,10 @@ export default {
                 : this.width < 1920
                   ? 1920
                   : 2560
-      return size
+      return ImageSize
     },
-    setWidth () {
-      const setWidth =
+    FullSize () {
+      const FullSize =
         this.fullwidth < 480
           ? 480
           : this.fullwidth < 720
@@ -117,17 +98,31 @@ export default {
                 : this.fullwidth < 1920
                   ? 1920
                   : 2560
-      return setWidth
+      return FullSize
     }
   },
+  mounted () {
+    // const ii = this.$refs.img
+    // ii.decode()
+    // .then(() => {
+    //   // this.$emit('myEvent')
+    console.log('ii')
+    // })
+    // if (this.smalloded & this.bigloaded) {
+    //   this.$emit('allloaded', this.k)
+    // };
+  },
   methods: {
-    imageLoad () {
-      this.phVisible = false
-    },
     hex2rgba (hex, alpha = 1) {
       const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16))
       return `rgba(${r},${g},${b},${alpha})`
     },
+    allImageLoaded () {
+      if (this.smalloded & this.bigloaded) {
+        this.$emit('allloaded', this.k)
+      }
+    },
+
     visibilityChanged (isVisible) {
       this.isVisible = isVisible
     }
@@ -150,38 +145,18 @@ export default {
   height: 100%;
   border-radius: 4px;
   transition: transform 1s;
-  &>* {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-    object-position: 50% 50%;
-  }
-
-  &__original {
-    transition: opacity 0.3s linear;
-    z-index: 1;
-
-    &>img {
-      height: 100%;
-      width: 100%;
-      object-fit: cover;
-      object-position: 50% 50%;
-    }
-  }
-
-  &__ph {
-    filter: blur(5px);
-    z-index: 0;
-    &>img {
-      height: 100%;
-      width: 100%;
-      object-fit: cover;
-      object-position: 50% 50%;
-    }
-  }
+}
+img {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
 }
 
+.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
 </style>

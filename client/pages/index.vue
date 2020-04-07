@@ -1,74 +1,14 @@
 <template>
-  <section>
-    <div class="container">
-      <div class="wrapper">
-        <img src="/image/jpg/1920/19-03-02-16-16-38.jpg" alt="">
-      </div>
-      <div class="text">
-        <h2 class="title">
-          До
-        </h2>
-        <p class="subtitle">
-          Первые фотографии на следующий день <br>
-          Все фотографии через 21 день или меньше
-        </p>
-      </div>
-
-      <div>
-        <!-- <nuxt-link class="button--green" to="/photoseries">
-        Фотосерии
-      </nuxt-link> -->
-      </div>
-    </div>
-    <div class="container">
-      <div class="wrapper">
-        <img src="/image/jpg/1920/19-03-02-16-16-38.jpg" alt="">
-      </div>
-      <div class="text">
-        <h2 class="title">
-          Во время
-        </h2>
-        <p class="subtitle">
-          Первые фотографии на следующий день <br>
-          Все фотографии через 21 день или меньше
-        </p>
-      </div>
-
-      <div>
-        <!-- <nuxt-link class="button--green" to="/photoseries">
-        Фотосерии
-      </nuxt-link> -->
-      </div>
-    </div>
-    <div class="container">
-      <div class="wrapper">
-        <img src="/image/jpg/1920/19-03-02-16-16-38.jpg" alt="">
-      </div>
-      <div class="text">
-        <h2 class="title">
-          После
-        </h2>
-        <p class="subtitle">
-          - Несколько фотографии на следующий день <br>
-          - Качественная, а не "авторская" обработка всех кадров <br>
-          - Все фото меньше, чем за 21 день
-        </p>
-      </div>
-
-      <div>
-        <!-- <nuxt-link class="button--green" to="/photoseries">
-        Фотосерии
-      </nuxt-link> -->
-      </div>
-    </div>
-  </section>
+  <mainz />
 </template>
 
 <script>
 // import { TweenMax, Power2 } from 'gsap'
 
 export default {
-
+  components: {
+    mainz: () => import('~/components/main.vue')
+  }
 }
 </script>
 

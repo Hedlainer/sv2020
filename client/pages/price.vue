@@ -1,9 +1,13 @@
 <template>
-  <div ref="container" class="wrap" @mousewheel="horscroll">
+  <div
+    ref="container"
+    class="wrap"
+    @mousewheel="horscroll"
+  >
     <div
-      :style="{ transform: `translateX(${sc}px)`}"
       class="container"
-    />
+      :style="{ transform: `translateX(${sc}px)`}"
+    ></div>
   </div>
 </template>
 

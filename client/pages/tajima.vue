@@ -2,13 +2,13 @@
   <section class="qqq" @mousewheel.passive="changeSpeed">
     <!-- <h1>{{speed}}</h1> -->
     <div class="holder">
-      <img :src="`/image/jpg/1024/${gallery[pos]}.jpg`" alt="">
+      <img alt="" :src="`/image/jpg/1024/${gallery[pos]}.jpg`" />
     </div>
     <div class="measure">
-      <div class="m1" />
-      <div class="m2" />
-      <div class="m3" />
-      <div class="dot" />
+      <div class="m1"></div>
+      <div class="m2"></div>
+      <div class="m3"></div>
+      <div class="dot"></div>
     </div>
   </section>
 </template>
@@ -113,9 +113,9 @@ export default {
 .holder{
     height: 100vh;
 }
-.qqq {
-  /* height: 300vh; */
-}
+// .qqq {
+//   /* height: 300vh; */
+// }
 .measure {
   position: fixed;
   z-index: 1000;

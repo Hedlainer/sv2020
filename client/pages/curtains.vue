@@ -1,11 +1,16 @@
 <template>
   <div class="page">
-    <div id="webgl" ref="webgl" />
+    <div id="webgl" ref="webgl"></div>
     <main class="seriya__wrapper" @scroll="e">
-      <div v-for="seriya in photoseries" ref="vforest" :key="seriya.ID" class="seriya__container">
+      <div
+        v-for="seriya in photoseries"
+        :key="seriya.ID"
+        ref="vforest"
+        class="seriya__container"
+      >
         <!-- <h2 style="color:white">{{seriya.Name}}</h2> -->
-        <img crossorigin="use-credentials" :src="`/img/${seriya.Id}.jpg`">
-        <img crossorigin="use-credentials" :src="`/img/${seriya.Id}.jpg`">
+        <img crossorigin="use-credentials" :src="`/img/${seriya.Id}.jpg`" />
+        <img crossorigin="use-credentials" :src="`/img/${seriya.Id}.jpg`" />
       </div>
     </main>
   </div>
@@ -52,7 +57,9 @@ export default {
     }
     curtains.updateScrollValues(this.scrollX, this.scrollY)
     // curtains.disableDrawing();
+    // eslint-disable-next-line no-loops/no-loops
     for (let i = 0; i < this.$refs.vforest.length; i++) {
+      // eslint-disable-next-line security/detect-object-injection
       const plane = curtains.addPlane(this.$refs.vforest[i], params)
       plane.onReady(() => {
         plane.updateScrollPosition()
@@ -162,7 +169,7 @@ export default {
     e (ev) {
       this.scrollX = ev.target.scrollLeft
       this.scrollY = ev.target.scrollTop
-      console.log(ev.target.scrollTop, ev.target.scrollLeft)
+      // console.log(ev.target.scrollTop, ev.target.scrollLeft)
     }
   }
 }

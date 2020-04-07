@@ -9,10 +9,10 @@
       :style="layoutStyle (image)"
     >
       <lazyPicture
-        :file="image.SeriesFileName"
-        :width="image.width"
-        :fullwidth="width"
         :color="image.Color"
+        :file="image.SeriesFileName"
+        :fullwidth="width"
+        :width="image.width"
       />
     </div>
   </div>
@@ -72,7 +72,9 @@ export default {
       layout.boxes.forEach((element, index) => {
         const FileName = this.photoseries.map(el => el.FileName)
         const Color = this.photoseries.map(el => el.Color)
+        // eslint-disable-next-line security/detect-object-injection
         element.SeriesFileName = FileName[index]
+        // eslint-disable-next-line security/detect-object-injection
         element.Color = Color[index]
       })
       return layout

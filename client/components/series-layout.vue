@@ -2,24 +2,20 @@
   <div
     class="gallery"
   >
-    <div
+    <adaptivePicture
       v-for="image in GetjustifiedLayout.boxes"
       :key="image.name"
       class="image_wrap"
+      :color="image.SeriesSpec.Color"
+      :file="image.SeriesFileName"
       :style="layoutStyle (image)"
-    >
-      <lazyPicture
-        :file="image.SeriesFileName"
-        :width="image.width"
-        :fullwidth="width"
-        :color="image.SeriesSpec.Color"
-      />
-      <ParamsPhoto :spec="image.SeriesSpec" />
-    </div>
+      :width="image.width"
+    />
   </div>
 </template>
 
 <script>
+/* eslint-disable security/detect-object-injection */
 import debounce from 'lodash/debounce'
 import justifiedLayout from 'justified-layout'
 let width, height, widthContainer
@@ -35,8 +31,10 @@ if (process.browser) {
 
 export default {
   components: {
+    // eslint-disable-next-line vue/no-unused-components
     lazyPicture: () => import('~/components/lazy-picture.vue'),
-    ParamsPhoto: () => import('~/components/params-photo.vue')
+    adaptivePicture: () => import('~/components/adaptive-picture.vue')
+    // ParamsPhoto: () => import('~/components/params-photo.vue')
   },
   // props: {
   //   objectName: {
@@ -114,11 +112,11 @@ export default {
   position: relative;
   height: auto;
 }
-.image_wrap {
-  position: absolute;
-  // overflow: hidden;
-  // border-radius: 4px;
-  transition: transform 1s;
-  // box-shadow: inset 0px 0px 0px 1px #03a9f4;
-}
+// .image_wrap {
+//   position: absolute;
+//   // overflow: hidden;
+//   // border-radius: 4px;
+//   transition: transform 1s;
+//   // box-shadow: inset 0px 0px 0px 1px #03a9f4;
+// }
 </style>

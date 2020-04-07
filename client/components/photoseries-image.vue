@@ -1,15 +1,29 @@
 <template>
-  <div class="photoseries__container" @mousemove="show = $event.isTrusted" @mouseleave="show = false">
+  <div
+    class="photoseries__container"
+    @mouseleave="show = false"
+    @mousemove="show = $event.isTrusted"
+  >
     <nuxt-link :to="`photoseries/${objectName.Route}`">
       <span
         class="photoseries__transparent"
-        @mousemove="moveY = $event.offsetY"
         @mouseenter="$emit('color', objectName.Color)"
-      />
+        @mousemove="moveY = $event.offsetY"
+      ></span>
     </nuxt-link>
-    <lazyPicture class="photoseries__wrapper" :color="objectName.Color" :file="objectName.FileName" :width="720" :fullwidth="width" />
+    <lazyPicture
+      class="photoseries__wrapper"
+      :color="objectName.Color"
+      :file="objectName.FileName"
+      :fullwidth="width"
+      :width="720"
+    />
     <transition name="fade">
-      <div v-if="show" class="name__wrapper" :style="{transform: `translateY(${moveY-30}px)`}">
+      <div
+        v-if="show"
+        class="name__wrapper"
+        :style="{transform: `translateY(${moveY-30}px)`}"
+      >
         <h2>{{ objectName.Name }}</h2>
       </div>
     </transition>

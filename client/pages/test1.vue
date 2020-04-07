@@ -1,25 +1,85 @@
 <template>
   <div class="page">
-    <div id="webgl" ref="webgl" />
-    <!-- <div id="fixed"></div> -->
+    <div id="webgl" ref="webgl"></div>
     <main class="seriya__wrapper" @scroll.passive="updateScroll">
-      <div v-for="seriya in photoseries" ref="CurtainsPlanes" :key="seriya.Id" class="seriya__container">
-        <!-- <h2 style="color:white">{{seriya.Name}}</h2> -->
-        <img class="plane-image" crossorigin="use-credentials" :src="`/image/jpg/720/${seriya.FileName}.jpg`">
-        <img class="plane-image" crossorigin="use-credentials" :src="`/image/jpg/1920/${seriya.FileName}.jpg`">
-      </div>
+      <!-- <div
+        v-for="seriya in photoseries"
+        :key="seriya.Id"
+        ref="CurtainsPlanes"
+        class="seriya__container"
+      > -->
+      <!-- <picture class="plane-image">
+          <source
+            :srcset="`/image/webp/720/${seriya.FileName}.webp`"
+            type="image/webp"
+          />
+          <source
+            :srcset="`/image/jpg/720/${seriya.FileName}.jpg`"
+            type="image/jpg"
+          />
+          <img
+            alt="SvobodinaPhoto"
+            crossorigin="use-credentials"
+            :src="`/image/jpg/720/${seriya.FileName}.jpg`"
+          />
+        </picture>
+        <picture class="plane-image">
+          <source
+            :srcset="`/image/webp/1920/${seriya.FileName}.webp`"
+            type="image/webp"
+          />
+          <source
+            :srcset="`/image/jpg/1920/${seriya.FileName}.jpg`"
+            type="image/jpg"
+          />
+          <img
+            alt="SvobodinaPhoto"
+            crossorigin="use-credentials"
+            :src="`/image/jpg/1920/${seriya.FileName}.jpg`"
+          />
+        </picture> -->
+      <lazyPicture
+        v-for="seriya in photoseries"
+        :key="seriya.Id"
+        ref="CurtainsPlanes"
+        class="seriya__container"
+        :color="seriya.Color"
+        :file="seriya.FileName"
+        :full-screen="true"
+        :k="seriya.Id"
+        :width="710"
+      />
+
+      <!-- <img
+            class="plane-image"
+            crossorigin="use-credentials"
+            :src="`/image/jpg/720/${seriya.FileName}.jpg`"
+          /> -->
+      <!-- <img
+          class="plane-image"
+          crossorigin="use-credentials"
+          :src="`/image/jpg/1920/${seriya.FileName}.jpg`"
+        /> -->
+      <!-- </picture> -->
+      <!-- </div> -->
     </main>
   </div>
 </template>
 
 <script>
 import { Curtains } from 'curtainsjs'
+import lazyPicture from '~/components/lazy-picture.vue'
 import anime from 'animejs/lib/anime.es.js'
 import photoseries from '~/static/db/Photoseries.json'
 import { vertex, fragment } from '~/assets/shader3.js'
 export default {
+  components: {
+    lazyPicture
+  },
   data () {
     return {
+      fullloaded: null,
+      smalloaded: null,
       photoseries,
       animating: true,
       duration: 1700,
@@ -47,9 +107,13 @@ export default {
   },
   mounted () {
     this.initCurtains()
-    // console.log(this.curtains.planes[0])
+    console.log(this.planes)
+    console.log(this.$refs.CurtainsPlanes[3])
   },
   methods: {
+    doSome (i) {
+      return i
+    },
     // route (a) {
     //   this.$router.push(`photoseries/${a}`)
     // },
@@ -59,22 +123,32 @@ export default {
         pixelRatio: window.devicePixelRatio,
         watchScroll: false
       })
-      for (let i = 0; i < this.$refs.CurtainsPlanes.length; i++) {
-        this.planes.push(
-          this.curtains.addPlane(this.$refs.CurtainsPlanes[i], this.params)
-        )
-        this.handlePlanes(i)
-      }
+      // const planeElements = this.$refs.CurtainsPlanes
+      this.$nextTick(() => {
+      // eslint-disable-next-line no-loops/no-loops
+        for (let i = 0; i < this.$refs.CurtainsPlanes.length; i++) {
+          // eslint-disable-next-line security/detect-object-injection
+          const plane = this.curtains.addPlane(this.$refs.CurtainsPlanes[i].$el, this.params)
+          plane._canDraw = false
+          plane && plane.onLoading(() => {
+            this.planes.push(plane)
+            this.handlePlanes(i)
+          })
+        }
+      })
     },
     handlePlanes (i) {
+      // eslint-disable-next-line security/detect-object-injection
       const plane = this.planes[i]
       plane.onReady(() => {
+        this.curtains.enableDrawing()
         plane.htmlElement.addEventListener('click', () => this.toFullscreen(i))
         plane.htmlElement.addEventListener('mousemove', e => this.mouseEv(e, i))
         plane.htmlElement.addEventListener('touchmove', e => this.mouseEv(e, i))
       })
     },
     getUnifors (i) {
+      // eslint-disable-next-line security/detect-object-injection
       const plane = this.planes[i]
       const rectPlane = plane.getBoundingRect()
       // ширина плана в условных еденицах
@@ -106,6 +180,7 @@ export default {
     },
     mouseEv (e, i) {
       // console.log(e)
+      // eslint-disable-next-line security/detect-object-injection
       const plane = this.planes[i]
       const rectPlane = plane.getBoundingRect()
       if (e.targetTouches) {
@@ -122,6 +197,7 @@ export default {
     },
     toFullscreen (i) {
       this.getUnifors(i)
+      // eslint-disable-next-line security/detect-object-injection
       const plane = this.planes[i]
       const tl = anime.timeline({ autoplay: false, easing: 'linear' })
       tl.add({ targets: this.curtains.container, zIndex: 10, duration: 0 })
@@ -163,7 +239,9 @@ export default {
         event.target.scrollTop,
         event.target.scrollLeft
       )
+      // eslint-disable-next-line no-loops/no-loops
       for (let i = 0; i < this.$refs.CurtainsPlanes.length; i++) {
+        // eslint-disable-next-line security/detect-object-injection
         this.curtains.planes[i].updateScrollPosition()
       }
     }
@@ -231,7 +309,7 @@ img {
   /* opacity: 1.3; */
 }
 .plane-image {
- // display: none;
+//  display: none;
   opacity: 1;
 }
 </style>

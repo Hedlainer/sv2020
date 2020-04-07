@@ -1,14 +1,18 @@
 <template>
   <div>
     <picture @load="isLoad">
-      <source :srcset="`https://svobodina.ru/wp-content/uploads/${size}/webp/${objectName.FileName}`">
-      <source :srcset="`https://svobodina.ru/wp-content/uploads/${size}/jpg/${objectName.FileName}`">
+      <source :srcset="`https://svobodina.ru/wp-content/uploads/${size}/webp/${objectName.FileName}`" />
+      <source :srcset="`https://svobodina.ru/wp-content/uploads/${size}/jpg/${objectName.FileName}`" />
       <img
-        :src="`https://svobodina.ru/wp-content/uploads/${size}/jpg/${objectName.FileName}`"
         :alt="objectName.Creator"
-      >
+        :src="`https://svobodina.ru/wp-content/uploads/${size}/jpg/${objectName.FileName}`"
+      />
     </picture>
-    <img src="/img/big.jpg" alt @load="ev">
+    <img
+      alt
+      src="/img/big.jpg"
+      @load="ev"
+    />
   </div>
 </template>
 
