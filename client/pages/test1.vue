@@ -2,66 +2,19 @@
   <div class="page">
     <div id="webgl" ref="webgl"></div>
     <main class="seriya__wrapper" @scroll.passive="updateScroll">
-      <!-- <div
-        v-for="seriya in photoseries"
-        :key="seriya.Id"
-        ref="CurtainsPlanes"
-        class="seriya__container"
-      > -->
-      <!-- <picture class="plane-image">
-          <source
-            :srcset="`/image/webp/720/${seriya.FileName}.webp`"
-            type="image/webp"
-          />
-          <source
-            :srcset="`/image/jpg/720/${seriya.FileName}.jpg`"
-            type="image/jpg"
-          />
-          <img
-            alt="SvobodinaPhoto"
-            crossorigin="use-credentials"
-            :src="`/image/jpg/720/${seriya.FileName}.jpg`"
-          />
-        </picture>
-        <picture class="plane-image">
-          <source
-            :srcset="`/image/webp/1920/${seriya.FileName}.webp`"
-            type="image/webp"
-          />
-          <source
-            :srcset="`/image/jpg/1920/${seriya.FileName}.jpg`"
-            type="image/jpg"
-          />
-          <img
-            alt="SvobodinaPhoto"
-            crossorigin="use-credentials"
-            :src="`/image/jpg/1920/${seriya.FileName}.jpg`"
-          />
-        </picture> -->
       <lazyPicture
-        v-for="seriya in photoseries"
+        v-for="(seriya, index) in photoseries"
         :key="seriya.Id"
         ref="CurtainsPlanes"
         class="seriya__container"
         :color="seriya.Color"
+        :current-width="710"
         :file="seriya.FileName"
-        :full-screen="true"
-        :k="seriya.Id"
-        :width="710"
+        :full-screen-image="true"
+        :my-index="index"
+        @fulload="doSome"
+        @myClick="e"
       />
-
-      <!-- <img
-            class="plane-image"
-            crossorigin="use-credentials"
-            :src="`/image/jpg/720/${seriya.FileName}.jpg`"
-          /> -->
-      <!-- <img
-          class="plane-image"
-          crossorigin="use-credentials"
-          :src="`/image/jpg/1920/${seriya.FileName}.jpg`"
-        /> -->
-      <!-- </picture> -->
-      <!-- </div> -->
     </main>
   </div>
 </template>
@@ -78,8 +31,8 @@ export default {
   },
   data () {
     return {
-      fullloaded: null,
-      smalloaded: null,
+      // fullloaded: null,
+      // smalloaded: null,
       photoseries,
       animating: true,
       duration: 1700,
@@ -93,9 +46,9 @@ export default {
         vertexShader: vertex,
         fragmentShader: fragment,
         fov: 180,
-        autoloadSources: true,
+        autoloadSources: false,
         uniforms: {
-          uTime: { name: 'uTime', type: '1f', value: 0 },
+          // uTime: { name: 'uTime', type: '1f', value: 0 },
           uViewSize: { name: 'uViewSize', type: '2f', value: [] },
           uMouse: { name: 'uMouse', type: '2f', value: [] },
           uPlanePosition: { name: 'uPlanePosition', type: '2f', value: [] },
@@ -107,12 +60,18 @@ export default {
   },
   mounted () {
     this.initCurtains()
-    console.log(this.planes)
-    console.log(this.$refs.CurtainsPlanes[3])
+    // console.log(this.planes)
+    // console.log(this.$refs.CurtainsPlanes[3])
   },
   methods: {
-    doSome (i) {
-      return i
+    e (ctx) {
+      this.toFullscreen(ctx.index)
+    },
+    async doSome (ctx) {
+      // // eslint-disable-next-line no-debugger
+      // debugger
+      this.planes[ctx.index].loadSources(ctx.img)
+      this.handlePlanes(ctx.index)
     },
     // route (a) {
     //   this.$router.push(`photoseries/${a}`)
@@ -123,26 +82,21 @@ export default {
         pixelRatio: window.devicePixelRatio,
         watchScroll: false
       })
-      // const planeElements = this.$refs.CurtainsPlanes
-      this.$nextTick(() => {
       // eslint-disable-next-line no-loops/no-loops
-        for (let i = 0; i < this.$refs.CurtainsPlanes.length; i++) {
-          // eslint-disable-next-line security/detect-object-injection
-          const plane = this.curtains.addPlane(this.$refs.CurtainsPlanes[i].$el, this.params)
-          plane._canDraw = false
-          plane && plane.onLoading(() => {
-            this.planes.push(plane)
-            this.handlePlanes(i)
-          })
-        }
-      })
+      for (const value of this.$refs.CurtainsPlanes) {
+        const plane = this.curtains.addPlane(value.$el, this.params)
+        this.planes.push(plane)
+      }
     },
     handlePlanes (i) {
       // eslint-disable-next-line security/detect-object-injection
       const plane = this.planes[i]
+      console.log(plane)
+      // eslint-disable-next-line no-debugger
+      // debugger
       plane.onReady(() => {
-        this.curtains.enableDrawing()
-        plane.htmlElement.addEventListener('click', () => this.toFullscreen(i))
+        // this.curtains.enableDrawing()
+        // plane.htmlElement.addEventListener('click', () => this.toFullscreen(i))
         plane.htmlElement.addEventListener('mousemove', e => this.mouseEv(e, i))
         plane.htmlElement.addEventListener('touchmove', e => this.mouseEv(e, i))
       })
@@ -240,9 +194,9 @@ export default {
         event.target.scrollLeft
       )
       // eslint-disable-next-line no-loops/no-loops
-      for (let i = 0; i < this.$refs.CurtainsPlanes.length; i++) {
+      for (const val of this.curtains.planes) {
         // eslint-disable-next-line security/detect-object-injection
-        this.curtains.planes[i].updateScrollPosition()
+        val.updateScrollPosition()
       }
     }
   }
