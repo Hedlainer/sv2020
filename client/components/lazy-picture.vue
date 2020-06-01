@@ -2,45 +2,44 @@
   <div
     v-observe-visibility="{
       callback: visibilityChanged,
-      throttle:400,
+      throttle:700,
       once: true
     }"
     class="lazy"
     :style="{ boxShadow: `inset 0px 0px 0px 1px ${color}`,
               backgroundColor: hex2rgba(color, .3) }"
   >
+    <picture v-if="fullScreenImage&curentImageLoaded" class="lazy__fullscreen">
+      <source
+        :srcset="`/image/webp/${ImageSize.fullImageWidth}/${file}.webp`"
+        type="image/webp"
+      />
+      <img
+        ref="imgFull"
+        alt="SvobodinaPhoto"
+        crossorigin="anonimous"
+        decode="async"
+        draggable="false"
+        :src="`/image/jpg/${ImageSize.fullImageWidth}/${file}.jpg`"
+        @load="loadImages"
+      />
+    </picture>
     <picture
       v-if="isVisible"
       class="lazy__original"
     >
       <source
-        :srcset="`/image/webp/${ImageSize}/${file}.webp`"
+        :srcset="`/image/webp/${ImageSize.currentImageWidth}/${file}.webp`"
         type="image/webp"
       />
-      <source
-        :srcset="`/image/jpg/${ImageSize}/${file}.jpg`"
-        type="image/jpg"
-      />
       <img
-        ref="img"
+        ref="imgSmall"
         alt="SvobodinaPhoto"
         crossorigin="anonimous"
-        :src="`/image/jpg/${ImageSize}/${file}.jpg`"
-      />
-    </picture>
-    <picture v-if="fullScreen&isVisible" class="lazy__fullscreen">
-      <source
-        :srcset="`/image/webp/${FullSize}/${file}.webp`"
-        type="image/webp"
-      />
-      <source
-        :srcset="`/image/jpg/${FullSize}/${file}.jpg`"
-        type="image/jpg"
-      />
-      <img
-        alt="SvobodinaPhoto"
-        crossorigin="anonimous"
-        :src="`/image/jpg/${FullSize}/${file}.jpg`"
+        decode="async"
+        draggable="false"
+        :src="`/image/jpg/${ImageSize.currentImageWidth}/${file}.jpg`"
+        @load="curentImageLoaded = true"
       />
     </picture>
   </div>
@@ -54,65 +53,61 @@ if (process.browser) {
 }
 export default {
   props: {
-    fullScreen: { type: Boolean, default: false },
+    fullScreenImage: { type: Boolean, default: false },
     file: { required: true, type: String },
-    width: { required: true, type: Number },
-    k: { default: 0, type: Number },
+    currentWidth: { required: true, type: Number },
+    myIndex: { default: 0, type: Number },
     color: { required: true, type: String }
   },
   data () {
     return {
       height,
+      curentImageLoaded: false,
       fullwidth: width,
-      phVisible: true,
-      opacity: 1,
       isVisible: false
     }
   },
   computed: {
     ImageSize () {
-      const ImageSize =
-        this.width < 480
-          ? 480
-          : this.width < 720
-            ? 720
-            : this.width < 1024
-              ? 1024
-              : this.width < 1440
-                ? 1440
-                : this.width < 1920
-                  ? 1920
-                  : 2560
-      return ImageSize
-    },
-    FullSize () {
-      const FullSize =
-        this.fullwidth < 480
-          ? 480
-          : this.fullwidth < 720
-            ? 720
-            : this.fullwidth < 1024
-              ? 1024
-              : this.fullwidth < 1440
-                ? 1440
-                : this.fullwidth < 1920
-                  ? 1920
-                  : 2560
-      return FullSize
+      const ImageSize = x => {
+        const w =
+          x < 480
+            ? 480
+            : x < 720
+              ? 720
+              : x < 1024
+                ? 1024
+                : x < 1440
+                  ? 1440
+                  : x < 1920
+                    ? 1920
+                    : 2560
+        return w
+      }
+      return {
+        fullImageWidth: ImageSize(this.fullWidth),
+        currentImageWidth: ImageSize(this.currentWidth)
+      }
     }
   },
-  mounted () {
-    // const ii = this.$refs.img
-    // ii.decode()
-    // .then(() => {
-    //   // this.$emit('myEvent')
-    console.log('ii')
-    // })
-    // if (this.smalloded & this.bigloaded) {
-    //   this.$emit('allloaded', this.k)
-    // };
-  },
+  // mounted () {
+  //   const ii = this.$refs.img
+  //   ii.onload(() => console.log('qqq'))
+  //   // .then(() => {
+  //   // this.$emit('myEvent')
+  //   // console.log('ii')
+  //   // })
+  //   // if (this.smalloded & this.bigloaded) {
+  //   //   this.$emit('allloaded', this.k)
+  //   // };
+  // },
   methods: {
+    loadImages () {
+      this.$emit('loaded', { index: this.myIndex, imgFull: this.$refs.imgFull, imgSmall: this.$refs.imgSmall })
+    },
+    e () {
+      console.log(this.myIndex)
+    },
     hex2rgba (hex, alpha = 1) {
       const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16))
       return `rgba(${r},${g},${b},${alpha})`

@@ -8,10 +8,10 @@
         ref="CurtainsPlanes"
         class="seriya__container"
         :color="seriya.Color"
-        :current-width="320"
         :file="seriya.FileName"
-        :full-screen-image="true"
+        :full-screen="true"
         :my-index="i"
+        :width="710"
         @loaded="loadImg"
       />
     </main>
@@ -43,7 +43,7 @@ export default {
         vertexShader: vertex,
         fragmentShader: fragment,
         fov: 180,
-        autoloadSources: false,
+        autoloadSources: true,
         uniforms: {
           uTime: { name: 'uTime', type: '1f', value: 0 },
           uViewSize: { name: 'uViewSize', type: '2f', value: [] },
@@ -57,20 +57,16 @@ export default {
   },
   mounted () {
     this.initCurtains()
-    // console.log(this.doSome())
-
-    // console.log(this.curtains.planes)
-    // console.log(this.$refs.CurtainsPlanes[3])
   },
   methods: {
-    async loadImg (ctx) {
-      await this.doSome(ctx)
-      await this.handlePlanes(ctx)
-    },
-    async doSome (ctx) {
+    loadImg (ctx) {
       const plane = this.curtains.addPlane(this.$refs.CurtainsPlanes[ctx.index].$el, this.params)
-      plane.loadImages([ctx.imgSmall, ctx.imgFull])
-      // return plane
+      console.log(ctx)
+      this.planes.push(plane)
+      this.handlePlanes(ctx.index)
+    },
+    doSome ($event) {
+      console.log($event)
     },
     // route (a) {
     //   this.$router.push(`photoseries/${a}`)
@@ -79,19 +75,21 @@ export default {
       this.curtains = new Curtains({
         container: this.$refs.webgl,
         pixelRatio: window.devicePixelRatio,
-        watchScroll: true
+        watchScroll: false
       })
     },
-    async handlePlanes (i) {
-      const plane = this.curtains.planes[i.index]
-      // eslint-disable-next-line no-debugger
-      // debugger
-      this.$refs.CurtainsPlanes[parseInt(i.index)].$el.addEventListener('click', () => this.toFullscreen(plane))
-      this.$refs.CurtainsPlanes[parseInt(i.index)].$el.addEventListener('mousemove', e => this.mouseEv(e, plane))
-      this.$refs.CurtainsPlanes[parseInt(i.index)].$el.addEventListener('touchmove', e => this.mouseEv(e, plane))
+    handlePlanes (i) {
+      // eslint-disable-next-line security/detect-object-injection
+      const plane = this.curtains.planes[i]
+      if (plane) {
+        this.curtains.enableDrawing()
+        plane.htmlElement.addEventListener('click', () => this.toFullscreen(i))
+        plane.htmlElement.addEventListener('mousemove', e => this.mouseEv(e, i))
+        plane.htmlElement.addEventListener('touchmove', e => this.mouseEv(e, i))
+      }
     },
-    async getUnifors (plane) {
-      // const plane = this.curtains.planes[parseInt(i)]
+    getUnifors (i) {
+      const plane = this.curtains.planes[i]
       const rectPlane = plane.getBoundingRect()
       // ширина плана в условных еденицах
       const wUnit =
@@ -120,7 +118,10 @@ export default {
       plane.uniforms.uPlanePosition.value = [xUnit, yUnit]
       plane.uniforms.uResolution.value = [xNormalized, yNormalized]
     },
-    mouseEv (e, plane) {
+    mouseEv (e, i) {
+      // console.log(e)
+      // eslint-disable-next-line security/detect-object-injection
+      const plane = this.curtains.planes[i]
       const rectPlane = plane.getBoundingRect()
       if (e.targetTouches) {
         this.mouseNormalized.x = (e.targetTouches[0].offsetX / rectPlane.width) * this.curtains.pixelRatio
@@ -134,10 +135,21 @@ export default {
         this.mouseNormalized.y
       ]
     },
-    async toFullscreen (plane) {
-      await this.getUnifors(plane)
+    toFullscreen (i) {
+      this.getUnifors(i)
+      // eslint-disable-next-line security/detect-object-injection
+      const plane = this.curtains.planes[i]
       const tl = anime.timeline({ autoplay: false, easing: 'linear' })
       tl.add({ targets: this.curtains.container, zIndex: 10, duration: 0 })
+        // .add(
+        //   {
+        //     targets: plane.htmlElement,
+        //     delay: 100,
+        //     opacity: 0,
+        //     duration: 100
+        //   },
+        //   "+=200"
+        // )
         .add({
           targets: plane.uniforms.uProgress,
           value: 1,
@@ -178,66 +190,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$scrollBarHeight: 1px;
 
-::-webkit-scrollbar {
-  width: $scrollBarHeight;
-  height: $scrollBarHeight;
-}
-
-::-webkit-scrollbar-button {
-  width: $scrollBarHeight;
-  height: $scrollBarHeight;
-}
-/* $hf: 100vh; */
-$h: 60vh;
-$w: $h * 1.5;
-$m: $w/2;
-$t: $h + $m;
-.page {
-  height: 100vh;
-  position: relative;
-  overflow: hidden;
-}
-img {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-.seriya__wrapper {
-  position: absolute;
-  top: 20vh;
-  height: 100vw;
-  width: $h;
-  transform: rotate(-90deg) translateY(-$h);
-  transform-origin: right top;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-.seriya__container {
-  box-shadow: inset 0px 0px 0px 1px #03a9f4;
-  border-radius: 3px;
-  margin-top: 200px;
-  margin-bottom: $h/2;
-  width: $w;
-  height: $h;
-  transform: rotate(90deg) translateX(-$m);
-  transform-origin: left bottom;
-}
-#webgl {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 100vh;
-  /* z-index: -1; */
-  /* transition: opacity 0.5s ease-in; */
-  /* opacity: 1.3; */
-}
-.plane-image {
-//  display: none;
-  opacity: 1;
-}
 </style>

@@ -51,8 +51,9 @@ export default {
   },
   computed: {
     GetjustifiedLayout () {
-      const aspect = this.$store.state.Series.Aspect.map(el => el)
-      const layout = justifiedLayout(aspect, {
+      // const aspect = this.$store.state.Series.Aspect.map(el => el)
+      // eslint-disable-next-line array-func/prefer-array-from
+      const layout = justifiedLayout([...this.$store.state.Series.Aspect], {
         fullWidthBreakoutRowCadence: 3,
         targetRowHeight: (this.height / 100) * 55,
         containerWidth: this.width,
