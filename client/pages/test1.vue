@@ -3,16 +3,29 @@
     <div id="webgl" ref="webgl"></div>
     <main class="seriya__wrapper" @scroll.passive="updateScroll">
       <lazyPicture
+<<<<<<< HEAD
         v-for="(seriya,i) in photoseries"
+=======
+        v-for="(seriya, index) in photoseries"
+>>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
         :key="seriya.Id"
         ref="CurtainsPlanes"
         class="seriya__container"
         :color="seriya.Color"
+<<<<<<< HEAD
         :current-width="320"
         :file="seriya.FileName"
         :full-screen-image="true"
         :my-index="i"
         @loaded="loadImg"
+=======
+        :current-width="710"
+        :file="seriya.FileName"
+        :full-screen-image="true"
+        :my-index="index"
+        @fulload="doSome"
+        @myClick="e"
+>>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
       />
     </main>
   </div>
@@ -30,6 +43,11 @@ export default {
   },
   data () {
     return {
+<<<<<<< HEAD
+=======
+      // fullloaded: null,
+      // smalloaded: null,
+>>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
       photoseries,
       animating: true,
       duration: 1700,
@@ -45,7 +63,7 @@ export default {
         fov: 180,
         autoloadSources: false,
         uniforms: {
-          uTime: { name: 'uTime', type: '1f', value: 0 },
+          // uTime: { name: 'uTime', type: '1f', value: 0 },
           uViewSize: { name: 'uViewSize', type: '2f', value: [] },
           uMouse: { name: 'uMouse', type: '2f', value: [] },
           uPlanePosition: { name: 'uPlanePosition', type: '2f', value: [] },
@@ -57,6 +75,7 @@ export default {
   },
   mounted () {
     this.initCurtains()
+<<<<<<< HEAD
     // console.log(this.doSome())
 
     // console.log(this.curtains.planes)
@@ -71,6 +90,20 @@ export default {
       const plane = this.curtains.addPlane(this.$refs.CurtainsPlanes[ctx.index].$el, this.params)
       plane.loadImages([ctx.imgSmall, ctx.imgFull])
       // return plane
+=======
+    // console.log(this.planes)
+    // console.log(this.$refs.CurtainsPlanes[3])
+  },
+  methods: {
+    e (ctx) {
+      this.toFullscreen(ctx.index)
+    },
+    async doSome (ctx) {
+      // // eslint-disable-next-line no-debugger
+      // debugger
+      this.planes[ctx.index].loadSources(ctx.img)
+      this.handlePlanes(ctx.index)
+>>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
     },
     // route (a) {
     //   this.$router.push(`photoseries/${a}`)
@@ -79,6 +112,7 @@ export default {
       this.curtains = new Curtains({
         container: this.$refs.webgl,
         pixelRatio: window.devicePixelRatio,
+<<<<<<< HEAD
         watchScroll: true
       })
     },
@@ -89,6 +123,28 @@ export default {
       this.$refs.CurtainsPlanes[parseInt(i.index)].$el.addEventListener('click', () => this.toFullscreen(plane))
       this.$refs.CurtainsPlanes[parseInt(i.index)].$el.addEventListener('mousemove', e => this.mouseEv(e, plane))
       this.$refs.CurtainsPlanes[parseInt(i.index)].$el.addEventListener('touchmove', e => this.mouseEv(e, plane))
+=======
+        watchScroll: false
+      })
+      // eslint-disable-next-line no-loops/no-loops
+      for (const value of this.$refs.CurtainsPlanes) {
+        const plane = this.curtains.addPlane(value.$el, this.params)
+        this.planes.push(plane)
+      }
+    },
+    handlePlanes (i) {
+      // eslint-disable-next-line security/detect-object-injection
+      const plane = this.planes[i]
+      console.log(plane)
+      // eslint-disable-next-line no-debugger
+      // debugger
+      plane.onReady(() => {
+        // this.curtains.enableDrawing()
+        // plane.htmlElement.addEventListener('click', () => this.toFullscreen(i))
+        plane.htmlElement.addEventListener('mousemove', e => this.mouseEv(e, i))
+        plane.htmlElement.addEventListener('touchmove', e => this.mouseEv(e, i))
+      })
+>>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
     },
     async getUnifors (plane) {
       // const plane = this.curtains.planes[parseInt(i)]
@@ -168,9 +224,13 @@ export default {
         event.target.scrollLeft
       )
       // eslint-disable-next-line no-loops/no-loops
+<<<<<<< HEAD
       for (let i = 0; i < this.curtains.planes.length; i++) {
+=======
+      for (const val of this.curtains.planes) {
+>>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
         // eslint-disable-next-line security/detect-object-injection
-        this.curtains.planes[i].updateScrollPosition()
+        val.updateScrollPosition()
       }
     }
   }

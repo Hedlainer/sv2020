@@ -15,12 +15,17 @@
         type="image/webp"
       />
       <img
+<<<<<<< HEAD
         ref="imgFull"
+=======
+        ref="fullImage"
+>>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
         alt="SvobodinaPhoto"
         crossorigin="anonimous"
         decode="async"
         draggable="false"
         :src="`/image/jpg/${ImageSize.fullImageWidth}/${file}.jpg`"
+<<<<<<< HEAD
         @load="loadImages"
       />
     </picture>
@@ -28,18 +33,33 @@
       v-if="isVisible"
       class="lazy__original"
     >
+=======
+        @load="fullImageLoaded"
+      />
+    </picture>
+    <picture v-if="isVisible" class="lazy__original">
+>>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
       <source
         :srcset="`/image/webp/${ImageSize.currentImageWidth}/${file}.webp`"
         type="image/webp"
       />
       <img
+<<<<<<< HEAD
         ref="imgSmall"
+=======
+        ref="currentImage"
+>>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
         alt="SvobodinaPhoto"
         crossorigin="anonimous"
         decode="async"
         draggable="false"
         :src="`/image/jpg/${ImageSize.currentImageWidth}/${file}.jpg`"
+<<<<<<< HEAD
         @load="curentImageLoaded = true"
+=======
+        @click="clickFullImg"
+        @load="currentImageLoad"
+>>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
       />
     </picture>
   </div>
@@ -63,7 +83,13 @@ export default {
     return {
       height,
       curentImageLoaded: false,
+<<<<<<< HEAD
       fullwidth: width,
+=======
+      fullWidth: width,
+      phVisible: true,
+      opacity: 1,
+>>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
       isVisible: false
     }
   },
@@ -90,6 +116,7 @@ export default {
       }
     }
   },
+<<<<<<< HEAD
   // mounted () {
   //   const ii = this.$refs.img
   //   ii.onload(() => console.log('qqq'))
@@ -107,17 +134,25 @@ export default {
     },
     e () {
       console.log(this.myIndex)
+=======
+  mounted () {},
+  methods: {
+    fullImageLoaded () {
+      this.$emit('fulload', { img: [this.$refs.currentImage, this.$refs.fullImage], index: this.myIndex })
+>>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
     },
     hex2rgba (hex, alpha = 1) {
       const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16))
       return `rgba(${r},${g},${b},${alpha})`
     },
-    allImageLoaded () {
-      if (this.smalloded & this.bigloaded) {
-        this.$emit('allloaded', this.k)
-      }
+    currentImageLoad () {
+      this.curentImageLoaded = true
+      console.log('current image', this.myIndex)
     },
-
+    clickFullImg () {
+      this.$emit('myClick', { index: this.myIndex })
+      console.log('click')
+    },
     visibilityChanged (isVisible) {
       this.isVisible = isVisible
     }
