@@ -1,5 +1,6 @@
 <template>
   <div
+    v-mouse="mouseEv"
     v-observe-visibility="{
       callback: visibilityChanged,
       throttle:400,
@@ -8,6 +9,7 @@
     class="lazy"
     :style="{ boxShadow: `inset 0px 0px 0px 1px ${color}`,
               backgroundColor: hex2rgba(color, .3) }"
+    @mousedown="clickFullImg"
   >
     <picture v-if="fullScreenImage&curentImageLoaded" class="lazy__fullscreen">
       <source
@@ -36,7 +38,6 @@
         decode="async"
         draggable="false"
         :src="`/image/jpg/${ImageSize.currentImageWidth}/${file}.jpg`"
-        @click="clickFullImg"
         @load="currentImageLoad"
       />
     </picture>
@@ -50,6 +51,22 @@ if (process.browser) {
   width = window.innerWidth
 }
 export default {
+  directives: {
+    mouse: {
+    // определение директивы
+      inserted: function (el, binding) {
+        const f = function (evt) {
+          if (binding.value(evt, el)) {
+            el.removeEventListener('mousemove', f)
+            el.removeEventListener('touchmove', f)
+          }
+        }
+        el.addEventListener('mousemove', f)
+        el.addEventListener('touchmove', f)
+        // el.addEventListener('mousemove', e => this.mouseEv(e, i))
+      }
+    }
+  },
   props: {
     fullScreenImage: { type: Boolean, default: false },
     file: { required: true, type: String },
@@ -57,6 +74,7 @@ export default {
     myIndex: { default: 0, type: Number },
     color: { required: true, type: String }
   },
+
   data () {
     return {
       height,
@@ -69,7 +87,7 @@ export default {
   },
   computed: {
     ImageSize () {
-      const ImageSize = x => {
+      const ImageSize = (x) => {
         const w =
           x < 480
             ? 480
@@ -90,8 +108,26 @@ export default {
       }
     }
   },
-  mounted () {},
+  mounted () {
+    // console.log(this.$refs.currentImage)
+
+    // this.$refs.currentImage.addEventListener('mousemove', e => this.mouseEv(e))
+    // this.$refs.currentImage.addEventListener('touchmove', e => this.mouseEv(e))
+  },
   methods: {
+    e ($event) {
+      console.log($event)
+    },
+    mouseEv (event) {
+      if (event.targetTouches) {
+        this.$emit('mousecord', { x: event.targetTouches[0].offsetX, y: event.targetTouches[0].offsetY })
+      } else {
+        this.$emit('mousecord', { x: event.offsetX, y: event.offsetY })
+      }
+    },
+    handleMouse: function (evt, el) {
+      console.log(evt)
+    },
     fullImageLoaded () {
       this.$emit('fulload', { img: [this.$refs.currentImage, this.$refs.fullImage], index: this.myIndex })
     },
@@ -101,14 +137,17 @@ export default {
     },
     currentImageLoad () {
       this.curentImageLoaded = true
-      console.log('current image', this.myIndex)
+      // console.log('current image', this.myIndex)
     },
-    clickFullImg () {
-      this.$emit('myClick', { index: this.myIndex })
-      console.log('click')
+    clickFullImg ($event) {
+      this.$emit('myClick', { index: this.myIndex, x: $event.offsetX, y: $event.offsetY })
+      // console.log('click')
     },
-    visibilityChanged (isVisible) {
+    visibilityChanged (isVisible, ev) {
       this.isVisible = isVisible
+    },
+    mousemove ($event) {
+      // console.log($event)
     }
   }
 }

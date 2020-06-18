@@ -46,7 +46,6 @@ export default {
   computed: {},
   mounted () {
     this.setupCurtains()
-    this.setupPlane()
   },
   methods: {
     setupCurtains () {
@@ -54,23 +53,11 @@ export default {
         container: this.$refs.webgl,
         pixelRatio: window.devicePixelRatio
       })
-    },
-    handlePlanes (i) {
-      // eslint-disable-next-line security/detect-object-injection
-      const plane = this.planes[i]
-      plane.onRender(() => {
-        plane.uniforms.time.value++ // update our time uniform value
-      })
-    },
-    setupPlane () {
-      // eslint-disable-next-line no-loops/no-loops
-      for (let i = 0; i < this.$refs.plane.length; i++) {
-        // eslint-disable-next-line security/detect-object-injection
-        this.plane = this.curtains.addPlane(this.$refs.plane[i], this.params)
-        if (this.plane) {
-          this.planes.push(this.plane)
-          this.handlePlanes(i)
-        }
+      for (const value of this.$refs.plane) {
+        const plane = this.curtains.addPlane(value, this.params)
+        plane.onRender(() => {
+          plane.uniforms.time.value++ // update our time uniform value
+        })
       }
     }
   }
@@ -87,8 +74,11 @@ body {
 }
 #canvas {
   position: fixed;
-  width: 100%;
+  top: 0;
+  right: 0;
+  left: 0;
   height: 100vh;
+  z-index: 10;
 }
 .plane {
   width: 80%;

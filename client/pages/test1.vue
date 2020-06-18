@@ -21,14 +21,15 @@
 
 <script>
 import { Curtains } from 'curtainsjs'
-import lazyPicture from '~/components/lazy-picture.vue'
 import anime from 'animejs/lib/anime.es.js'
+import lazyPicture from '~/components/lazy-picture.vue'
 import photoseries from '~/static/db/Photoseries.json'
 import { vertex, fragment } from '~/assets/shader3.js'
 export default {
   components: {
     lazyPicture
   },
+
   data () {
     return {
       // fullloaded: null,
@@ -45,7 +46,7 @@ export default {
         heightSegments: 32,
         vertexShader: vertex,
         fragmentShader: fragment,
-        fov: 180,
+        fov: 1,
         autoloadSources: false,
         uniforms: {
           // uTime: { name: 'uTime', type: '1f', value: 0 },
@@ -64,14 +65,14 @@ export default {
     // console.log(this.$refs.CurtainsPlanes[3])
   },
   methods: {
-    e (ctx) {
-      this.toFullscreen(ctx.index)
+    async e (ctx) {
+      await
+      this.toFullscreen(ctx)
     },
     async doSome (ctx) {
-      // // eslint-disable-next-line no-debugger
       // debugger
       this.planes[ctx.index].loadSources(ctx.img)
-      this.handlePlanes(ctx.index)
+      // this.handlePlanes(ctx.index)
     },
     // route (a) {
     //   this.$router.push(`photoseries/${a}`)
@@ -82,28 +83,27 @@ export default {
         pixelRatio: window.devicePixelRatio,
         watchScroll: false
       })
-      // eslint-disable-next-line no-loops/no-loops
       for (const value of this.$refs.CurtainsPlanes) {
         const plane = this.curtains.addPlane(value.$el, this.params)
         this.planes.push(plane)
       }
     },
-    handlePlanes (i) {
+    // handlePlanes (i) {
+    //   // eslint-disable-next-line security/detect-object-injection
+    //   const plane = this.planes[i]
+    //   // console.log(plane.htmlElement)
+    //   // eslint-disable-next-line no-debugger
+    //   // debugger
+    //   plane.onReady(() => {
+    //     // this.curtains.enableDrawing()
+    //     // plane.htmlElement.addEventListener('click', () => this.toFullscreen(i))
+    //     plane.htmlElement.addEventListener('mousemove', e => this.mouseEv(e, i))
+    //     plane.htmlElement.addEventListener('touchmove', e => this.mouseEv(e, i))
+    //   })
+    // },
+    async getUnifors (i) {
       // eslint-disable-next-line security/detect-object-injection
-      const plane = this.planes[i]
-      console.log(plane)
-      // eslint-disable-next-line no-debugger
-      // debugger
-      plane.onReady(() => {
-        // this.curtains.enableDrawing()
-        // plane.htmlElement.addEventListener('click', () => this.toFullscreen(i))
-        plane.htmlElement.addEventListener('mousemove', e => this.mouseEv(e, i))
-        plane.htmlElement.addEventListener('touchmove', e => this.mouseEv(e, i))
-      })
-    },
-    getUnifors (i) {
-      // eslint-disable-next-line security/detect-object-injection
-      const plane = this.planes[i]
+      const plane = this.planes[i.index]
       const rectPlane = plane.getBoundingRect()
       // ширина плана в условных еденицах
       const wUnit =
@@ -127,43 +127,38 @@ export default {
         xNormalized = 1
         yNormalized = window.innerHeight / window.innerWidth / imageAspect
       }
+      this.mouseNormalized.x = (i.x / rectPlane.width) * this.curtains.pixelRatio
+      this.mouseNormalized.y = 1 - (i.y / rectPlane.height) * this.curtains.pixelRatio
 
+      plane.uniforms.uMouse.value = [this.mouseNormalized.x, this.mouseNormalized.y]
       plane.uniforms.uViewSize.value = [wUnit, hUnit]
       plane.uniforms.uPlanePosition.value = [xUnit, yUnit]
       plane.uniforms.uResolution.value = [xNormalized, yNormalized]
+      return plane
     },
-    mouseEv (e, i) {
-      // console.log(e)
+    // mouseEv (e, i) {
+    //   console.log(e)
+    //   // eslint-disable-next-line security/detect-object-injection
+    //   const plane = this.planes[i]
+    //   const rectPlane = plane.getBoundingRect()
+    //   if (e.targetTouches) {
+    //     this.mouseNormalized.x = (e.targetTouches[0].offsetX / rectPlane.width) * this.curtains.pixelRatio
+    //     this.mouseNormalized.y = 1 - (e.targetTouches[0].offsetY / rectPlane.height) * this.curtains.pixelRatio
+    //   } else {
+    //     this.mouseNormalized.x = (e.offsetX / rectPlane.width) * this.curtains.pixelRatio
+    //     this.mouseNormalized.y = 1 - (e.offsetY / rectPlane.height) * this.curtains.pixelRatio
+    //   }
+    //   plane.uniforms.uMouse.value = [
+    //     this.mouseNormalized.x,
+    //     this.mouseNormalized.y
+    //   ]
+    // },
+    async toFullscreen (i) {
+      await this.getUnifors(i)
       // eslint-disable-next-line security/detect-object-injection
-      const plane = this.planes[i]
-      const rectPlane = plane.getBoundingRect()
-      if (e.targetTouches) {
-        this.mouseNormalized.x = (e.targetTouches[0].offsetX / rectPlane.width) * this.curtains.pixelRatio
-        this.mouseNormalized.y = 1 - (e.targetTouches[0].offsetY / rectPlane.height) * this.curtains.pixelRatio
-      } else {
-        this.mouseNormalized.x = (e.offsetX / rectPlane.width) * this.curtains.pixelRatio
-        this.mouseNormalized.y = 1 - (e.offsetY / rectPlane.height) * this.curtains.pixelRatio
-      }
-      plane.uniforms.uMouse.value = [
-        this.mouseNormalized.x,
-        this.mouseNormalized.y
-      ]
-    },
-    toFullscreen (i) {
-      this.getUnifors(i)
-      // eslint-disable-next-line security/detect-object-injection
-      const plane = this.planes[i]
+      const plane = this.planes[i.index]
       const tl = anime.timeline({ autoplay: false, easing: 'linear' })
       tl.add({ targets: this.curtains.container, zIndex: 10, duration: 0 })
-        // .add(
-        //   {
-        //     targets: plane.htmlElement,
-        //     delay: 100,
-        //     opacity: 0,
-        //     duration: 100
-        //   },
-        //   "+=200"
-        // )
         .add({
           targets: plane.uniforms.uProgress,
           value: 1,
