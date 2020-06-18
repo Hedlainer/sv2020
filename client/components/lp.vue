@@ -52,6 +52,22 @@ if (process.browser) {
   width = window.innerWidth
 }
 export default {
+  directives: {
+    mouse: {
+    // определение директивы
+      inserted: function (el, binding) {
+        const f = function (evt) {
+          if (binding.value(evt, el)) {
+            el.removeEventListener('mousemove', f)
+            el.removeEventListener('touchmove', f)
+          }
+        }
+        el.addEventListener('mousemove', f)
+        el.addEventListener('touchmove', f)
+        // el.addEventListener('mousemove', e => this.mouseEv(e, i))
+      }
+    }
+  },
   props: {
     fullScreenImage: { type: Boolean, default: false },
     file: { required: true, type: String },

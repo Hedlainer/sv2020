@@ -1,12 +1,12 @@
 <template>
-  <div class="page">
+  <div class="seriya">
     <div id="webgl" ref="webgl"></div>
     <main class="seriya__wrapper" @scroll.passive="updateScroll">
       <lazyPicture
         v-for="(seriya,i) in photoseries"
         :key="seriya.Id"
         ref="CurtainsPlanes"
-        class="seriya__container"
+        class="seriya__wrapper__img"
         :color="seriya.Color"
         :current-width="320"
         :file="seriya.FileName"
@@ -42,7 +42,7 @@ export default {
         heightSegments: 32,
         vertexShader: vertex,
         fragmentShader: fragment,
-        fov: 180,
+        fov: 1,
         autoloadSources: false,
         uniforms: {
           uTime: { name: 'uTime', type: '1f', value: 0 },
@@ -189,11 +189,6 @@ $scrollBarHeight: 1px;
   width: $scrollBarHeight;
   height: $scrollBarHeight;
 }
-/* $hf: 100vh; */
-$h: 60vh;
-$w: $h * 1.5;
-$m: $w/2;
-$t: $h + $m;
 .page {
   height: 100vh;
   position: relative;
@@ -205,26 +200,7 @@ img {
   object-fit: cover;
   object-position: center;
 }
-.seriya__wrapper {
-  position: absolute;
-  top: 20vh;
-  height: 100vw;
-  width: $h;
-  transform: rotate(-90deg) translateY(-$h);
-  transform-origin: right top;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-.seriya__container {
-  box-shadow: inset 0px 0px 0px 1px #03a9f4;
-  border-radius: 3px;
-  margin-top: 200px;
-  margin-bottom: $h/2;
-  width: $w;
-  height: $h;
-  transform: rotate(90deg) translateX(-$m);
-  transform-origin: left bottom;
-}
+
 #webgl {
   position: absolute;
   top: 0;
@@ -240,4 +216,34 @@ img {
 //  display: none;
   opacity: 1;
 }
+
+.seriya {
+  position: relative;
+  transition: background-color 2s;
+  width: 100%;
+  height: 100vh;
+  overflow-x: auto;
+  &__wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    padding-left: 5vw;
+    padding-right: 5vw;
+    height: 100%;
+    position: absolute;
+    &__img {
+      display: block;
+      border-radius: 3px;
+      &:nth-child(odd) {
+        width: calc(33vh * 1.5);
+        height: 33vh;
+      }
+      &:nth-child(even) {
+        width: calc(37vh * 1.5);
+        height: 37vh;
+      }
+    }
+  }
+  }
 </style>

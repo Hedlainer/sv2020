@@ -1,5 +1,6 @@
 <template>
   <div
+    v-mouse="mouseEv"
     v-observe-visibility="{
       callback: visibilityChanged,
       throttle:400,
@@ -50,6 +51,22 @@ if (process.browser) {
   width = window.innerWidth
 }
 export default {
+  directives: {
+    mouse: {
+    // определение директивы
+      inserted: function (el, binding) {
+        const f = function (evt) {
+          if (binding.value(evt, el)) {
+            el.removeEventListener('mousemove', f)
+            el.removeEventListener('touchmove', f)
+          }
+        }
+        el.addEventListener('mousemove', f)
+        el.addEventListener('touchmove', f)
+        // el.addEventListener('mousemove', e => this.mouseEv(e, i))
+      }
+    }
+  },
   props: {
     fullScreenImage: { type: Boolean, default: false },
     file: { required: true, type: String },
@@ -57,6 +74,7 @@ export default {
     myIndex: { default: 0, type: Number },
     color: { required: true, type: String }
   },
+
   data () {
     return {
       height,
@@ -90,7 +108,26 @@ export default {
       }
     }
   },
+  mounted () {
+    // console.log(this.$refs.currentImage)
+
+    // this.$refs.currentImage.addEventListener('mousemove', e => this.mouseEv(e))
+    // this.$refs.currentImage.addEventListener('touchmove', e => this.mouseEv(e))
+  },
   methods: {
+    e ($event) {
+      console.log($event)
+    },
+    mouseEv (event) {
+      if (event.targetTouches) {
+        this.$emit('mousecord', { x: event.targetTouches[0].offsetX, y: event.targetTouches[0].offsetY })
+      } else {
+        this.$emit('mousecord', { x: event.offsetX, y: event.offsetY })
+      }
+    },
+    handleMouse: function (evt, el) {
+      console.log(evt)
+    },
     fullImageLoaded () {
       this.$emit('fulload', { img: [this.$refs.currentImage, this.$refs.fullImage], index: this.myIndex })
     },
@@ -104,9 +141,13 @@ export default {
     },
     clickFullImg ($event) {
       this.$emit('myClick', { index: this.myIndex, x: $event.offsetX, y: $event.offsetY })
+      // console.log('click')
     },
     visibilityChanged (isVisible, ev) {
       this.isVisible = isVisible
+    },
+    mousemove ($event) {
+      // console.log($event)
     }
   }
 }

@@ -1,53 +1,44 @@
 <template>
-  <div class="page">
+  <div class="seriya">
     <div id="webgl" ref="webgl"></div>
-    <main class="seriya__wrapper" @scroll.passive="updateScroll">
+    <div
+      ref="container"
+      class="seriya__wrapper"
+      @mousewheel="$refs.container.scrollLeft += $event.deltaY"
+      @scroll.passive="updateScroll"
+    >
       <lazyPicture
-<<<<<<< HEAD
-        v-for="(seriya,i) in photoseries"
-=======
         v-for="(seriya, index) in photoseries"
->>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
         :key="seriya.Id"
         ref="CurtainsPlanes"
-        class="seriya__container"
+        class="seriya__wrapper__img"
         :color="seriya.Color"
-<<<<<<< HEAD
-        :current-width="320"
-        :file="seriya.FileName"
-        :full-screen-image="true"
-        :my-index="i"
-        @loaded="loadImg"
-=======
         :current-width="710"
         :file="seriya.FileName"
         :full-screen-image="true"
         :my-index="index"
         @fulload="doSome"
         @myClick="e"
->>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
       />
-    </main>
+    </div>
   </div>
 </template>
 
 <script>
 import { Curtains } from 'curtainsjs'
-import lazyPicture from '~/components/lazy-picture.vue'
 import anime from 'animejs/lib/anime.es.js'
+import lazyPicture from '~/components/lazy-picture.vue'
 import photoseries from '~/static/db/Photoseries.json'
 import { vertex, fragment } from '~/assets/shader3.js'
 export default {
   components: {
     lazyPicture
   },
+
   data () {
     return {
-<<<<<<< HEAD
-=======
       // fullloaded: null,
       // smalloaded: null,
->>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
       photoseries,
       animating: true,
       duration: 1700,
@@ -60,7 +51,8 @@ export default {
         heightSegments: 32,
         vertexShader: vertex,
         fragmentShader: fragment,
-        fov: 180,
+        fov: 1,
+        shareProgram: true,
         autoloadSources: false,
         uniforms: {
           // uTime: { name: 'uTime', type: '1f', value: 0 },
@@ -75,35 +67,15 @@ export default {
   },
   mounted () {
     this.initCurtains()
-<<<<<<< HEAD
-    // console.log(this.doSome())
-
-    // console.log(this.curtains.planes)
-    // console.log(this.$refs.CurtainsPlanes[3])
-  },
-  methods: {
-    async loadImg (ctx) {
-      await this.doSome(ctx)
-      await this.handlePlanes(ctx)
-    },
-    async doSome (ctx) {
-      const plane = this.curtains.addPlane(this.$refs.CurtainsPlanes[ctx.index].$el, this.params)
-      plane.loadImages([ctx.imgSmall, ctx.imgFull])
-      // return plane
-=======
     // console.log(this.planes)
     // console.log(this.$refs.CurtainsPlanes[3])
   },
   methods: {
     e (ctx) {
-      this.toFullscreen(ctx.index)
+      this.toFullscreen(ctx)
     },
     async doSome (ctx) {
-      // // eslint-disable-next-line no-debugger
-      // debugger
       this.planes[ctx.index].loadSources(ctx.img)
-      this.handlePlanes(ctx.index)
->>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
     },
     // route (a) {
     //   this.$router.push(`photoseries/${a}`)
@@ -112,18 +84,6 @@ export default {
       this.curtains = new Curtains({
         container: this.$refs.webgl,
         pixelRatio: window.devicePixelRatio,
-<<<<<<< HEAD
-        watchScroll: true
-      })
-    },
-    async handlePlanes (i) {
-      const plane = this.curtains.planes[i.index]
-      // eslint-disable-next-line no-debugger
-      // debugger
-      this.$refs.CurtainsPlanes[parseInt(i.index)].$el.addEventListener('click', () => this.toFullscreen(plane))
-      this.$refs.CurtainsPlanes[parseInt(i.index)].$el.addEventListener('mousemove', e => this.mouseEv(e, plane))
-      this.$refs.CurtainsPlanes[parseInt(i.index)].$el.addEventListener('touchmove', e => this.mouseEv(e, plane))
-=======
         watchScroll: false
       })
       // eslint-disable-next-line no-loops/no-loops
@@ -132,22 +92,9 @@ export default {
         this.planes.push(plane)
       }
     },
-    handlePlanes (i) {
+    getUnifors (i) {
       // eslint-disable-next-line security/detect-object-injection
-      const plane = this.planes[i]
-      console.log(plane)
-      // eslint-disable-next-line no-debugger
-      // debugger
-      plane.onReady(() => {
-        // this.curtains.enableDrawing()
-        // plane.htmlElement.addEventListener('click', () => this.toFullscreen(i))
-        plane.htmlElement.addEventListener('mousemove', e => this.mouseEv(e, i))
-        plane.htmlElement.addEventListener('touchmove', e => this.mouseEv(e, i))
-      })
->>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
-    },
-    async getUnifors (plane) {
-      // const plane = this.curtains.planes[parseInt(i)]
+      const plane = this.planes[i.index]
       const rectPlane = plane.getBoundingRect()
       // ширина плана в условных еденицах
       const wUnit =
@@ -171,27 +118,35 @@ export default {
         xNormalized = 1
         yNormalized = window.innerHeight / window.innerWidth / imageAspect
       }
+      this.mouseNormalized.x = (i.x / rectPlane.width) * this.curtains.pixelRatio
+      this.mouseNormalized.y = 1 - (i.y / rectPlane.height) * this.curtains.pixelRatio
 
+      plane.uniforms.uMouse.value = [this.mouseNormalized.x, this.mouseNormalized.y]
       plane.uniforms.uViewSize.value = [wUnit, hUnit]
       plane.uniforms.uPlanePosition.value = [xUnit, yUnit]
       plane.uniforms.uResolution.value = [xNormalized, yNormalized]
     },
-    mouseEv (e, plane) {
-      const rectPlane = plane.getBoundingRect()
-      if (e.targetTouches) {
-        this.mouseNormalized.x = (e.targetTouches[0].offsetX / rectPlane.width) * this.curtains.pixelRatio
-        this.mouseNormalized.y = 1 - (e.targetTouches[0].offsetY / rectPlane.height) * this.curtains.pixelRatio
-      } else {
-        this.mouseNormalized.x = (e.offsetX / rectPlane.width) * this.curtains.pixelRatio
-        this.mouseNormalized.y = 1 - (e.offsetY / rectPlane.height) * this.curtains.pixelRatio
-      }
-      plane.uniforms.uMouse.value = [
-        this.mouseNormalized.x,
-        this.mouseNormalized.y
-      ]
-    },
-    async toFullscreen (plane) {
-      await this.getUnifors(plane)
+    // mouseEv (e, i) {
+    //   console.log(e)
+    //   // eslint-disable-next-line security/detect-object-injection
+    //   const plane = this.planes[i]
+    //   const rectPlane = plane.getBoundingRect()
+    //   if (e.targetTouches) {
+    //     this.mouseNormalized.x = (e.targetTouches[0].offsetX / rectPlane.width) * this.curtains.pixelRatio
+    //     this.mouseNormalized.y = 1 - (e.targetTouches[0].offsetY / rectPlane.height) * this.curtains.pixelRatio
+    //   } else {
+    //     this.mouseNormalized.x = (e.offsetX / rectPlane.width) * this.curtains.pixelRatio
+    //     this.mouseNormalized.y = 1 - (e.offsetY / rectPlane.height) * this.curtains.pixelRatio
+    //   }
+    //   plane.uniforms.uMouse.value = [
+    //     this.mouseNormalized.x,
+    //     this.mouseNormalized.y
+    //   ]
+    // },
+    async toFullscreen (i) {
+      this.getUnifors(i)
+      // eslint-disable-next-line security/detect-object-injection
+      const plane = this.planes[i.index]
       const tl = anime.timeline({ autoplay: false, easing: 'linear' })
       tl.add({ targets: this.curtains.container, zIndex: 10, duration: 0 })
         .add({
@@ -224,11 +179,7 @@ export default {
         event.target.scrollLeft
       )
       // eslint-disable-next-line no-loops/no-loops
-<<<<<<< HEAD
-      for (let i = 0; i < this.curtains.planes.length; i++) {
-=======
       for (const val of this.curtains.planes) {
->>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
         // eslint-disable-next-line security/detect-object-injection
         val.updateScrollPosition()
       }
@@ -250,43 +201,43 @@ $scrollBarHeight: 1px;
   height: $scrollBarHeight;
 }
 /* $hf: 100vh; */
-$h: 60vh;
-$w: $h * 1.5;
-$m: $w/2;
-$t: $h + $m;
-.page {
-  height: 100vh;
-  position: relative;
-  overflow: hidden;
-}
+// $h: 60vh;
+// $w: $h * 1.5;
+// $m: $w/2;
+// $t: $h + $m;
+  // .page {
+  //   height: 100vh;
+  //   position: relative;
+  //   overflow: hidden;
+  // }
 img {
   height: 100%;
   width: 100%;
   object-fit: cover;
   object-position: center;
 }
-.seriya__wrapper {
-  position: absolute;
-  top: 20vh;
-  height: 100vw;
-  width: $h;
-  transform: rotate(-90deg) translateY(-$h);
-  transform-origin: right top;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-.seriya__container {
-  box-shadow: inset 0px 0px 0px 1px #03a9f4;
-  border-radius: 3px;
-  margin-top: 200px;
-  margin-bottom: $h/2;
-  width: $w;
-  height: $h;
-  transform: rotate(90deg) translateX(-$m);
-  transform-origin: left bottom;
-}
+// .seriya__wrapper {
+//   position: absolute;
+//   top: 20vh;
+//   height: 100vw;
+//   width: $h;
+//   transform: rotate(-90deg) translateY(-$h);
+//   transform-origin: right top;
+//   overflow-y: auto;
+//   overflow-x: hidden;
+// }
+// .seriya__container {
+//   box-shadow: inset 0px 0px 0px 1px #03a9f4;
+//   border-radius: 3px;
+//   margin-top: 200px;
+//   margin-bottom: $h/2;
+//   width: $w;
+//   height: $h;
+//   transform: rotate(90deg) translateX(-$m);
+//   transform-origin: left bottom;
+// }
 #webgl {
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
@@ -296,8 +247,40 @@ img {
   /* transition: opacity 0.5s ease-in; */
   /* opacity: 1.3; */
 }
-.plane-image {
-//  display: none;
-  opacity: 1;
-}
+// .plane-image {
+// //  display: none;
+//   opacity: 1;
+// }
+
+.seriya {
+  position: relative;
+  transition: background-color 2s;
+  width: 100%;
+  height: 100vh;
+  overflow-x: auto;
+  // overflow: hidden;
+  &__wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    padding-left: 15vw;
+    padding-right: 15vw;
+    height: 100%;
+    position: absolute;
+    &__img {
+      display: block;
+      border-radius: 3px;
+      &:nth-child(odd) {
+        width: calc(33vh * 1.5);
+        height: 33vh;
+      }
+      &:nth-child(even) {
+        width: calc(37vh * 1.5);
+        height: 37vh;
+      }
+    }
+  }
+  }
+
 </style>
