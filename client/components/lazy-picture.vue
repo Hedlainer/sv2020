@@ -3,7 +3,7 @@
     v-mouse="mouseEv"
     v-observe-visibility="{
       callback: visibilityChanged,
-      throttle:400,
+      throttle:700,
       once: true
     }"
     class="lazy"
@@ -38,7 +38,7 @@
         decode="async"
         draggable="false"
         :src="`/image/jpg/${ImageSize.currentImageWidth}/${file}.jpg`"
-        @load="currentImageLoad"
+        @load="curentImageLoaded = true"
       />
     </picture>
   </div>
@@ -115,9 +115,9 @@ export default {
     // this.$refs.currentImage.addEventListener('touchmove', e => this.mouseEv(e))
   },
   methods: {
-    e ($event) {
-      console.log($event)
-    },
+    // e ($event) {
+    //   console.log($event)
+    // },
     mouseEv (event) {
       if (event.targetTouches) {
         this.$emit('mousecord', { x: event.targetTouches[0].offsetX, y: event.targetTouches[0].offsetY })
@@ -125,9 +125,9 @@ export default {
         this.$emit('mousecord', { x: event.offsetX, y: event.offsetY })
       }
     },
-    handleMouse: function (evt, el) {
-      console.log(evt)
-    },
+    // handleMouse: function (evt, el) {
+    //   console.log(evt)
+    // },
     fullImageLoaded () {
       this.$emit('fulload', { img: [this.$refs.currentImage, this.$refs.fullImage], index: this.myIndex })
     },
@@ -135,20 +135,20 @@ export default {
       const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16))
       return `rgba(${r},${g},${b},${alpha})`
     },
-    currentImageLoad () {
-      this.curentImageLoaded = true
-      // console.log('current image', this.myIndex)
-    },
+    // currentImageLoad () {
+    //   this.curentImageLoaded = true
+    //   // console.log('current image', this.myIndex)
+    // },
     clickFullImg ($event) {
       this.$emit('myClick', { index: this.myIndex, x: $event.offsetX, y: $event.offsetY })
       // console.log('click')
     },
     visibilityChanged (isVisible, ev) {
       this.isVisible = isVisible
-    },
-    mousemove ($event) {
-      // console.log($event)
     }
+    // mousemove ($event) {
+    //   // console.log($event)
+    // }
   }
 }
 </script>

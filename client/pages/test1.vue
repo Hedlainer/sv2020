@@ -101,7 +101,7 @@ export default {
     //     plane.htmlElement.addEventListener('touchmove', e => this.mouseEv(e, i))
     //   })
     // },
-    async getUnifors (i) {
+    getUnifors (i) {
       // eslint-disable-next-line security/detect-object-injection
       const plane = this.planes[i.index]
       const rectPlane = plane.getBoundingRect()
@@ -134,7 +134,6 @@ export default {
       plane.uniforms.uViewSize.value = [wUnit, hUnit]
       plane.uniforms.uPlanePosition.value = [xUnit, yUnit]
       plane.uniforms.uResolution.value = [xNormalized, yNormalized]
-      return plane
     },
     // mouseEv (e, i) {
     //   console.log(e)
@@ -154,7 +153,7 @@ export default {
     //   ]
     // },
     async toFullscreen (i) {
-      await this.getUnifors(i)
+      this.getUnifors(i)
       // eslint-disable-next-line security/detect-object-injection
       const plane = this.planes[i.index]
       const tl = anime.timeline({ autoplay: false, easing: 'linear' })
