@@ -2,12 +2,13 @@
   <div
     v-observe-visibility="{
       callback: visibilityChanged,
-      throttle:700,
+      throttle:500,
       once: true
     }"
     class="lazy"
-    :style="{ boxShadow: `inset 0px 0px 0px 1px ${color}`,
+    :style="{ boxShadow: `inset 0px 0px 0px 1px ${hex2rgba(color, 1)}`,
               backgroundColor: hex2rgba(color, .3) }"
+    @mousedown="clickFullImg"
   >
     <picture v-if="fullScreenImage&curentImageLoaded" class="lazy__fullscreen">
       <source
@@ -15,51 +16,28 @@
         type="image/webp"
       />
       <img
-<<<<<<< HEAD
-        ref="imgFull"
-=======
         ref="fullImage"
->>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
         alt="SvobodinaPhoto"
         crossorigin="anonimous"
         decode="async"
         draggable="false"
         :src="`/image/jpg/${ImageSize.fullImageWidth}/${file}.jpg`"
-<<<<<<< HEAD
-        @load="loadImages"
-      />
-    </picture>
-    <picture
-      v-if="isVisible"
-      class="lazy__original"
-    >
-=======
         @load="fullImageLoaded"
       />
     </picture>
     <picture v-if="isVisible" class="lazy__original">
->>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
       <source
         :srcset="`/image/webp/${ImageSize.currentImageWidth}/${file}.webp`"
         type="image/webp"
       />
       <img
-<<<<<<< HEAD
-        ref="imgSmall"
-=======
         ref="currentImage"
->>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
         alt="SvobodinaPhoto"
         crossorigin="anonimous"
         decode="async"
         draggable="false"
         :src="`/image/jpg/${ImageSize.currentImageWidth}/${file}.jpg`"
-<<<<<<< HEAD
         @load="curentImageLoaded = true"
-=======
-        @click="clickFullImg"
-        @load="currentImageLoad"
->>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
       />
     </picture>
   </div>
@@ -72,6 +50,7 @@ if (process.browser) {
   width = window.innerWidth
 }
 export default {
+
   props: {
     fullScreenImage: { type: Boolean, default: false },
     file: { required: true, type: String },
@@ -79,23 +58,20 @@ export default {
     myIndex: { default: 0, type: Number },
     color: { required: true, type: String }
   },
+
   data () {
     return {
       height,
       curentImageLoaded: false,
-<<<<<<< HEAD
-      fullwidth: width,
-=======
       fullWidth: width,
       phVisible: true,
       opacity: 1,
->>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
       isVisible: false
     }
   },
   computed: {
     ImageSize () {
-      const ImageSize = x => {
+      const ImageSize = (x) => {
         const w =
           x < 480
             ? 480
@@ -116,44 +92,30 @@ export default {
       }
     }
   },
-<<<<<<< HEAD
-  // mounted () {
-  //   const ii = this.$refs.img
-  //   ii.onload(() => console.log('qqq'))
-  //   // .then(() => {
-  //   // this.$emit('myEvent')
-  //   // console.log('ii')
-  //   // })
-  //   // if (this.smalloded & this.bigloaded) {
-  //   //   this.$emit('allloaded', this.k)
-  //   // };
-  // },
-  methods: {
-    loadImages () {
-      this.$emit('loaded', { index: this.myIndex, imgFull: this.$refs.imgFull, imgSmall: this.$refs.imgSmall })
-    },
-    e () {
-      console.log(this.myIndex)
-=======
-  mounted () {},
+
   methods: {
     fullImageLoaded () {
-      this.$emit('fulload', { img: [this.$refs.currentImage, this.$refs.fullImage], index: this.myIndex })
->>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
+      this.$emit('fulload', {
+        img: [this.$refs.currentImage, this.$refs.fullImage],
+        index: this.myIndex,
+        aspect: this.$refs.fullImage.naturalHeight / this.$refs.fullImage.naturalWidth
+      })
     },
+
+    clickFullImg ($event) {
+      this.$emit('myClick', { index: this.myIndex, x: $event.offsetX, y: $event.offsetY })
+    },
+
     hex2rgba (hex, alpha = 1) {
-      const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16))
-      return `rgba(${r},${g},${b},${alpha})`
+      if (this.curentImageLoaded) {
+        return 'rgba(0,0,0,0)'
+      } else {
+        const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16))
+        return `rgba(${r},${g},${b},${alpha})`
+      }
     },
-    currentImageLoad () {
-      this.curentImageLoaded = true
-      console.log('current image', this.myIndex)
-    },
-    clickFullImg () {
-      this.$emit('myClick', { index: this.myIndex })
-      console.log('click')
-    },
-    visibilityChanged (isVisible) {
+
+    visibilityChanged (isVisible, ev) {
       this.isVisible = isVisible
     }
   }
@@ -177,6 +139,7 @@ export default {
   transition: transform 1s;
 }
 img {
+  display: none;
   position: absolute;
   height: 100%;
   width: 100%;
