@@ -3,29 +3,17 @@
     <div id="webgl" ref="webgl"></div>
     <main class="seriya__wrapper" @scroll.passive="updateScroll">
       <lazyPicture
-<<<<<<< HEAD
-        v-for="(seriya,i) in photoseries"
-=======
         v-for="(seriya, index) in photoseries"
->>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
         :key="seriya.Id"
         ref="CurtainsPlanes"
         class="seriya__container"
         :color="seriya.Color"
-<<<<<<< HEAD
-        :current-width="320"
-        :file="seriya.FileName"
-        :full-screen-image="true"
-        :my-index="i"
-        @loaded="loadImg"
-=======
         :current-width="710"
         :file="seriya.FileName"
         :full-screen-image="true"
         :my-index="index"
-        @fulload="doSome"
-        @myClick="e"
->>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
+        @fulload="preparePlane"
+        @myClick="activeAnimate"
       />
     </main>
   </div>
@@ -33,21 +21,19 @@
 
 <script>
 import { Curtains } from 'curtainsjs'
-import lazyPicture from '~/components/lazy-picture.vue'
 import anime from 'animejs/lib/anime.es.js'
+import lazyPicture from '~/components/lazy-picture.vue'
 import photoseries from '~/static/db/Photoseries.json'
 import { vertex, fragment } from '~/assets/shader3.js'
+
 export default {
   components: {
     lazyPicture
   },
+
   data () {
     return {
-<<<<<<< HEAD
-=======
-      // fullloaded: null,
-      // smalloaded: null,
->>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
+      calcCords: {},
       photoseries,
       animating: true,
       duration: 1700,
@@ -60,10 +46,9 @@ export default {
         heightSegments: 32,
         vertexShader: vertex,
         fragmentShader: fragment,
-        fov: 180,
+        fov: 1,
         autoloadSources: false,
         uniforms: {
-          // uTime: { name: 'uTime', type: '1f', value: 0 },
           uViewSize: { name: 'uViewSize', type: '2f', value: [] },
           uMouse: { name: 'uMouse', type: '2f', value: [] },
           uPlanePosition: { name: 'uPlanePosition', type: '2f', value: [] },
@@ -75,35 +60,27 @@ export default {
   },
   mounted () {
     this.initCurtains()
-<<<<<<< HEAD
-    // console.log(this.doSome())
-
-    // console.log(this.curtains.planes)
-    // console.log(this.$refs.CurtainsPlanes[3])
-  },
-  methods: {
-    async loadImg (ctx) {
-      await this.doSome(ctx)
-      await this.handlePlanes(ctx)
-    },
-    async doSome (ctx) {
-      const plane = this.curtains.addPlane(this.$refs.CurtainsPlanes[ctx.index].$el, this.params)
-      plane.loadImages([ctx.imgSmall, ctx.imgFull])
-      // return plane
-=======
     // console.log(this.planes)
     // console.log(this.$refs.CurtainsPlanes[3])
   },
   methods: {
-    e (ctx) {
-      this.toFullscreen(ctx.index)
+    activeAnimate (ctx) {
+      this.toFullscreen(ctx)
     },
-    async doSome (ctx) {
-      // // eslint-disable-next-line no-debugger
-      // debugger
-      this.planes[ctx.index].loadSources(ctx.img)
-      this.handlePlanes(ctx.index)
->>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
+    preparePlane (ctx) {
+      const plane = this.planes[ctx.index]
+      plane.loadSources(ctx.img)
+      // считаем вестор для нормализации изображения в шейдере
+      let xNormalized, yNormalized
+      if (window.innerHeight / window.innerWidth > ctx.aspect) {
+        xNormalized = (window.innerWidth / window.innerHeight) * ctx.aspect
+        yNormalized = 1
+      } else {
+        xNormalized = 1
+        yNormalized = window.innerHeight / window.innerWidth / ctx.aspect
+      }
+      plane.uniforms.uResolution.value = [xNormalized, yNormalized]
+      this.getUnifors(ctx)
     },
     // route (a) {
     //   this.$router.push(`photoseries/${a}`)
@@ -112,95 +89,42 @@ export default {
       this.curtains = new Curtains({
         container: this.$refs.webgl,
         pixelRatio: window.devicePixelRatio,
-<<<<<<< HEAD
-        watchScroll: true
-      })
-    },
-    async handlePlanes (i) {
-      const plane = this.curtains.planes[i.index]
-      // eslint-disable-next-line no-debugger
-      // debugger
-      this.$refs.CurtainsPlanes[parseInt(i.index)].$el.addEventListener('click', () => this.toFullscreen(plane))
-      this.$refs.CurtainsPlanes[parseInt(i.index)].$el.addEventListener('mousemove', e => this.mouseEv(e, plane))
-      this.$refs.CurtainsPlanes[parseInt(i.index)].$el.addEventListener('touchmove', e => this.mouseEv(e, plane))
-=======
         watchScroll: false
       })
-      // eslint-disable-next-line no-loops/no-loops
       for (const value of this.$refs.CurtainsPlanes) {
         const plane = this.curtains.addPlane(value.$el, this.params)
         this.planes.push(plane)
       }
     },
-    handlePlanes (i) {
+    getUnifors (i) {
       // eslint-disable-next-line security/detect-object-injection
-      const plane = this.planes[i]
-      console.log(plane)
-      // eslint-disable-next-line no-debugger
-      // debugger
-      plane.onReady(() => {
-        // this.curtains.enableDrawing()
-        // plane.htmlElement.addEventListener('click', () => this.toFullscreen(i))
-        plane.htmlElement.addEventListener('mousemove', e => this.mouseEv(e, i))
-        plane.htmlElement.addEventListener('touchmove', e => this.mouseEv(e, i))
-      })
->>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
-    },
-    async getUnifors (plane) {
-      // const plane = this.curtains.planes[parseInt(i)]
+      const plane = this.planes[i.index]
       const rectPlane = plane.getBoundingRect()
       // ширина плана в условных еденицах
-      const wUnit =
-        (window.innerWidth / rectPlane.width) * this.curtains.pixelRatio
-      const hUnit =
-        (window.innerHeight / rectPlane.height) * this.curtains.pixelRatio
+      this.calcCords.w = (window.innerWidth / rectPlane.width) * this.curtains.pixelRatio
+      this.calcCords.h = (window.innerHeight / rectPlane.height) * this.curtains.pixelRatio
       // вектор для перемещения плана при увеличении до размера окна
-      const xUnit = (rectPlane.left / rectPlane.width - wUnit / 2 + 0.5) * 2
-      const yUnit = (-(rectPlane.top / rectPlane.height - hUnit / 2) - 0.5) * 2
-      // параметры изображения в пикселях
-      const widthImg = plane.images[1].naturalWidth
-      const heightImg = plane.images[1].naturalHeight
+      this.calcCords.x = (rectPlane.left / rectPlane.width - this.calcCords.w / 2 + 0.5) * 2
+      this.calcCords.y = (-(rectPlane.top / rectPlane.height - this.calcCords.h / 2) - 0.5) * 2
 
-      const imageAspect = heightImg / widthImg
-      // считаем вестор для нормализации изображения в шейдере
-      let xNormalized, yNormalized
-      if (window.innerHeight / window.innerWidth > imageAspect) {
-        xNormalized = (window.innerWidth / window.innerHeight) * imageAspect
-        yNormalized = 1
-      } else {
-        xNormalized = 1
-        yNormalized = window.innerHeight / window.innerWidth / imageAspect
-      }
+      this.calcCords.mouseX = (i.x / rectPlane.width) * this.curtains.pixelRatio
+      this.calcCords.mouseY = 1 - (i.y / rectPlane.height) * this.curtains.pixelRatio
 
-      plane.uniforms.uViewSize.value = [wUnit, hUnit]
-      plane.uniforms.uPlanePosition.value = [xUnit, yUnit]
-      plane.uniforms.uResolution.value = [xNormalized, yNormalized]
+      plane.uniforms.uMouse.value = [this.calcCords.mouseX, this.calcCords.mouseY]
+      plane.uniforms.uViewSize.value = [this.calcCords.w, this.calcCords.h]
+      plane.uniforms.uPlanePosition.value = [this.calcCords.x, this.calcCords.y]
     },
-    mouseEv (e, plane) {
-      const rectPlane = plane.getBoundingRect()
-      if (e.targetTouches) {
-        this.mouseNormalized.x = (e.targetTouches[0].offsetX / rectPlane.width) * this.curtains.pixelRatio
-        this.mouseNormalized.y = 1 - (e.targetTouches[0].offsetY / rectPlane.height) * this.curtains.pixelRatio
-      } else {
-        this.mouseNormalized.x = (e.offsetX / rectPlane.width) * this.curtains.pixelRatio
-        this.mouseNormalized.y = 1 - (e.offsetY / rectPlane.height) * this.curtains.pixelRatio
-      }
-      plane.uniforms.uMouse.value = [
-        this.mouseNormalized.x,
-        this.mouseNormalized.y
-      ]
-    },
-    async toFullscreen (plane) {
-      await this.getUnifors(plane)
+    toFullscreen (i) {
+      this.getUnifors(i)
+      // eslint-disable-next-line security/detect-object-injection
+      const plane = this.planes[i.index]
       const tl = anime.timeline({ autoplay: false, easing: 'linear' })
-      tl.add({ targets: this.curtains.container, zIndex: 10, duration: 0 })
-        .add({
-          targets: plane.uniforms.uProgress,
-          value: 1,
-          // delay: 0,
-          duration: this.duration,
-          easing: 'cubicBezier(0.215, 0.61, 0.355, 1)'
-        })
+      tl.add({
+        targets: plane.uniforms.uProgress,
+        value: 1,
+        duration: this.duration,
+        easing: 'cubicBezier(0.215, 0.61, 0.355, 1)'
+      })
         .add(
           {
             targets: plane.uniforms.uProgress,
@@ -210,12 +134,6 @@ export default {
           },
           '+=1500'
         )
-        .add({
-          targets: this.curtains.container,
-          delay: 1,
-          zIndex: -10,
-          duration: 0
-        })
       tl.play()
     },
     updateScroll (event) {
@@ -223,13 +141,7 @@ export default {
         event.target.scrollTop,
         event.target.scrollLeft
       )
-      // eslint-disable-next-line no-loops/no-loops
-<<<<<<< HEAD
-      for (let i = 0; i < this.curtains.planes.length; i++) {
-=======
       for (const val of this.curtains.planes) {
->>>>>>> 50407439460d2f6ffd580d9c4599ce864dd83c88
-        // eslint-disable-next-line security/detect-object-injection
         val.updateScrollPosition()
       }
     }
@@ -260,6 +172,7 @@ $t: $h + $m;
   overflow: hidden;
 }
 img {
+  // display: none;
   height: 100%;
   width: 100%;
   object-fit: cover;
@@ -288,10 +201,11 @@ img {
 #webgl {
   position: absolute;
   top: 0;
-  right: 0;
-  bottom: 0;
+  // right: 0;
+  // bottom: 0;
   left: 0;
   height: 100vh;
+  width: 100%;
   /* z-index: -1; */
   /* transition: opacity 0.5s ease-in; */
   /* opacity: 1.3; */
