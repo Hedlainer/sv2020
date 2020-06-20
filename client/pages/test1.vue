@@ -1,26 +1,21 @@
 <template>
-  <div class="seriya">
+  <div class="page">
     <div id="webgl" ref="webgl"></div>
-    <div
-      ref="container"
-      class="seriya__wrapper"
-      @mousewheel="$refs.container.scrollLeft += $event.deltaY"
-      @scroll.passive="updateScroll"
-    >
+    <main class="seriya__wrapper" @scroll.passive="updateScroll">
       <lazyPicture
         v-for="(seriya, index) in photoseries"
         :key="seriya.Id"
         ref="CurtainsPlanes"
-        class="seriya__wrapper__img"
+        class="seriya__container"
         :color="seriya.Color"
         :current-width="710"
         :file="seriya.FileName"
         :full-screen-image="true"
         :my-index="index"
-        @fulload="doSome"
-        @myClick="e"
+        @fulload="preparePlane"
+        @myClick="activeAnimate"
       />
-    </div>
+    </main>
   </div>
 </template>
 
@@ -30,6 +25,7 @@ import anime from 'animejs/lib/anime.es.js'
 import lazyPicture from '~/components/lazy-picture.vue'
 import photoseries from '~/static/db/Photoseries.json'
 import { vertex, fragment } from '~/assets/shader3.js'
+
 export default {
   components: {
     lazyPicture
@@ -37,8 +33,7 @@ export default {
 
   data () {
     return {
-      // fullloaded: null,
-      // smalloaded: null,
+      calcCords: {},
       photoseries,
       animating: true,
       duration: 1700,
@@ -52,10 +47,8 @@ export default {
         vertexShader: vertex,
         fragmentShader: fragment,
         fov: 1,
-        shareProgram: true,
         autoloadSources: false,
         uniforms: {
-          // uTime: { name: 'uTime', type: '1f', value: 0 },
           uViewSize: { name: 'uViewSize', type: '2f', value: [] },
           uMouse: { name: 'uMouse', type: '2f', value: [] },
           uPlanePosition: { name: 'uPlanePosition', type: '2f', value: [] },
@@ -71,11 +64,23 @@ export default {
     // console.log(this.$refs.CurtainsPlanes[3])
   },
   methods: {
-    e (ctx) {
+    activeAnimate (ctx) {
       this.toFullscreen(ctx)
     },
-    async doSome (ctx) {
-      this.planes[ctx.index].loadSources(ctx.img)
+    preparePlane (ctx) {
+      const plane = this.planes[ctx.index]
+      plane.loadSources(ctx.img)
+      // считаем вестор для нормализации изображения в шейдере
+      let xNormalized, yNormalized
+      if (window.innerHeight / window.innerWidth > ctx.aspect) {
+        xNormalized = (window.innerWidth / window.innerHeight) * ctx.aspect
+        yNormalized = 1
+      } else {
+        xNormalized = 1
+        yNormalized = window.innerHeight / window.innerWidth / ctx.aspect
+      }
+      plane.uniforms.uResolution.value = [xNormalized, yNormalized]
+      this.getUnifors(ctx)
     },
     // route (a) {
     //   this.$router.push(`photoseries/${a}`)
@@ -97,65 +102,30 @@ export default {
       const plane = this.planes[i.index]
       const rectPlane = plane.getBoundingRect()
       // ширина плана в условных еденицах
-      const wUnit =
-        (window.innerWidth / rectPlane.width) * this.curtains.pixelRatio
-      const hUnit =
-        (window.innerHeight / rectPlane.height) * this.curtains.pixelRatio
+      this.calcCords.w = (window.innerWidth / rectPlane.width) * this.curtains.pixelRatio
+      this.calcCords.h = (window.innerHeight / rectPlane.height) * this.curtains.pixelRatio
       // вектор для перемещения плана при увеличении до размера окна
-      const xUnit = (rectPlane.left / rectPlane.width - wUnit / 2 + 0.5) * 2
-      const yUnit = (-(rectPlane.top / rectPlane.height - hUnit / 2) - 0.5) * 2
-      // параметры изображения в пикселях
-      const widthImg = plane.images[1].naturalWidth
-      const heightImg = plane.images[1].naturalHeight
+      this.calcCords.x = (rectPlane.left / rectPlane.width - this.calcCords.w / 2 + 0.5) * 2
+      this.calcCords.y = (-(rectPlane.top / rectPlane.height - this.calcCords.h / 2) - 0.5) * 2
 
-      const imageAspect = heightImg / widthImg
-      // считаем вестор для нормализации изображения в шейдере
-      let xNormalized, yNormalized
-      if (window.innerHeight / window.innerWidth > imageAspect) {
-        xNormalized = (window.innerWidth / window.innerHeight) * imageAspect
-        yNormalized = 1
-      } else {
-        xNormalized = 1
-        yNormalized = window.innerHeight / window.innerWidth / imageAspect
-      }
-      this.mouseNormalized.x = (i.x / rectPlane.width) * this.curtains.pixelRatio
-      this.mouseNormalized.y = 1 - (i.y / rectPlane.height) * this.curtains.pixelRatio
+      this.calcCords.mouseX = (i.x / rectPlane.width) * this.curtains.pixelRatio
+      this.calcCords.mouseY = 1 - (i.y / rectPlane.height) * this.curtains.pixelRatio
 
-      plane.uniforms.uMouse.value = [this.mouseNormalized.x, this.mouseNormalized.y]
-      plane.uniforms.uViewSize.value = [wUnit, hUnit]
-      plane.uniforms.uPlanePosition.value = [xUnit, yUnit]
-      plane.uniforms.uResolution.value = [xNormalized, yNormalized]
+      plane.uniforms.uMouse.value = [this.calcCords.mouseX, this.calcCords.mouseY]
+      plane.uniforms.uViewSize.value = [this.calcCords.w, this.calcCords.h]
+      plane.uniforms.uPlanePosition.value = [this.calcCords.x, this.calcCords.y]
     },
-    // mouseEv (e, i) {
-    //   console.log(e)
-    //   // eslint-disable-next-line security/detect-object-injection
-    //   const plane = this.planes[i]
-    //   const rectPlane = plane.getBoundingRect()
-    //   if (e.targetTouches) {
-    //     this.mouseNormalized.x = (e.targetTouches[0].offsetX / rectPlane.width) * this.curtains.pixelRatio
-    //     this.mouseNormalized.y = 1 - (e.targetTouches[0].offsetY / rectPlane.height) * this.curtains.pixelRatio
-    //   } else {
-    //     this.mouseNormalized.x = (e.offsetX / rectPlane.width) * this.curtains.pixelRatio
-    //     this.mouseNormalized.y = 1 - (e.offsetY / rectPlane.height) * this.curtains.pixelRatio
-    //   }
-    //   plane.uniforms.uMouse.value = [
-    //     this.mouseNormalized.x,
-    //     this.mouseNormalized.y
-    //   ]
-    // },
-    async toFullscreen (i) {
+    toFullscreen (i) {
       this.getUnifors(i)
       // eslint-disable-next-line security/detect-object-injection
       const plane = this.planes[i.index]
       const tl = anime.timeline({ autoplay: false, easing: 'linear' })
-      tl.add({ targets: this.curtains.container, zIndex: 10, duration: 0 })
-        .add({
-          targets: plane.uniforms.uProgress,
-          value: 1,
-          // delay: 0,
-          duration: this.duration,
-          easing: 'cubicBezier(0.215, 0.61, 0.355, 1)'
-        })
+      tl.add({
+        targets: plane.uniforms.uProgress,
+        value: 1,
+        duration: this.duration,
+        easing: 'cubicBezier(0.215, 0.61, 0.355, 1)'
+      })
         .add(
           {
             targets: plane.uniforms.uProgress,
@@ -165,12 +135,6 @@ export default {
           },
           '+=1500'
         )
-        .add({
-          targets: this.curtains.container,
-          delay: 1,
-          zIndex: -10,
-          duration: 0
-        })
       tl.play()
     },
     updateScroll (event) {
@@ -180,7 +144,6 @@ export default {
       )
       // eslint-disable-next-line no-loops/no-loops
       for (const val of this.curtains.planes) {
-        // eslint-disable-next-line security/detect-object-injection
         val.updateScrollPosition()
       }
     }
@@ -201,86 +164,56 @@ $scrollBarHeight: 1px;
   height: $scrollBarHeight;
 }
 /* $hf: 100vh; */
-// $h: 60vh;
-// $w: $h * 1.5;
-// $m: $w/2;
-// $t: $h + $m;
-  // .page {
-  //   height: 100vh;
-  //   position: relative;
-  //   overflow: hidden;
-  // }
+$h: 60vh;
+$w: $h * 1.5;
+$m: $w/2;
+$t: $h + $m;
+.page {
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
 img {
+  // display: none;
   height: 100%;
   width: 100%;
   object-fit: cover;
   object-position: center;
 }
-// .seriya__wrapper {
-//   position: absolute;
-//   top: 20vh;
-//   height: 100vw;
-//   width: $h;
-//   transform: rotate(-90deg) translateY(-$h);
-//   transform-origin: right top;
-//   overflow-y: auto;
-//   overflow-x: hidden;
-// }
-// .seriya__container {
-//   box-shadow: inset 0px 0px 0px 1px #03a9f4;
-//   border-radius: 3px;
-//   margin-top: 200px;
-//   margin-bottom: $h/2;
-//   width: $w;
-//   height: $h;
-//   transform: rotate(90deg) translateX(-$m);
-//   transform-origin: left bottom;
-// }
+.seriya__wrapper {
+  position: absolute;
+  top: 20vh;
+  height: 100vw;
+  width: $h;
+  transform: rotate(-90deg) translateY(-$h);
+  transform-origin: right top;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.seriya__container {
+  box-shadow: inset 0px 0px 0px 1px #03a9f4;
+  border-radius: 3px;
+  margin-top: 200px;
+  margin-bottom: $h/2;
+  width: $w;
+  height: $h;
+  transform: rotate(90deg) translateX(-$m);
+  transform-origin: left bottom;
+}
 #webgl {
-  position: fixed;
+  position: absolute;
   top: 0;
-  right: 0;
-  bottom: 0;
+  // right: 0;
+  // bottom: 0;
   left: 0;
   height: 100vh;
+  width: 100%;
   /* z-index: -1; */
   /* transition: opacity 0.5s ease-in; */
   /* opacity: 1.3; */
 }
-// .plane-image {
-// //  display: none;
-//   opacity: 1;
-// }
-
-.seriya {
-  position: relative;
-  transition: background-color 2s;
-  width: 100%;
-  height: 100vh;
-  overflow-x: auto;
-  // overflow: hidden;
-  &__wrapper {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: center;
-    padding-left: 15vw;
-    padding-right: 15vw;
-    height: 100%;
-    position: absolute;
-    &__img {
-      display: block;
-      border-radius: 3px;
-      &:nth-child(odd) {
-        width: calc(33vh * 1.5);
-        height: 33vh;
-      }
-      &:nth-child(even) {
-        width: calc(37vh * 1.5);
-        height: 37vh;
-      }
-    }
-  }
-  }
-
+.plane-image {
+//  display: none;
+  opacity: 1;
+}
 </style>

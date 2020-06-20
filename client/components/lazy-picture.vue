@@ -2,11 +2,11 @@
   <div
     v-observe-visibility="{
       callback: visibilityChanged,
-      throttle:400,
+      throttle:500,
       once: true
     }"
     class="lazy"
-    :style="{ boxShadow: `inset 0px 0px 0px 1px ${color}`,
+    :style="{ boxShadow: `inset 0px 0px 0px 1px ${hex2rgba(color, 1)}`,
               backgroundColor: hex2rgba(color, .3) }"
     @mousedown="clickFullImg"
   >
@@ -37,7 +37,7 @@
         decode="async"
         draggable="false"
         :src="`/image/jpg/${ImageSize.currentImageWidth}/${file}.jpg`"
-        @load="currentImageLoad"
+        @load="curentImageLoaded = true"
       />
     </picture>
   </div>
@@ -50,6 +50,7 @@ if (process.browser) {
   width = window.innerWidth
 }
 export default {
+
   props: {
     fullScreenImage: { type: Boolean, default: false },
     file: { required: true, type: String },
@@ -57,6 +58,7 @@ export default {
     myIndex: { default: 0, type: Number },
     color: { required: true, type: String }
   },
+
   data () {
     return {
       height,
@@ -90,21 +92,29 @@ export default {
       }
     }
   },
+
   methods: {
     fullImageLoaded () {
-      this.$emit('fulload', { img: [this.$refs.currentImage, this.$refs.fullImage], index: this.myIndex })
+      this.$emit('fulload', {
+        img: [this.$refs.currentImage, this.$refs.fullImage],
+        index: this.myIndex,
+        aspect: this.$refs.fullImage.naturalHeight / this.$refs.fullImage.naturalWidth
+      })
     },
-    hex2rgba (hex, alpha = 1) {
-      const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16))
-      return `rgba(${r},${g},${b},${alpha})`
-    },
-    currentImageLoad () {
-      this.curentImageLoaded = true
-      // console.log('current image', this.myIndex)
-    },
+
     clickFullImg ($event) {
       this.$emit('myClick', { index: this.myIndex, x: $event.offsetX, y: $event.offsetY })
     },
+
+    hex2rgba (hex, alpha = 1) {
+      if (this.curentImageLoaded) {
+        return 'rgba(0,0,0,0)'
+      } else {
+        const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16))
+        return `rgba(${r},${g},${b},${alpha})`
+      }
+    },
+
     visibilityChanged (isVisible, ev) {
       this.isVisible = isVisible
     }
@@ -129,6 +139,7 @@ export default {
   transition: transform 1s;
 }
 img {
+  display: none;
   position: absolute;
   height: 100%;
   width: 100%;
