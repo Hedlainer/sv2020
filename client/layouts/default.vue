@@ -1,5 +1,5 @@
 <template>
-  <nuxt />
+  <nuxt class="main" />
 </template>
 
 <script>
@@ -37,5 +37,9 @@ export default {
 <style lang="scss">
 html{
     background: black;
+}
+.main{
+  height: 100vh;
+  position: relative;
 }
 </style>

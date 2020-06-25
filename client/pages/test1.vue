@@ -1,22 +1,21 @@
 <template>
-  <div class="page">
+  <main class="seriya__wrapper" @scroll.passive="updateScroll">
     <div id="webgl" ref="webgl"></div>
-    <main class="seriya__wrapper" @scroll.passive="updateScroll">
-      <lazyPicture
-        v-for="(seriya, index) in photoseries"
-        :key="seriya.Id"
-        ref="CurtainsPlanes"
-        class="seriya__container"
-        :color="seriya.Color"
-        :current-width="710"
-        :file="seriya.FileName"
-        :full-screen-image="true"
-        :my-index="index"
-        @fulload="preparePlane"
-        @myClick="activeAnimate"
-      />
-    </main>
-  </div>
+    <lazyPicture
+      v-for="(seriya, index) in photoseries"
+      :key="seriya.Id"
+      ref="CurtainsPlanes"
+      class="seriya__container"
+      :color="seriya.Color"
+      :current-width="710"
+      :file="seriya.FileName"
+      :full-screen-image="true"
+      :img-data="seriya"
+      :my-index="index"
+      @fulload="preparePlane"
+      @myClick="activateAnimate"
+    />
+  </main>
 </template>
 
 <script>
@@ -64,7 +63,7 @@ export default {
     // console.log(this.$refs.CurtainsPlanes[3])
   },
   methods: {
-    activeAnimate (ctx) {
+    activateAnimate (ctx) {
       this.toFullscreen(ctx)
     },
     preparePlane (ctx) {
@@ -80,7 +79,7 @@ export default {
         yNormalized = window.innerHeight / window.innerWidth / ctx.aspect
       }
       plane.uniforms.uResolution.value = [xNormalized, yNormalized]
-      this.getUnifors(ctx)
+      // this.getUnifors(ctx)
     },
     // route (a) {
     //   this.$router.push(`photoseries/${a}`)
@@ -89,7 +88,7 @@ export default {
       this.curtains = new Curtains({
         container: this.$refs.webgl,
         pixelRatio: window.devicePixelRatio,
-        watchScroll: false
+        watchScroll: true
       })
       // eslint-disable-next-line no-loops/no-loops
       for (const value of this.$refs.CurtainsPlanes) {
@@ -163,45 +162,32 @@ $scrollBarHeight: 1px;
   width: $scrollBarHeight;
   height: $scrollBarHeight;
 }
-/* $hf: 100vh; */
-$h: 60vh;
-$w: $h * 1.5;
-$m: $w/2;
-$t: $h + $m;
 .page {
   height: 100vh;
   position: relative;
-  overflow: hidden;
+  // overflow: hidden;
 }
-img {
-  // display: none;
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-  object-position: center;
-}
+
 .seriya__wrapper {
+  // width: calc(((60vh * 1.5) + 10vw) * 9);
   position: absolute;
-  top: 20vh;
-  height: 100vw;
-  width: $h;
-  transform: rotate(-90deg) translateY(-$h);
-  transform-origin: right top;
-  overflow-y: auto;
-  overflow-x: hidden;
+  padding: 0 2.5vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  // cursor: move;
 }
+
 .seriya__container {
-  box-shadow: inset 0px 0px 0px 1px #03a9f4;
-  border-radius: 3px;
-  margin-top: 200px;
-  margin-bottom: $h/2;
-  width: $w;
-  height: $h;
-  transform: rotate(90deg) translateX(-$m);
-  transform-origin: left bottom;
+  position: relative;
+  width: calc(60vh * 1.5);
+  height: 60vh;
+  margin: auto 5vw;
+  text-align: center;
 }
+
 #webgl {
-  position: absolute;
+  position: fixed;
   top: 0;
   // right: 0;
   // bottom: 0;
@@ -212,8 +198,32 @@ img {
   /* transition: opacity 0.5s ease-in; */
   /* opacity: 1.3; */
 }
+
 .plane-image {
-//  display: none;
+  //  display: none;
   opacity: 1;
 }
+
+@media screen and (orientation: portrait) {
+
+  .page {
+    max-height: 100vh;
+  }
+
+  .seriya__wrapper {
+    overflow: hidden;
+    width: 100vw;
+    padding: 2.5vh 0;
+    height: auto;
+    flex-direction: column;
+  }
+
+  .seriya__container {
+    width: 95vw;
+    height: calc(95vw / 1.5);
+    margin: 5vw 0;
+  }
+
+}
+
 </style>

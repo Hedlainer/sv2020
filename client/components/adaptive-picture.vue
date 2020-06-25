@@ -6,8 +6,7 @@
       once: true
     }"
     class="lazy"
-    :style="{ boxShadow: `inset 0px 0px 0px 1px ${color}`,
-              backgroundColor: hex2rgba(color, .3) }"
+    :style="{ boxShadow: `inset 0px 0px 0px 1px ${color}`,backgroundImage: `url(/image/svg/${file}.svg)`}"
   >
     <picture
       v-if="isVisible"
@@ -75,6 +74,12 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.lazy__original{
+  min-height: 100%;
+  background-repeat: no-repeat;
+    background-size: 100% auto;
+    background-position: center top;
+}
 .lazy {
   transition: transform 1s;
   position: absolute;

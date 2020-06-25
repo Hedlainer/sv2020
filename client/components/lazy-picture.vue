@@ -6,9 +6,8 @@
       once: true
     }"
     class="lazy"
-    :style="{ boxShadow: `inset 0px 0px 0px 1px ${hex2rgba(color, 1)}`,
-              backgroundColor: hex2rgba(color, .3) }"
-    @mousedown="clickFullImg"
+    :style="{ backgroundImage: `url(/image/svg/${file}.svg)`}"
+    @click="clickFullImg"
   >
     <picture v-if="fullScreenImage&curentImageLoaded" class="lazy__fullscreen">
       <source
@@ -25,7 +24,10 @@
         @load="fullImageLoaded"
       />
     </picture>
-    <picture v-if="isVisible" class="lazy__original">
+    <picture
+      v-if="isVisible"
+      class="lazy__original"
+    >
       <source
         :srcset="`/image/webp/${ImageSize.currentImageWidth}/${file}.webp`"
         type="image/webp"
@@ -50,13 +52,15 @@ if (process.browser) {
   width = window.innerWidth
 }
 export default {
-
+// :style="{ boxShadow: `inset 0px 0px 0px 1px ${hex2rgba(color, 1)}`,
+//               backgroundColor: hex2rgba(color, .3) }"
   props: {
     fullScreenImage: { type: Boolean, default: false },
     file: { required: true, type: String },
     currentWidth: { required: true, type: Number },
     myIndex: { default: 0, type: Number },
-    color: { required: true, type: String }
+    color: { required: true, type: String },
+    imgData: { required: true, type: Object }
   },
 
   data () {
@@ -97,8 +101,8 @@ export default {
     fullImageLoaded () {
       this.$emit('fulload', {
         img: [this.$refs.currentImage, this.$refs.fullImage],
-        index: this.myIndex,
-        aspect: this.$refs.fullImage.naturalHeight / this.$refs.fullImage.naturalWidth
+        aspect: this.$refs.fullImage.naturalHeight / this.$refs.fullImage.naturalWidth,
+        index: this.myIndex
       })
     },
 
@@ -117,6 +121,7 @@ export default {
 
     visibilityChanged (isVisible, ev) {
       this.isVisible = isVisible
+      // console.log(ev)
     }
   }
 }
@@ -139,12 +144,12 @@ export default {
   transition: transform 1s;
 }
 img {
-  display: none;
-  position: absolute;
+  // display: none;
+  //position: absolute;
   height: 100%;
   width: 100%;
   object-fit: cover;
-  object-position: 50% 50%;
+  object-position: center;
 }
 
 .fullscreen {
