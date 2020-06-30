@@ -1,5 +1,8 @@
 <template>
-  <main class="seriya__wrapper" @scroll.passive="updateScroll">
+  <main
+    class="seriya"
+    @scroll.passive="updateScroll"
+  >
     <div id="webgl" ref="webgl"></div>
     <lazyPicture
       v-for="(seriya, index) in photoseries"
@@ -10,7 +13,6 @@
       :current-width="710"
       :file="seriya.FileName"
       :full-screen-image="true"
-      :img-data="seriya"
       :my-index="index"
       @fulload="preparePlane"
       @myClick="activateAnimate"
@@ -120,20 +122,28 @@ export default {
       const plane = this.planes[i.index]
       const tl = anime.timeline({ autoplay: false, easing: 'linear' })
       tl.add({
-        targets: plane.uniforms.uProgress,
-        value: 1,
-        duration: this.duration,
-        easing: 'cubicBezier(0.215, 0.61, 0.355, 1)'
+        targets: '#webgl',
+        zIndex: 2,
+        duration: 0
       })
-        .add(
-          {
-            targets: plane.uniforms.uProgress,
-            value: 0,
-            easing: 'cubicBezier(0.445, 0.05, 0.55, 0.95)',
-            duration: this.duration
-          },
-          '+=1500'
-        )
+        .add({
+          targets: plane.uniforms.uProgress,
+          value: 1,
+          duration: this.duration,
+          easing: 'cubicBezier(0.215, 0.61, 0.355, 1)',
+          complete: () => {
+            this.$router.push(`photoseries/${this.photoseries[i.index].Route}`)
+          }
+        })
+        // .add(
+        //   {
+        //     targets: plane.uniforms.uProgress,
+        //     value: 0,
+        //     easing: 'cubicBezier(0.445, 0.05, 0.55, 0.95)',
+        //     duration: this.duration
+        //   }
+        //   // '+=1500'
+        // )
       tl.play()
     },
     updateScroll (event) {
@@ -162,68 +172,49 @@ $scrollBarHeight: 1px;
   width: $scrollBarHeight;
   height: $scrollBarHeight;
 }
-.page {
-  height: 100vh;
-  position: relative;
-  // overflow: hidden;
-}
 
-.seriya__wrapper {
-  // width: calc(((60vh * 1.5) + 10vw) * 9);
+.seriya {
   position: absolute;
   padding: 0 2.5vw;
   height: 100vh;
   display: flex;
   align-items: center;
-  // cursor: move;
+  &__container {
+    position: relative;
+    margin: auto 3vw;
+    text-align: center;
+      &:nth-child(odd) {
+        width: calc(65vh * 1.5);
+        height: 65vh;
+      }
+      &:nth-child(even) {
+        width: calc(67vh * 1.5);
+        height: 67vh;
+      }
+  }
 }
-
-.seriya__container {
-  position: relative;
-  width: calc(60vh * 1.5);
-  height: 60vh;
-  margin: auto 5vw;
-  text-align: center;
-}
-
 #webgl {
   position: fixed;
   top: 0;
-  // right: 0;
-  // bottom: 0;
   left: 0;
   height: 100vh;
   width: 100%;
-  /* z-index: -1; */
-  /* transition: opacity 0.5s ease-in; */
-  /* opacity: 1.3; */
-}
-
-.plane-image {
-  //  display: none;
-  opacity: 1;
 }
 
 @media screen and (orientation: portrait) {
 
-  .page {
-    max-height: 100vh;
-  }
-
-  .seriya__wrapper {
+  .seriya {
     overflow: hidden;
     width: 100vw;
     padding: 2.5vh 0;
     height: auto;
     flex-direction: column;
+    &__container {
+      width: 95vw;
+      height: calc(95vw / 1.5);
+      margin: 5vw 0;
   }
-
-  .seriya__container {
-    width: 95vw;
-    height: calc(95vw / 1.5);
-    margin: 5vw 0;
-  }
-
+}
 }
 
 </style>

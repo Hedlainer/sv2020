@@ -2,10 +2,10 @@
   <div
     class="gallery"
   >
-    <adaptivePicture
+    <apicture
       v-for="image in GetjustifiedLayout.boxes"
-      :key="image.name"
-      class="image_wrap"
+      :key="image.SeriesFileName"
+      class="anim"
       :color="image.SeriesSpec.Color"
       :file="image.SeriesFileName"
       :style="layoutStyle (image)"
@@ -16,6 +16,8 @@
 
 <script>
 /* eslint-disable security/detect-object-injection */
+import apicture from '~/components/apicture.vue'
+import anime from 'animejs/lib/anime.es.js'
 import debounce from 'lodash/debounce'
 import justifiedLayout from 'justified-layout'
 let width, height, widthContainer
@@ -31,17 +33,8 @@ if (process.browser) {
 
 export default {
   components: {
-    // eslint-disable-next-line vue/no-unused-components
-    lazyPicture: () => import('~/components/lazy-picture.vue'),
-    adaptivePicture: () => import('~/components/adaptive-picture.vue')
-    // ParamsPhoto: () => import('~/components/params-photo.vue')
+    apicture
   },
-  // props: {
-  //   objectName: {
-  //     required: true,
-  //     type: Array
-  //   }
-  // },
   data () {
     return {
       width,
@@ -51,7 +44,6 @@ export default {
   },
   computed: {
     GetjustifiedLayout () {
-      // const aspect = this.$store.state.Series.Aspect.map(el => el)
       // eslint-disable-next-line array-func/prefer-array-from
       const layout = justifiedLayout([...this.$store.state.Series.Aspect], {
         fullWidthBreakoutRowCadence: 3,
@@ -75,6 +67,21 @@ export default {
       return layout
     }
   },
+  mounted () {
+    anime({
+      // duration: 3000,
+      targets: '.anim',
+      opacity: [0, 1],
+      // scale: 1.5
+      translateX () {
+        return anime.random(-window.innerWidth * 0.017, window.innerWidth * 0.017)
+      },
+      translateY () {
+        return anime.random(-window.innerHeight * 0.03, window.innerHeight * 0.03)
+      },
+      easing: 'linear'
+    })
+  },
   beforeMount () {
     window.addEventListener('resize', debounce(this.resize, 400))
   },
@@ -83,16 +90,67 @@ export default {
   },
 
   methods: {
+    beforeEnter: function (el) {
+    // ...
+    },
+    // коллбэк done не обязательно использовать, если
+    // анимация или переход также определены в CSS
+    enter (el, done) {
+      anime({
+      // duration: 3000,
+        targets: el,
+        // opacity: 0,
+        // scale: 1.5
+        translateX () {
+          return anime.random(-window.innerWidth * 0.017, window.innerWidth * 0.017)
+        },
+        translateY () {
+          return anime.random(-window.innerHeight * 0.03, window.innerHeight * 0.03)
+        },
+        easing: 'cubicBezier(0.215, 0.61, 0.355, 1)',
+        complete () {
+          done()
+        }
+      })
+      // ...
+    },
+    afterEnter: function (el) {
+    // ...
+    },
+    enterCancelled: function (el) {
+    // ...
+    },
+
+    // --------
+    // ИСЧЕЗНОВЕНИЕ
+    // --------
+
+    beforeLeave: function (el) {
+    // ...
+    },
+    // коллбэк done не обязательно использовать, если
+    // анимация или переход также определены в CSS
+    leave: function (el, done) {
+    // ...
+      done()
+    },
+    afterLeave: function (el) {
+    // ...
+    },
+    // leaveCancelled доступна только для v-show
+    leaveCancelled: function (el) {
+    // ...
+    },
     layoutStyle (image) {
-      const plusOrMinus = Math.random() < 0.5 ? -1 : 1
-      const coefWidth = Math.floor(Math.random() * this.width * 0.019 * plusOrMinus)
-      const coefHeight = Math.floor(Math.random() * this.height * 0.03 * plusOrMinus)
+      // const plusOrMinus = Math.random() < 0.5 ? -1 : 1
+      // const coefWidth = Math.floor(Math.random() * this.width * 0.019 * plusOrMinus)
+      // const coefHeight = Math.floor(Math.random() * this.height * 0.03 * plusOrMinus)
       return {
         left: `${image.left}px`,
         top: `${image.top}px`,
         width: `${image.width}px`,
-        height: `${image.height}px`,
-        transform: `translate(${coefWidth}px, ${coefHeight}px)`
+        height: `${image.height}px`
+        // transform: `translate(${coefWidth}px, ${coefHeight}px)`
       }
     },
     resize () {

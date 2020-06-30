@@ -23,6 +23,7 @@
       <img
         alt="SvobodinaPhoto"
         crossorigin="anonimous"
+        decode="async"
         :src="`/image/jpg/${ImageSize}/${file}.jpg`"
         :style="{ opacity: opacity}"
         @load="opacity = 1"

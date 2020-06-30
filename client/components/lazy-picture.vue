@@ -59,8 +59,7 @@ export default {
     file: { required: true, type: String },
     currentWidth: { required: true, type: Number },
     myIndex: { default: 0, type: Number },
-    color: { required: true, type: String },
-    imgData: { required: true, type: Object }
+    color: { required: true, type: String }
   },
 
   data () {

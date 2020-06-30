@@ -54,7 +54,7 @@ export default {
   directives: {
     mouse: {
     // определение директивы
-      inserted: function (el, binding) {
+      inserted (el, binding) {
         const f = function (evt) {
           if (binding.value(evt, el)) {
             el.removeEventListener('mousemove', f)
@@ -125,7 +125,7 @@ export default {
         this.$emit('mousecord', { x: event.offsetX, y: event.offsetY })
       }
     },
-    handleMouse: function (evt, el) {
+    handleMouse (evt, el) {
       console.log(evt)
     },
     fullImageLoaded () {
