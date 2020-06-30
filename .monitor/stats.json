@@ -433,7 +433,7 @@
         ],
         "modules": [
           {
-            "name": "./node_modules/animejs/lib/anime.es.js",
+            "name": "./node_modules/animejs",
             "size": 40670,
             "id": 184
           }

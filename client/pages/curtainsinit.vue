@@ -20,7 +20,7 @@
 import { Curtains } from 'curtainsjs'
 import { vertex, fragment } from '~/assets/shaderinit.js'
 // eslint-disable-next-line no-unused-vars
-// import anime from 'animejs/lib/anime.es.js'
+// import anime from 'animejs'
 export default {
   data () {
     return {

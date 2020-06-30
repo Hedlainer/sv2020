@@ -30,7 +30,7 @@
 
 <script>
 // eslint-disable-next-line no-unused-vars
-// import anime from 'animejs/lib/anime.es.js'
+// import anime from 'animejs'
 import photoseries from '~/static/db/Photoseries.json'
 // new Glide('.glide').mount({ Controls, Breakpoints })
 export default {

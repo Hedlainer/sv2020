@@ -22,7 +22,7 @@
 
 <script>
 import { Curtains } from 'curtainsjs'
-import anime from 'animejs/lib/anime.es.js'
+import anime from 'animejs'
 import lazyPicture from '~/components/lazy-picture.vue'
 import photoseries from '~/static/db/Photoseries.json'
 import { vertex, fragment } from '~/assets/shader3.js'

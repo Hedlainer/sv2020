@@ -17,7 +17,7 @@
 <script>
 /* eslint-disable security/detect-object-injection */
 import apicture from '~/components/apicture.vue'
-import anime from 'animejs/lib/anime.es.js'
+import anime from 'animejs'
 import debounce from 'lodash/debounce'
 import justifiedLayout from 'justified-layout'
 let width, height, widthContainer

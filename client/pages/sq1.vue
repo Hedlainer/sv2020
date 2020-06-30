@@ -9,7 +9,7 @@
 
 <script>
 // eslint-disable-next-line no-unused-vars
-import anime from 'animejs/lib/anime.es.js'
+import anime from 'animejs'
 export default {
   transition: {
     name: 'page3',
