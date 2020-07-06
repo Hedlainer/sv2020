@@ -1,22 +1,15 @@
 <template>
   <div>
     <h1>{{ $store.state.Series.Title }}</h1>
-    <SeriesLayout />
+    <SeriesLayout class="gallery" />
   </div>
 </template>
 
 <script>
 export default {
-  components: {
-    SeriesLayout: () => import('~/components/series-layout.vue')
-  },
   async fetch ({ store, params }) {
     await store.dispatch('GET_SERIES', params.Route)
-    // store.commit('HERNYA', params.Route)
   }
-  // beforeCreate () {
-  //   this.$store.dispatch('GET_SERIES', this.$route.params.Route)
-  // }
 }
 </script>
 
@@ -29,5 +22,9 @@ h1{
     color: #03a9f4;
     opacity: 0.2;
     z-index: 2;
+}
+.gallery {
+  position: relative;
+  height: auto;
 }
 </style>

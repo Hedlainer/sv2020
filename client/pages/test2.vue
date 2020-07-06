@@ -2,7 +2,7 @@
   <div class="seriya">
     <div id="webgl" ref="webgl"></div>
     <main class="seriya__wrapper" @scroll.passive="updateScroll">
-      <lazyPicture
+      <lazypicture
         v-for="(seriya,i) in photoseries"
         :key="seriya.Id"
         ref="CurtainsPlanes"
@@ -21,13 +21,13 @@
 <script>
 import { Curtains } from 'curtainsjs'
 import anime from 'animejs'
-import lazyPicture from '~/components/lazy-picture.vue'
+
 import photoseries from '~/static/db/Photoseries.json'
 import { vertex, fragment } from '~/assets/shader3.js'
 export default {
-  components: {
-    lazyPicture
-  },
+  // components: {
+  //   lazyPicture
+  // },
   data () {
     return {
       photoseries,

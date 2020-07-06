@@ -1,12 +1,12 @@
 const isDev = process.env.NODE_ENV !== 'production'
 module.exports = {
   mode: 'universal',
-  // components: true,
+  components: true,
   telemetry: false,
-  pageTransition: {
-    name: 'page',
-    mode: 'out-in'
-  },
+  // pageTransition: {
+  //   name: 'page',
+  //   mode: 'out-in'
+  // },
   /*
    ** Headers of the page
    */

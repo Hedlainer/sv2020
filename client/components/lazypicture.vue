@@ -106,7 +106,13 @@ export default {
     },
 
     clickFullImg ($event) {
-      this.$emit('myClick', { index: this.myIndex, x: $event.offsetX, y: $event.offsetY })
+      this.$emit('myClick', {
+        index: this.myIndex,
+        x: $event.offsetX,
+        y: $event.offsetY,
+        img: [this.$refs.currentImage, this.$refs.fullImage],
+        aspect: this.$refs.fullImage.naturalHeight / this.$refs.fullImage.naturalWidth
+      })
     },
 
     hex2rgba (hex, alpha = 1) {
@@ -135,7 +141,6 @@ export default {
 </style>
 <style lang="scss" scoped>
 .lazy {
-  position: relative;
   overflow: hidden;
   width: 100%;
   height: 100%;

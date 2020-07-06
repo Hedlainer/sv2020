@@ -55,9 +55,6 @@ export const mutations = {
     state.nameJL = payload.map(el => el.Name)
   },
   change_series (state, payload) {
-    // state.SeriesAspect = payload.Aspect
-    // state.SeriesFileName = payload.ImageName
-    // state.SeriesSpec = payload.Spec
     state.Series = payload
   }
 }
