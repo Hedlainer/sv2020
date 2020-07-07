@@ -1,89 +1,182 @@
 <template>
-  <section
-    ref="container"
+  <main
     class="seriya"
-    :style="{ backgroundColor: bgColor }"
-    @mousewheel="horizontalScroll"
+    @scroll.passive="updateScroll"
   >
-    <div ref="wrap" class="seriya__wrapper">
-      <div
-        v-for="seriya in photoseries"
-        :key="seriya.ID"
-        class="seriya__wrapper__img"
-      >
-        <photoseriesImage :object-name="seriya" @color="bgColor = $event" />
-      </div>
-    </div>
-  </section>
+    <div id="webgl" ref="webgl"></div>
+    <lazypicture
+      v-for="(seriya, index) in photoseries"
+      :key="seriya.Id"
+      ref="CurtainsPlanes"
+      class="seriya__container"
+      :color="seriya.Color"
+      :current-width="710"
+      :file="seriya.FileName"
+      :full-screen-image="true"
+      :my-index="index"
+      @fulload="preparePlane"
+      @myClick="activateAnimate"
+    />
+  </main>
 </template>
 
 <script>
+import { Curtains } from 'curtainsjs'
+import anime from 'animejs'
 import photoseries from '~/static/db/Photoseries.json'
+import { vertex, fragment } from '~/assets/shader3.js'
 export default {
-  components: {
-    photoseriesImage: () =>
-      import('~/components/photoseries-image.vue')
-  },
   data () {
     return {
+      calcCords: {},
       photoseries,
-      bgColor: null,
-      show: false,
-      minHour: 0,
-      max: 8400,
-      value: 1,
-      sm: null
+      animating: true,
+      duration: 1700,
+      curtains: null,
+      // координаты мыши для пересчёта в шейдер
+      mouseNormalized: { x: 0, y: 0 },
+      planes: [],
+      params: {
+        widthSegments: 32,
+        heightSegments: 32,
+        vertexShader: vertex,
+        fragmentShader: fragment,
+        fov: 1,
+        autoloadSources: false,
+        uniforms: {
+          uViewSize: { name: 'uViewSize', type: '2f', value: [] },
+          uMouse: { name: 'uMouse', type: '2f', value: [] },
+          uPlanePosition: { name: 'uPlanePosition', type: '2f', value: [] },
+          uResolution: { name: 'uResolution', type: '2f', value: [] },
+          uProgress: { name: 'uProgress', type: '1f', value: 0 }
+        }
+      }
     }
   },
   mounted () {
-    // console.log(this.photoseries.map(el => el.Aspect))
-  },
-  beforeMount () {
-    window.addEventListener('resize', this.resize)
-  },
-  beforeDestroy () {
-    window.removeEventListener('resize', this.resize)
+    this.initCurtains()
+    // console.log(this.planes)
+    // console.log(this.$refs.CurtainsPlanes[3])
   },
   methods: {
-    horizontalScroll ($event) {
-      if ($event.deltaY > 0) {
-        this.value += $event.deltaY
-        this.$refs.container.scrollLeft = this.value
+    activateAnimate (ctx) {
+      this.toFullscreen(ctx)
+    },
+    preparePlane (ctx) {
+      const plane = this.planes[ctx.index]
+      plane.loadSources(ctx.img)
+      // считаем вестор для нормализации изображения в шейдере
+      let xNormalized, yNormalized
+      if (window.innerHeight / window.innerWidth > ctx.aspect) {
+        xNormalized = (window.innerWidth / window.innerHeight) * ctx.aspect
+        yNormalized = 1
+      } else {
+        xNormalized = 1
+        yNormalized = window.innerHeight / window.innerWidth / ctx.aspect
       }
-      this.$refs.container.scrollLeft += $event.deltaY
-      this.value = this.$refs.container.scrollLeft
+      plane.uniforms.uResolution.value = [xNormalized, yNormalized]
+      // this.getUnifors(ctx)
+    },
+    // route (a) {
+    //   this.$router.push(`photoseries/${a}`)
+    // },
+    initCurtains () {
+      this.curtains = new Curtains({
+        container: this.$refs.webgl,
+        pixelRatio: window.devicePixelRatio,
+        watchScroll: true
+      })
+      // eslint-disable-next-line no-loops/no-loops
+      for (const value of this.$refs.CurtainsPlanes) {
+        const plane = this.curtains.addPlane(value.$el, this.params)
+        this.planes.push(plane)
+      }
+    },
+    getUnifors (i) {
+      // eslint-disable-next-line security/detect-object-injection
+      const plane = this.planes[i.index]
+      const rectPlane = plane.getBoundingRect()
+      // ширина плана в условных еденицах
+      this.calcCords.w = (window.innerWidth / rectPlane.width) * this.curtains.pixelRatio
+      this.calcCords.h = (window.innerHeight / rectPlane.height) * this.curtains.pixelRatio
+      // вектор для перемещения плана при увеличении до размера окна
+      this.calcCords.x = (rectPlane.left / rectPlane.width - this.calcCords.w / 2 + 0.5) * 2
+      this.calcCords.y = (-(rectPlane.top / rectPlane.height - this.calcCords.h / 2) - 0.5) * 2
+
+      this.calcCords.mouseX = (i.x / rectPlane.width) * this.curtains.pixelRatio
+      this.calcCords.mouseY = 1 - (i.y / rectPlane.height) * this.curtains.pixelRatio
+
+      plane.uniforms.uMouse.value = [this.calcCords.mouseX, this.calcCords.mouseY]
+      plane.uniforms.uViewSize.value = [this.calcCords.w, this.calcCords.h]
+      plane.uniforms.uPlanePosition.value = [this.calcCords.x, this.calcCords.y]
+    },
+    toFullscreen (i) {
+      this.getUnifors(i)
+      // eslint-disable-next-line security/detect-object-injection
+      const plane = this.planes[i.index]
+      const tl = anime.timeline({ autoplay: false, easing: 'linear' })
+      tl.add({
+        targets: '#webgl',
+        zIndex: 2,
+        duration: 0
+      })
+        .add({
+          targets: plane.uniforms.uProgress,
+          value: 1,
+          duration: this.duration,
+          easing: 'cubicBezier(0.215, 0.61, 0.355, 1)',
+          complete: () => {
+            this.$router.push(`photoseries/${this.photoseries[i.index].Route}`)
+          }
+        })
+        // .add(
+        //   {
+        //     targets: plane.uniforms.uProgress,
+        //     value: 0,
+        //     easing: 'cubicBezier(0.445, 0.05, 0.55, 0.95)',
+        //     duration: this.duration
+        //   }
+        //   // '+=1500'
+        // )
+      tl.play()
+    },
+    updateScroll (event) {
+      this.curtains.updateScrollValues(
+        event.target.scrollTop,
+        event.target.scrollLeft
+      )
+      // eslint-disable-next-line no-loops/no-loops
+      for (const val of this.curtains.planes) {
+        val.updateScrollPosition()
+      }
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+$scrollBarHeight: 1px;
+
 ::-webkit-scrollbar {
-  width: 1px;
-  height: 1px;
-  &-button {
-    width: 1px;
-    height: 1px;
-  }
+  width: $scrollBarHeight;
+  height: $scrollBarHeight;
 }
+
+::-webkit-scrollbar-button {
+  width: $scrollBarHeight;
+  height: $scrollBarHeight;
+}
+
 .seriya {
-  position: relative;
-  transition: background-color 2s;
-  width: 100%;
+  position: absolute;
+  padding: 0 2.5vw;
   height: 100vh;
-  overflow-x: auto;
-  &__wrapper {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: center;
-    padding-left: 5vw;
-    padding-right: 5vw;
-    height: 100%;
-    position: absolute;
-    &__img {
-      display: block;
-      border-radius: 3px;
+  display: flex;
+  align-items: center;
+  &__container {
+    position: relative;
+    margin: auto 3vw;
+    text-align: center;
       &:nth-child(odd) {
         width: calc(65vh * 1.5);
         height: 65vh;
@@ -92,7 +185,30 @@ export default {
         width: calc(67vh * 1.5);
         height: 67vh;
       }
-    }
   }
 }
+#webgl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+}
+
+@media screen and (orientation: portrait) {
+
+  .seriya {
+    overflow: hidden;
+    width: 100vw;
+    padding: 2.5vh 0;
+    height: auto;
+    flex-direction: column;
+    &__container {
+      width: 95vw;
+      height: calc(95vw / 1.5);
+      margin: 5vw 0;
+  }
+}
+}
+
 </style>

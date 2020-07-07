@@ -14,9 +14,9 @@
     <lazyPicture
       class="photoseries__wrapper"
       :color="objectName.Color"
+      :current-width="710"
       :file="objectName.FileName"
       :fullwidth="width"
-      :width="720"
     />
     <transition name="fade">
       <div
@@ -37,9 +37,9 @@ if (process.browser) {
   width = window.innerWidth
 }
 export default {
-  components: {
-    lazyPicture: () => import('~/components/lazy-picture.vue')
-  },
+  // components: {
+  //   lazyPicture: () => import('~/components/ ')
+  // },
   props: {
     objectName: {
       required: true,

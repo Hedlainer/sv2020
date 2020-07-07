@@ -38,7 +38,8 @@ export const state = () => ({
   SeriesFileName: [],
   SeriesSpec: [],
   Series: {},
-  hernya: []
+  hernya: [],
+  curtains: undefined
 })
 export const getters = {
   // aspect (ctx) {
@@ -47,16 +48,13 @@ export const getters = {
 }
 export const mutations = {
   HERNYA (state, payload) {
-    // state.hernya = all.find(el => el.Name === payload)
+    state.curtains = payload
   },
   AWS (state, payload) {
     state.aspectJL = payload.map(el => el.Aspect)
     state.nameJL = payload.map(el => el.Name)
   },
   change_series (state, payload) {
-    // state.SeriesAspect = payload.Aspect
-    // state.SeriesFileName = payload.ImageName
-    // state.SeriesSpec = payload.Spec
     state.Series = payload
   }
 }

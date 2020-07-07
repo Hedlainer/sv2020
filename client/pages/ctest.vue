@@ -42,7 +42,7 @@
 
 <script>
 import { Curtains } from 'curtainsjs'
-import anime from 'animejs/lib/anime.es.js'
+import anime from 'animejs'
 import { vertex, fragment } from '~/assets/shadertest.js'
 export default {
   data () {

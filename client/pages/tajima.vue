@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import anime from 'animejs/lib/anime.es.js'
+import anime from 'animejs'
 import photoseries from '~/static/db/Photoseries.json'
 export default {
   data () {

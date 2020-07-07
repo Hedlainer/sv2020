@@ -34,9 +34,9 @@ if (process.browser) {
 }
 
 export default {
-  components: {
-    lazyPicture: () => import('~/components/lazy-picture.vue')
-  },
+  // components: {
+  //   lazyPicture: () => import('~/components/lazy-picture.vue')
+  // },
   // props: {
   //   objectName: {
   //     required: true,

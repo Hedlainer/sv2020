@@ -54,7 +54,7 @@
 
 <script>
 import { Curtains } from 'curtainsjs'
-import anime from 'animejs/lib/anime.es.js'
+import anime from 'animejs'
 import photoseries from '~/static/db/Photoseries.json'
 import vertex from '~/assets/vertex.vert'
 import fragment from '~/assets/fragment.frag'
