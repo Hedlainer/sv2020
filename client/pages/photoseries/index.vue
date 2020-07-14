@@ -2,7 +2,7 @@
   <main>
     <div id="webgl" ref="webgl"></div>
     <div class="seriya">
-      <lazypicture
+      <lp2
         v-for="(seriya, index) in photoseries"
         :key="seriya.Id"
         ref="CurtainsPlanes"
@@ -13,7 +13,39 @@
         :full-screen-image="true"
         :my-index="index"
         @myClick="activateAnimate"
-      />
+      >
+        <template v-slot:fullScreenImage>
+          <picture class="lazy__fullscreen">
+            <source
+              :srcset="`/image/webp/1920/${seriya.FileName}.webp`"
+              type="image/webp"
+            />
+            <img
+              alt="SvobodinaPhoto"
+              crossorigin="anonimous"
+              decode="async"
+              draggable="false"
+              :src="`/image/jpg/1920/${seriya.FileName}.jpg`"
+            />
+          </picture>
+        </template>
+        <template v-slot:currentImage>
+          <picture class="lazy__original">
+            <source
+              :srcset="`/image/webp/720/${seriya.FileName}.webp`"
+              type="image/webp"
+            />
+            <img
+              ref="currentImage"
+              alt="SvobodinaPhoto"
+              crossorigin="anonimous"
+              decode="async"
+              draggable="false"
+              :src="`/image/jpg/720/${seriya.FileName}.jpg`"
+            />
+          </picture>
+        </template>
+      </lp2>
     </div>
   </main>
 </template>
@@ -24,12 +56,16 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import { CustomEase } from 'gsap/dist/CustomEase'
 import { Curtains } from 'curtainsjs'
-import anime from 'animejs'
+// import anime from 'animejs'
 import photoseries from '~/static/db/Photoseries.json'
 import { vertex, fragment } from '~/assets/shader3.js'
+import lp2 from '~/components/lp2.vue'
 
 export default {
   layout: 'series',
+  components: {
+    lp2
+  },
   data () {
     return {
       calcCords: {},
@@ -58,7 +94,7 @@ export default {
     }
   },
   mounted () {
-    this.initCurtains()
+    // this.initCurtains()
     // console.log(ScrollTrigger)
     gsap.registerPlugin(ScrollTrigger, CustomEase)
 
@@ -100,25 +136,38 @@ export default {
 
     // const sections = gsap.utils.toArray('.seriya__container')
 
-    // console.log(this.$refs.CurtainsPlanes[3])
+    console.log(this.$refs.CurtainsPlanes[3])
   },
   methods: {
 
     activateAnimate (ctx) {
       // create
 
-      const plane = this.curtains.addPlane(this.$refs.CurtainsPlanes[ctx.index].$el, this.params)
+      this.curtains = new Curtains({
+        container: this.$refs.webgl,
+        pixelRatio: window.devicePixelRatio,
+        watchScroll: true
+      })
+      // eslint-disable-next-line no-loops/no-loops
+      // for (const value of this.$refs.CurtainsPlanes) {
+      //   const plane = this.curtains.addPlane(value.$el, this.params)
+      //   this.planes.push(plane)
+      // }
+      this.curtains.disableDrawing()
 
+      const plane = this.curtains.addPlane(this.$refs.CurtainsPlanes[ctx.index].$el, this.params)
+      const aspect = plane.images[0].naturalHeight / plane.images[0].naturalWidth
+      console.log(this.$refs.fullImage)
       // prepare
 
       plane.onReady(() => {
         let xNormalized, yNormalized
-        if (window.innerHeight / window.innerWidth > ctx.aspect) {
-          xNormalized = (window.innerWidth / window.innerHeight) * ctx.aspect
+        if (window.innerHeight / window.innerWidth > aspect) {
+          xNormalized = (window.innerWidth / window.innerHeight) * aspect
           yNormalized = 1
         } else {
           xNormalized = 1
-          yNormalized = window.innerHeight / window.innerWidth / ctx.aspect
+          yNormalized = window.innerHeight / window.innerWidth / aspect
         }
         plane.uniforms.uResolution.value = [xNormalized, yNormalized]
 
@@ -141,32 +190,34 @@ export default {
 
         // animate
 
-        // const tl = gsap.timline()
-        // tl.to('#webgl', { zIndex: 2, duration: 0 })
-        // tl.to(plane.uniforms.uProgress, {
-        //   value: 1,
-        //   duration: this.duration,
-        //   easing: 'cubicBezier(0.215, 0.61, 0.355, 1)',
-        //   onComplete: () => {
-        //     this.$router.push(`photoseries/${this.photoseries[i.index].Route}`)
-        //   }
-        // })
-
-        const tl = anime.timeline({ autoplay: false, easing: 'linear' })
-        tl.add({
-          targets: '#webgl',
-          zIndex: 2,
-          duration: 0
+        const tl = gsap.timeline()
+        CustomEase.create('easeName', '0.215, 0.61, 0.355, 1')
+        this.curtains.enableDrawing()
+        tl.to('#webgl', { zIndex: 2, duration: 0 })
+        tl.to(plane.uniforms.uProgress, {
+          value: 1,
+          duration: 1.5,
+          easing: 'easeName',
+          onComplete: () => {
+            this.$router.push(`photoseries/${this.photoseries[ctx.index].Route}`)
+          }
         })
-          .add({
-            targets: plane.uniforms.uProgress,
-            value: 1,
-            duration: this.duration,
-            easing: 'cubicBezier(0.215, 0.61, 0.355, 1)',
-            complete: () => {
-              this.$router.push(`photoseries/${this.photoseries[ctx.index].Route}`)
-            }
-          })
+
+        // const tl = anime.timeline({ autoplay: false, easing: 'linear' })
+        // tl.add({
+        //   targets: '#webgl',
+        //   zIndex: 2,
+        //   duration: 0
+        // })
+        //   .add({
+        //     targets: plane.uniforms.uProgress,
+        //     value: 1,
+        //     duration: this.duration,
+        //     easing: 'cubicBezier(0.215, 0.61, 0.355, 1)',
+        //     complete: () => {
+        //       this.$router.push(`photoseries/${this.photoseries[ctx.index].Route}`)
+        //     }
+        //   })
         tl.play()
       })
     //   this.toFullscreen(ctx)
@@ -204,6 +255,7 @@ export default {
       //   const plane = this.curtains.addPlane(value.$el, this.params)
       //   this.planes.push(plane)
       // }
+      this.curtains.disableDrawing()
     },
     // getUnifors (i) {
     //   // eslint-disable-next-line security/detect-object-injection
@@ -241,7 +293,7 @@ export default {
     //   const plane = this.planes[i.index]
     //   console.log(gsap)
     //   const tl = gsap.timeline()
-    //   CustomEase.create('easeName', '0.215, 0.61, 0.355, 1')
+    // CustomEase.create('easeName', '0.215, 0.61, 0.355, 1')
     //   tl.to('#webgl', { zIndex: 2, duration: 0 })
 
     //   tl.to(plane.uniforms.uProgress, {
@@ -313,6 +365,7 @@ body{
 
 .seriya {
   position: absolute;
+  will-change: transform;
   padding: 0 2.5vw;
   height: 100vh;
   display: flex;
