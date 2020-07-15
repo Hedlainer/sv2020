@@ -34,45 +34,45 @@ import { Curtains } from 'curtainsjs'
 import anime from 'animejs'
 import photoseries from '~/static/db/Photoseries.json'
 import { vertex, fragment } from '~/assets/shader3.js'
-class Slider {
-  /** * CONSTRUCTOR ***/
+// class Slider {
+//   /** * CONSTRUCTOR ***/
 
-  constructor (options = {}) {
-    // our options
-    this.options = {
-      // slider state and values
-      // the div we are going to translate
-      element: options.element || document.getElementById('planes'),
-      // easing value, the lower the smoother
-      easing: options.easing || 0.1,
-      // translation speed
-      // 1: will follow the mouse
-      // 2: will go twice as fast as the mouse, etc
-      dragSpeed: options.dragSpeed || 1,
-      // duration of the in animation
-      duration: options.duration || 750
-    }
+//   constructor (options = {}) {
+//     // our options
+//     this.options = {
+//       // slider state and values
+//       // the div we are going to translate
+//       element: options.element || document.getElementById('planes'),
+//       // easing value, the lower the smoother
+//       easing: options.easing || 0.1,
+//       // translation speed
+//       // 1: will follow the mouse
+//       // 2: will go twice as fast as the mouse, etc
+//       dragSpeed: options.dragSpeed || 1,
+//       // duration of the in animation
+//       duration: options.duration || 750
+//     }
 
-    // if we are currently dragging
-    this.isMouseDown = false
-    // if the slider is currently translating
-    this.isTranslating = false
+//     // if we are currently dragging
+//     this.isMouseDown = false
+//     // if the slider is currently translating
+//     this.isTranslating = false
 
-    // current position
-    this.currentPosition = 0
-    // drag start position
-    this.startPosition = 0
-    // drag end position
-    this.endPosition = 0
+//     // current position
+//     this.currentPosition = 0
+//     // drag start position
+//     this.startPosition = 0
+//     // drag end position
+//     this.endPosition = 0
 
-    // slider translation
-    this.translation = 0
+//     // slider translation
+//     this.translation = 0
 
-    this.animationFrame = null
+//     this.animationFrame = null
 
-    // we'll need to set up our slider here...
-  }
-}
+//     // we'll need to set up our slider here...
+//   }
+// }
 export default {
   data () {
     return {
@@ -133,10 +133,10 @@ export default {
   },
   mounted () {
     this.options.element = this.$refs.planes
-    this.setupSlider()
-    this.slider = new Slider(this.options)
+    // this.setupSlider()
+    // this.slider = new Slider(this.options)
     this.initCurtains()
-    console.log(this.slider)
+    // console.log(this.slider)
   },
   methods: {
     /** * HELPERS ***/

@@ -4,6 +4,9 @@
   "description": "best web for best ph",
   "author": "iasvobodin",
   "scripts": {
+    "export": "nuxt export",
+    "serve": "nuxt serve",
+    "static": "nuxt build --target static && nuxt export --fail-on-error",
     "analyze": "cross-env NODE_ENV=production  nuxt build --analyze",
     "buildandstart": "cross-env NODE_ENV=production nuxt build && cross-env NODE_ENV=production nuxt start",
     "exif": "exiftool  -json -filename -ShutterSpeedValue -ApertureValue -FocalLength -ImageWidth -ImageHeight -Rating -Keywords 'src/image'> 'src/db/data.json'",
@@ -27,6 +30,7 @@
     "curtainsjs": "^6.1.1",
     "dotenv": "^8.2.0",
     "glslify-loader": "^2.0.0",
+    "gsap": "file:gsap-bonus.tgz",
     "intersection-observer": "^0.10.0",
     "justified-layout": "^4.0.0",
     "minipass": "^3.1.3",
