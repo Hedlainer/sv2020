@@ -9,11 +9,9 @@
     :style="{ backgroundImage: `url(/image/svg/${file}.svg)`}"
     @click="clickFullImg"
   >
-    <slot
-      v-if="isVisible"
-      name="fullScreenImage"
-    ></slot>
+    <slot name="title"></slot>
     <slot v-if="isVisible" name="currentImage"></slot>
+    <slot v-if="isVisible" name="fullScreenImage"></slot>
     <!-- <picture v-if="fullScreenImage&curentImageLoaded" class="lazy__fullscreen">
       <source
         :srcset="`/image/webp/${ImageSize.fullImageWidth}/${file}.webp`"
@@ -28,8 +26,11 @@
         :src="`/image/jpg/${ImageSize.fullImageWidth}/${file}.jpg`"
         @load="fullImageLoaded"
       />
-    </picture> -->
-    <!-- <picture v-if="isVisible" class="lazy__original">
+    </picture>
+    <picture
+      v-if="isVisible"
+      class="lazy__original"
+    >
       <source
         :srcset="`/image/webp/${ImageSize.currentImageWidth}/${file}.webp`"
         type="image/webp"
@@ -102,7 +103,7 @@ export default {
     fullImageLoaded () {
       this.$emit('fulload', {
         img: [this.$refs.currentImage, this.$refs.fullImage],
-        aspect: this.$refs.fullImage.naturalHeight / this.$refs.fullImage.naturalWidth,
+        // aspect: this.$refs.fullImage.naturalHeight / this.$refs.fullImage.naturalWidth,
         index: this.myIndex
       })
     },

@@ -19,10 +19,13 @@
 module.exports = {
   root: true,
   env: {
+    es11: true,
     browser: true,
     node: true
+
   },
   parserOptions: {
+    ecmaVersion: 11,
     ecmaFeatures: {
       legacyDecorators: true
     },
@@ -102,16 +105,18 @@ module.exports = {
     // "import/no-unresolved": 0,
     // "import/no-unassigned-import": 0,
     // "semi": ["error", "never"],
-    // 'no-console': 'off',
-    'no-loops/no-loops': 2,
-    // "space-before-function-paren": [
-    //   "error",
-    //   {
-    //     "anonymous": "always",
-    //     "named": "always",
-    //     "asyncArrow": "always"
-    //   }
-    // ]
+    // "no-console": "off",
+    'no-loops/no-loops': 'off',
+    'no-debugger': 'off',
+
+    'space-before-function-paren': [
+      'error',
+      {
+        anonymous: 'always',
+        named: 'always',
+        asyncArrow: 'always'
+      }
+    ],
 
     'vue/html-self-closing': ['error', {
       html: {

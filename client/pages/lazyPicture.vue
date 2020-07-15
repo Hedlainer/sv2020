@@ -1,13 +1,15 @@
 <template>
   <div
+    v-mouse="mouseEv"
     v-observe-visibility="{
       callback: visibilityChanged,
-      throttle:700,
+      throttle:400,
       once: true
     }"
     class="lazy"
     :style="{ boxShadow: `inset 0px 0px 0px 1px ${color}`,
               backgroundColor: hex2rgba(color, .3) }"
+    @mousedown="clickFullImg"
   >
     <picture v-if="fullScreenImage&curentImageLoaded" class="lazy__fullscreen">
       <source
@@ -15,31 +17,28 @@
         type="image/webp"
       />
       <img
-        ref="imgFull"
+        ref="fullImage"
         alt="SvobodinaPhoto"
         crossorigin="anonimous"
         decode="async"
         draggable="false"
         :src="`/image/jpg/${ImageSize.fullImageWidth}/${file}.jpg`"
-        @load="loadImages"
+        @load="fullImageLoaded"
       />
     </picture>
-    <picture
-      v-if="isVisible"
-      class="lazy__original"
-    >
+    <picture v-if="isVisible" class="lazy__original">
       <source
         :srcset="`/image/webp/${ImageSize.currentImageWidth}/${file}.webp`"
         type="image/webp"
       />
       <img
-        ref="imgSmall"
+        ref="currentImage"
         alt="SvobodinaPhoto"
         crossorigin="anonimous"
         decode="async"
         draggable="false"
         :src="`/image/jpg/${ImageSize.currentImageWidth}/${file}.jpg`"
-        @load="curentImageLoaded = true"
+        @load="currentImageLoad"
       />
     </picture>
   </div>
@@ -55,7 +54,7 @@ export default {
   directives: {
     mouse: {
     // определение директивы
-      inserted: function (el, binding) {
+      inserted (el, binding) {
         const f = function (evt) {
           if (binding.value(evt, el)) {
             el.removeEventListener('mousemove', f)
@@ -75,17 +74,20 @@ export default {
     myIndex: { default: 0, type: Number },
     color: { required: true, type: String }
   },
+
   data () {
     return {
       height,
       curentImageLoaded: false,
-      fullwidth: width,
+      fullWidth: width,
+      phVisible: true,
+      opacity: 1,
       isVisible: false
     }
   },
   computed: {
     ImageSize () {
-      const ImageSize = x => {
+      const ImageSize = (x) => {
         const w =
           x < 480
             ? 480
@@ -106,36 +108,46 @@ export default {
       }
     }
   },
-  // mounted () {
-  //   const ii = this.$refs.img
-  //   ii.onload(() => console.log('qqq'))
-  //   // .then(() => {
-  //   // this.$emit('myEvent')
-  //   // console.log('ii')
-  //   // })
-  //   // if (this.smalloded & this.bigloaded) {
-  //   //   this.$emit('allloaded', this.k)
-  //   // };
-  // },
+  mounted () {
+    // console.log(this.$refs.currentImage)
+
+    // this.$refs.currentImage.addEventListener('mousemove', e => this.mouseEv(e))
+    // this.$refs.currentImage.addEventListener('touchmove', e => this.mouseEv(e))
+  },
   methods: {
-    loadImages () {
-      this.$emit('loaded', { index: this.myIndex, imgFull: this.$refs.imgFull, imgSmall: this.$refs.imgSmall })
+    e ($event) {
+      console.log($event)
     },
-    e () {
-      console.log(this.myIndex)
+    mouseEv (event) {
+      if (event.targetTouches) {
+        this.$emit('mousecord', { x: event.targetTouches[0].offsetX, y: event.targetTouches[0].offsetY })
+      } else {
+        this.$emit('mousecord', { x: event.offsetX, y: event.offsetY })
+      }
+    },
+    handleMouse (evt, el) {
+      console.log(evt)
+    },
+    fullImageLoaded () {
+      this.$emit('fulload', { img: [this.$refs.currentImage, this.$refs.fullImage], index: this.myIndex })
     },
     hex2rgba (hex, alpha = 1) {
       const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16))
       return `rgba(${r},${g},${b},${alpha})`
     },
-    allImageLoaded () {
-      if (this.smalloded & this.bigloaded) {
-        this.$emit('allloaded', this.k)
-      }
+    currentImageLoad () {
+      this.curentImageLoaded = true
+      // console.log('current image', this.myIndex)
     },
-
-    visibilityChanged (isVisible) {
+    clickFullImg ($event) {
+      this.$emit('myClick', { index: this.myIndex, x: $event.offsetX, y: $event.offsetY })
+      // console.log('click')
+    },
+    visibilityChanged (isVisible, ev) {
       this.isVisible = isVisible
+    },
+    mousemove ($event) {
+      // console.log($event)
     }
   }
 }

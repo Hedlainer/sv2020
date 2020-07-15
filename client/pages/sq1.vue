@@ -3,7 +3,9 @@
     <nuxt-link class="link" to="/sq2">
       sq2
     </nuxt-link>
-    <div class="square"></div>
+    <div class="square">
+      <h1>SQ1</h1>
+    </div>
   </div>
 </template>
 
@@ -12,54 +14,55 @@
 import anime from 'animejs'
 export default {
   transition: {
-    name: 'page3',
+    name: 'parent',
     // mode: 'out-in',
-    // mode: 'in-out',
-    mode: '',
+    mode: 'in-out',
+    // mode: '',
     css: false,
-    beforeEnter (el) {
-      anime({
-        // duration: 3000,
-        targets: el,
-        // opacity: 0,
-        // scale: 1.5
-        translateX: ['100%', '50%'],
-        easing: 'linear'
-      })
-    },
+    // beforeEnter (el) {
+    //   anime.set(el, {
+    //     translateY: '-100%',
+    //     scale: 0.9
+    //   })
+    // },
     enter (el, done) {
+      // done()
       anime({
         targets: el,
-        // opacity: [0, 1],
-        translateX: ['50%', '0%'],
-        easing: 'easeInOutQuad',
-        complete () { done() }
+        // translateY: '-50%',
+        // scale: 0.9,
+        easing: 'linear',
+        changeComplete () {
+          done()
+        }
       })
     //   done()
     },
-    // afterEnter (el) {
-    //   anime({
-    //     targets: el,
-    //     // translateX: '10%',
-    //     easing: 'easeInOutQuad'
-    //   })
-    // }
     leave (el, done) {
       anime({
         targets: el,
-        // opacity: [1, 0],
-        translateX: ['0', '-50%'],
+        // translateY: '-50%',
+        scale: 3, // middle to down
         easing: 'easeInOutQuad',
-        complete () { done() }
-      })
-    },
-    afterLeave (el) {
-      anime({
-        targets: el,
-        translateX: ['-50%', '-100%'],
-        easing: 'easeInOutQuad'
+        changeComplete () {
+          // done()
+          anime({
+            targets: el,
+            duration: 3000,
+            opacity: 0,
+            easing: 'linear',
+            changeComplete () { done() }
+          })
+        }
       })
     }
+    // afterLeave (el) {
+    //   anime({
+    //     targets: el,
+    //     translateX: ['-50%', '-100%'],
+    //     easing: 'easeInOutQuad'
+    //   })
+    // }
 
     //     beforeEnter (el) {
     //       anime({
@@ -85,6 +88,7 @@ export default {
     top: 20px;
 }
 .wrap{
+  position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -92,7 +96,10 @@ export default {
 }
 .square{
 width: 200px;
-height: 100px;
-background-color: red;
+height: 200px;
+background-color: rgb(255, 17, 0);
+display: flex;
+    align-items: center;
+    justify-content: center;
 }
 </style>
