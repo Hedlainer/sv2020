@@ -34,13 +34,24 @@ export default {
   }
 }
 </script>
-<style lang="scss">
+<style lang="css">
+::-webkit-scrollbar {
+  width: 1px;
+  height: 1px;
+}
+::-webkit-scrollbar-button {
+    width: 1px;
+    height: 1px;
+  }
 html{
     background: black;
-    overflow-x: hidden;
+
+}
+img{
+    display: none;
 }
 .main{
-  height: 100vh;
+  /* height: 100vh; */
   position: relative;
 }
 </style>

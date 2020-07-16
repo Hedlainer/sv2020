@@ -6,12 +6,11 @@
       once: true
     }"
     class="lazy"
-    :style="{ backgroundImage: `url(/image/svg/${file}.svg)`}"
-    @click="clickFullImg"
+    @mousedown="clickFullImg"
   >
     <slot name="title"></slot>
-    <slot v-if="isVisible" name="currentImage"></slot>
-    <slot v-if="isVisible" name="fullScreenImage"></slot>
+    <slot name="currentImage"></slot>
+    <slot name="fullScreenImage"></slot>
     <!-- <picture v-if="fullScreenImage&curentImageLoaded" class="lazy__fullscreen">
       <source
         :srcset="`/image/webp/${ImageSize.fullImageWidth}/${file}.webp`"
@@ -54,6 +53,8 @@ if (process.browser) {
   height = window.innerHeight
   width = window.innerWidth
 }
+// :style="{ backgroundImage: `url(/image/svg/${file}.svg)`}"
+
 export default {
 // :style="{ boxShadow: `inset 0px 0px 0px 1px ${hex2rgba(color, 1)}`,
 //               backgroundColor: hex2rgba(color, .3) }"

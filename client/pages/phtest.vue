@@ -24,7 +24,7 @@
 import { Curtains } from 'curtainsjs'
 import anime from 'animejs'
 import photoseries from '~/static/db/Photoseries.json'
-import { vertex, fragment } from '~/assets/shader3.js'
+import { vertex, fragment } from '~/assets/shaderPhotoseries.js'
 export default {
   data () {
     return {

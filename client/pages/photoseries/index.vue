@@ -1,7 +1,9 @@
 <template>
   <main>
     <div id="webgl" ref="webgl"></div>
-    <div class="seriya">
+    <div
+      class="seriya"
+    >
       <lp2
         v-for="(seriya, index) in photoseries"
         :key="seriya.Id"
@@ -61,7 +63,7 @@ import { CustomEase } from 'gsap/dist/CustomEase'
 import { Curtains } from 'curtainsjs'
 // import anime from 'animejs'
 import photoseries from '~/static/db/Photoseries.json'
-import { vertex, fragment } from '~/assets/shader3.js'
+import { vertex, fragment, fspass } from '~/assets/shaderPhotoseries.js'
 // import { vertexPass, fragmentPass } from '~/assets/shaderPass.js'
 import lp2 from '~/components/lp2.vue'
 
@@ -72,6 +74,18 @@ export default {
   },
   data () {
     return {
+      planesDeformation: 0,
+      shaderPassParams: {
+        fragmentShader: fspass, // we'll be using the lib default vertex shader
+        uniforms: {
+          displacement: {
+            name: 'uDisplacement',
+            type: '1f',
+            value: 0
+          }
+        }
+      },
+      shaderPass: null,
       calcCords: {},
       photoseries,
       animating: true,
@@ -99,51 +113,54 @@ export default {
   },
   mounted () {
     this.initCurtains()
-    // console.log(ScrollTrigger)
+
     gsap.registerPlugin(ScrollTrigger, CustomEase)
 
-    console.log(document.querySelector('.seriya').offsetWidth)
-    const tween = gsap.to('.seriya', {
+    gsap.to('.seriya', {
       x: -(document.querySelector('.seriya').offsetWidth - window.innerWidth),
-      ease: 'none'
-      // scrollTrigger: {
-      //   trigger: '.seriya',
-      //   pin: true,
-      //   scrub: 1,
-      //   // pinSpacing: false,
-      //   // horizontal: true,
-      //   onUpdate: self => console.log('velocity:', self.getVelocity()),
-      //   // snap: 1 / (sections.length - 1),
-      //   // base vertical scrolling on how wide the container is so it feels more natural.
-      //   end: () => '+=' + document.querySelector('.seriya').offsetWidth
-      // }
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.seriya',
+        pin: true,
+        scrub: 1,
+        end: () => '+=' + document.querySelector('.seriya').offsetWidth
+      }
     })
 
-    const st = ScrollTrigger.create({
-      trigger: '.seriya',
-      pin: true,
-      scrub: 1,
-      // pinSpacing: false,
-      // horizontal: true,
-      onUpdate: self => console.log('velocity:', self.scroll()),
-      // snap: 1 / (sections.length - 1),
-      // base vertical scrolling on how wide the container is so it feels more natural.
-      end: () => '+=' + document.querySelector('.seriya').offsetWidth,
-      animation: tween
+    this.curtains.onRender(() => {
+      // update our planes deformation
+      // increase/decrease the effect
+      this.planesDeformation = this.lerp(this.planesDeformation, 0, 0.1)
+      // console.log(this.planesDeformation)
+    }).onScroll(() => {
+      // get scroll deltas to apply the effect on scroll
+      var delta = this.curtains.getScrollDeltas()
+
+      // invert value for the effect
+      delta.y = -delta.y
+
+      // threshold
+      if (delta.y > 60) {
+        delta.y = 60
+      } else if (delta.y < -60) {
+        delta.y = -60
+      }
+
+      if (Math.abs(delta.y) > Math.abs(this.planesDeformation)) {
+        this.planesDeformation = this.lerp(this.planesDeformation, delta.y, 0.5)
+      }
     })
 
-    // get
-    const position = st.scroll()
-    console.log(position)
-    // set
-    // st.scroll(100);
-
-    // const sections = gsap.utils.toArray('.seriya__container')
-
-    console.log(this.$refs.CurtainsPlanes[3])
+    this.shaderPass = this.curtains.addShaderPass(this.shaderPassParams)
+    this.shaderPass.onRender(() => {
+      console.log('render')
+      this.shaderPass.uniforms.displacement.value = this.planesDeformation / 1000
+    })
   },
   methods: {
-
+    lerp (start, end, amt) {
+      return (1 - amt) * start + amt * end
+    },
     activateAnimate (ctx) {
       // create
 
@@ -159,10 +176,12 @@ export default {
       // // }
       // this.curtains.disableDrawing()
 
-      const plane = this.curtains.addPlane(this.$refs.CurtainsPlanes[ctx.index].$el, this.params)
+      // const plane = this.curtains.addPlane(this.$refs.CurtainsPlanes[ctx.index].$el, this.params)
+
+      const plane = this.curtains.planes[ctx.index]
       // debugger
       const aspect = plane.images[0].naturalHeight / plane.images[0].naturalWidth
-      console.log(this.$refs.fullImage)
+      // console.log(this.$refs.fullImage)
       // prepare
 
       plane.onReady(() => {
@@ -197,7 +216,7 @@ export default {
 
         const tl = gsap.timeline()
         CustomEase.create('easeName', '0.215, 0.61, 0.355, 1')
-        this.curtains.enableDrawing()
+        // this.curtains.enableDrawing()
         tl.to('#webgl', { zIndex: 2, duration: 0 })
         tl.to(plane.uniforms.uProgress, {
           value: 1,
@@ -253,14 +272,15 @@ export default {
       this.curtains = new Curtains({
         container: this.$refs.webgl,
         pixelRatio: window.devicePixelRatio,
-        watchScroll: true
+        watchScroll: true,
+        antialias: false
       })
       // eslint-disable-next-line no-loops/no-loops
-      // for (const value of this.$refs.CurtainsPlanes) {
-      //   const plane = this.curtains.addPlane(value.$el, this.params)
-      //   this.planes.push(plane)
-      // }
-      this.curtains.disableDrawing()
+      for (const value of this.$refs.CurtainsPlanes) {
+        const plane = this.curtains.addPlane(value.$el, this.params)
+        this.planes.push(plane)
+      }
+      // this.curtains.disableDrawing()
     },
     // getUnifors (i) {
     //   // eslint-disable-next-line security/detect-object-injection
@@ -364,10 +384,9 @@ $scrollBarHeight: 1px;
   width: $scrollBarHeight;
   height: $scrollBarHeight;
 }
-body{
-  overflow-x: hidden;
+img{
+  display: none;
 }
-
 .seriya {
   position: absolute;
   will-change: transform;
