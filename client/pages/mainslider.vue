@@ -140,7 +140,7 @@ export default {
       this.position += this.speed
       // чем меньше цифра тем больше нужно крутить колёсико типа расстояниея которое нужно прокрутить
       this.speed *= 0.7
-      // turget position round number
+      // turget position round number Прилипчивость к половине так как округляем до целого
       const i = Math.round(this.position)
       // const dif = i - this.position
       // LERP!!!
