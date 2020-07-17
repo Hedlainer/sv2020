@@ -1,3 +1,4 @@
+ <!-- РАБОЧИЙ ВАРИАНТ, НО ФОТКИ ОТКРЫВАЮТСЯ В НАЧАЛЕ!!!! СО СКРОЛЛТРИГЕРОМ И ПОДГРУЗКОЙ ПЛАНОВ ПРИ ЗАГРУЗКЕ ИЗОБРАЖЕНИЙ  -->
 <template>
   <main
     ref="container"
@@ -87,38 +88,20 @@ export default {
       ease: 'none',
       onUpdate: () => {
         for (const value of this.planes) {
-          value.setRelativePosition(gsap.getProperty('.seriya', 'x', 'px'), 0, 0)
+          value.setRelativePosition(gsap.getProperty('.seriya', 'x'), 0, 0)
         }
-        // this.curtains.updateScrollValues()
+        this.curtains.updateScrollValues()
         // debugger
-        console.log(gsap.getProperty('.seriya', 'x'))
+        // console.log(gsap.getProperty('.seriya', 'x'))
         // setRelativePosition(gsap.getProperty('.seriya', 'x', 'px'),0,0)
       },
       scrollTrigger: {
         trigger: '.seriya',
         pin: true,
         scrub: 1,
-        // onUpdate: (self) => {
-        //   // this.curtains.updateScrollValues()
-        //   console.log(self)
-        // // setRelativePosition()
-        // },
         end: () => '+=' + document.querySelector('.seriya').offsetWidth
       }
     })
-
-    // console.log(ScrollTrigger.scrollerProxy())
-    // (document.body, {
-    //   scrollTop (value) {
-    //     if (arguments.length) {
-    //       //   bodyScrollBar.scrollTop = value; // setter
-    //     }
-    //     // return bodyScrollBar.scrollTop;    // getter
-    //   },
-    //   getBoundingClientRect () {
-    //     return { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight }
-    //   }
-    // })
   },
   methods: {
     horizontalScroll ($event) {

@@ -1,6 +1,6 @@
+<!-- РАБОЧИЙ СЛАЙДЕР БЕЗ ДЕКОДИРОВАНИЯ ЧЕРЕЗ КАНВУ -->
 <template>
   <main class="wrapper" @mousewheel.passive="changeSpeed">
-    <div class="dot"></div>
     <div
       id="canvas"
       ref="webgl"
@@ -12,8 +12,8 @@
       @load="eee"
     >
       <h1>{{ position }}</h1>
-      <h1>{{ position2 }}</h1>
-      <img
+      <h1>{{ speed }}</h1>
+      <!-- <img
         ref="img1"
         alt
         crossorigin="anonymous"
@@ -33,7 +33,7 @@
         crossorigin="anonymous"
         decoding="async"
         src="/image/jpg/1024/19-03-02-21-55-28.jpg"
-      />
+      /> -->
       <canvas ref="c1"></canvas>
       <canvas ref="c2"></canvas>
     </div>
@@ -90,9 +90,18 @@ export default {
     const ctx2 = canvas2.getContext('2d')
     const images = []
 
-    const img1 = this.$refs.img1
-    const img2 = this.$refs.img2
-    const img3 = this.$refs.img3
+    // const img1 = this.$refs.img1
+    // const img2 = this.$refs.img2
+    // const img3 = this.$refs.img3
+    const img1 = new Image()
+    img1.src = '/image/jpg/1024/19-03-02-21-06-25.jpg'
+    img1.decoding = 'async'
+    const img2 = new Image()
+    img2.src = '/image/jpg/1024/19-03-02-13-46-07.jpg'
+    img2.decoding = 'async'
+    const img3 = new Image()
+    img3.src = '/image/jpg/1024/19-03-02-21-55-28.jpg'
+    img3.decoding = 'async'
 
     img1.decode().then(() => {
       console.log('decode1')
@@ -114,7 +123,7 @@ export default {
       this.plane.userData.nextTex.setSource(canvas2)
     })
 
-    img2.decode().then(() => {
+    img3.decode().then(() => {
       console.log('decode3')
       images.push(img3)
       ctx2.drawImage(img3, 0, 0)
@@ -129,11 +138,17 @@ export default {
 
     const raf = () => {
       this.position += this.speed
+      // чем меньше цифра тем больше нужно крутить колёсико типа расстояниея которое нужно прокрутить
       this.speed *= 0.7
+      // turget position round number
       const i = Math.round(this.position)
-      const dif = i - this.position
+      // const dif = i - this.position
+      // LERP!!!
+      // i target position
+      // this.position - current position
+      // * 0,some number - coef lerp с какой скоростью бужет прилипать чем больше тем сильнее крутить
+      this.position += (i - this.position) * 0.037
 
-      this.position += dif * 0.037
       if (Math.abs(i - this.position) < 0.00001) {
         this.position = i
       }

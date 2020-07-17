@@ -1,3 +1,4 @@
+    <!-- РАБОЧИЙ ВАРИАНТ С ЭФФЕКТОМ РАССЛОЕНИЯ ПО ЦВЕТАМ -->
 <template>
   <main class="wrapper">
     <div id="canvas" ref="webgl"></div>
