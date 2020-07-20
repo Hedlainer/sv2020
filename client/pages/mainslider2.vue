@@ -1,8 +1,12 @@
 <!-- РАБОЧИЙ СЛАЙДЕР БЕЗ ДЕКОДИРОВАНИЯ ЧЕРЕЗ КАНВУ -->
 <template>
   <main class="wrapper" @mousewheel.passive="changeSpeed">
-    <div class="fixscroll" @scroll="getScrollPosition">
-      <div ref="sc" class="scroller">
+    <div
+      ref="sc"
+      class="fixscroll"
+      @scroll="getScrollPosition"
+    >
+      <div class="scroller">
         <!-- <p class="poshandler">
           {{ scrollPos }}
         </p> {{ scrollPos }} -->
@@ -16,11 +20,11 @@
     <div
       ref="plane"
       class="plane"
-      @load="eee"
     >
       <!-- <h1>{{ position }}</h1> -->
       <!-- <h1>{{ speed }}</h1> -->
-      <h1>{{ scrollPos }}</h1>
+      <h1>{{ scrollPos/1000 }}</h1>
+      <!-- <h1>{{ scrollPos2 }}</h1> -->
       <!-- <img
         ref="img1"
         alt
@@ -50,21 +54,27 @@
 
 <script>
 import { Curtains } from 'curtainsjs'
-import anime from 'animejs'
+// import anime from 'animejs'
 import { vertex, fragment } from '~/assets/shadertest.js'
 export default {
   data () {
     return {
+      lastPos: 0,
+      timer: 0,
+      delta: 0,
+      delay: 50,
       animation: null,
       activeTextureIndex: 0,
       nextTextureIndex: 1,
       speed: 0,
+      snab: 0,
       position: 0,
       position2: 0,
       pos: 0,
       curtains: undefined,
       plane: undefined,
-      scrollPos: '',
+      scrollPos: 0,
+      scrollPos2: 0,
       params: {
         vertexShader: vertex,
         fragmentShader: fragment,
@@ -84,14 +94,14 @@ export default {
     this.setupCurtains()
     this.setupPlane()
 
-    const animation = anime({
-      autoplay: false,
-      targets: '.dot2',
-      easing: 'linear'
-      // translateX: 750,
-      // rotate: 45,
-      // scale: 0.9
-    })
+    // const animation = anime({
+    //   autoplay: false,
+    //   targets: '.dot2',
+    //   easing: 'linear'
+    //   // translateX: 750,
+    //   // rotate: 45,
+    //   // scale: 0.9
+    // })
     const canvas1 = this.$refs.c1
     const canvas2 = this.$refs.c2
 
@@ -163,27 +173,43 @@ export default {
       }
       this.position2 = this.position - Math.floor(this.position)
 
-      animation.seek(animation.duration * this.position)
+      // animation.seek(animation.duration * this.position)
 
-      // if (this.position > images.length - 1) {
-      //   this.position = 0
-      // }
-      // this.plane.uniforms.progress.value = this.position
-      // ctx1.drawImage(images[Math.floor(this.position)], 0, 0)
-      // ctx2.drawImage(images[Math.floor(this.position) + 1], 0, 0)
+      if (this.position > images.length - 1) {
+        this.position = 0
+      }
+      this.plane.uniforms.progress.value = this.position
+      ctx1.drawImage(images[Math.floor(this.position)], 0, 0)
+      ctx2.drawImage(images[Math.floor(this.position) + 1], 0, 0)
 
-      this.scrollPos += (1600 - this.scrollPos) * 0.037
-      this.$refs.sc.scrollTo(this.scrollPos, this.scrollPos)
+      this.scrollPos2 += this.delta
+      // this.delta *= 0.8
+      const h = document.querySelector('.scroller').offsetHeight / 4
+      this.snab = Math.round(this.scrollPos / h)
+      // this.scrollPos *= 0.99
+      this.scrollPos += (this.snab * h - this.scrollPos) * 0.037
+
+      this.$refs.sc.scrollTo(0, this.scrollPos)
       requestAnimationFrame(raf)
     }
   },
   methods: {
+    checkScrollSpeed (e) {
+      if (this.lastPos != null) { // && newPos < maxScroll
+        this.delta = e.target.scrollTop - this.lastPos
+      }
+      this.lastPos = e.target.scrollTop
+      this.timer && clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
+        this.lastPos = null
+        this.delta = 0
+      }, this.delay)
+      return this.delta
+    },
+
     getScrollPosition ($event) {
       this.scrollPos = $event.target.scrollTop
-      console.log($event)
-    },
-    eee () {
-      console.log('типа загрузилось')
+      console.log(this.checkScrollSpeed($event))
     },
     changeSpeed ($event) {
       this.speed += $event.deltaY * 0.0002
@@ -271,7 +297,7 @@ img {
   overflow-y: auto;
 }
 .scroller{
-height: 500vh;
+height: 4000px;
 position: relative;
 background: rgb(153,0,255);
 background: linear-gradient(180deg, rgba(153,0,255,1) 0%, rgba(0,158,89,1) 50%, rgba(252,230,69,1) 100%);

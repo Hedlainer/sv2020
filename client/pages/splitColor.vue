@@ -82,7 +82,7 @@ export default {
       this.curtains.onRender(() => {
         // update our planes deformation
         // increase/decrease the effect
-        this.planesDeformation = this.lerp(this.planesDeformation, 0, 0.1)
+        this.planesDeformation = this.lerp(this.planesDeformation, 0, 0.05)
         // console.log(this.planesDeformation)
       }).onScroll(() => {
       // get scroll deltas to apply the effect on scroll
