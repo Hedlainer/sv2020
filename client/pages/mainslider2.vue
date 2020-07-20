@@ -1,17 +1,16 @@
 <!-- РАБОЧИЙ СЛАЙДЕР БЕЗ ДЕКОДИРОВАНИЯ ЧЕРЕЗ КАНВУ -->
 <template>
-  <main class="wrapper" @mousewheel.passive="changeSpeed">
-    <div
-      ref="sc"
-      class="fixscroll"
-      @scroll="getScrollPosition"
-    >
-      <div class="scroller">
-        <!-- <p class="poshandler">
-          {{ scrollPos }}
-        </p> {{ scrollPos }} -->
-      </div>
+  <main
+    ref="sc"
+    class="wrapper"
+    @scroll.passive="getScrollPosition"
+  >
+    <div class="scroller">
     </div>
+    <!-- <div
+      class="fixscroll"
+    >
+    </div> -->
     <div
       id="canvas"
       ref="webgl"
@@ -19,11 +18,11 @@
     ></div>
     <div
       ref="plane"
-      class="plane"
+      class="plane "
     >
       <!-- <h1>{{ position }}</h1> -->
       <!-- <h1>{{ speed }}</h1> -->
-      <h1>{{ scrollPos/1000 }}</h1>
+      <!-- <h1>{{ scrollPos/1000 }}</h1> -->
       <!-- <h1>{{ scrollPos2 }}</h1> -->
       <!-- <img
         ref="img1"
@@ -178,16 +177,26 @@ export default {
       if (this.position > images.length - 1) {
         this.position = 0
       }
-      this.plane.uniforms.progress.value = this.position
-      ctx1.drawImage(images[Math.floor(this.position)], 0, 0)
-      ctx2.drawImage(images[Math.floor(this.position) + 1], 0, 0)
+      // this.plane.uniforms.progress.value = this.position
+      // ctx1.drawImage(images[Math.floor(this.position)], 0, 0)
+      // ctx2.drawImage(images[Math.floor(this.position) + 1], 0, 0)
 
-      this.scrollPos2 += this.delta
+      // this.scrollPos2 += this.delta
       // this.delta *= 0.8
-      const h = document.querySelector('.scroller').offsetHeight / 4
+
+      const h = document.querySelector('.scroller').offsetHeight / 3
       this.snab = Math.round(this.scrollPos / h)
-      // this.scrollPos *= 0.99
-      this.scrollPos += (this.snab * h - this.scrollPos) * 0.037
+      this.scrollPos += (this.snab * h - this.scrollPos) * 0.057
+
+      if (Math.abs(this.snab - this.scrollPos) < 0.00001) {
+        this.scrollPos = this.snab
+      }
+      this.plane.uniforms.progress.value = this.scrollPos / 1000
+      var dr
+      this.scrollPos / 1000 > 2 ? dr = 0 : dr = 1
+
+      ctx1.drawImage(images[Math.floor(this.scrollPos / 1000)], 0, 0)
+      ctx2.drawImage(images[Math.floor(this.scrollPos / 1000) + dr], 0, 0)
 
       this.$refs.sc.scrollTo(0, this.scrollPos)
       requestAnimationFrame(raf)
@@ -209,7 +218,7 @@ export default {
 
     getScrollPosition ($event) {
       this.scrollPos = $event.target.scrollTop
-      console.log(this.checkScrollSpeed($event))
+      // console.log(this.checkScrollSpeed($event))
     },
     changeSpeed ($event) {
       this.speed += $event.deltaY * 0.0002
@@ -257,7 +266,7 @@ h1{
   width: 100%;
   height: 100vh;
   margin: 0;
-  overflow: hidden;
+  overflow-y: auto;
 }
 #canvas {
   position: absolute;
@@ -297,14 +306,12 @@ img {
   overflow-y: auto;
 }
 .scroller{
-height: 4000px;
-position: relative;
+height: 3000px;
+position: absolute;
+top: 0;
+left: 0;
+z-index: -3;
 background: rgb(153,0,255);
 background: linear-gradient(180deg, rgba(153,0,255,1) 0%, rgba(0,158,89,1) 50%, rgba(252,230,69,1) 100%);
-}
-.poshandler{
-  position: fixed;
-  top: 0;
-  left: 0;
 }
 </style>
