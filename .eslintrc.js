@@ -19,7 +19,7 @@
 module.exports = {
   root: true,
   env: {
-    es11: true,
+    es6: true,
     browser: true,
     node: true
 

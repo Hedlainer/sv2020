@@ -1,6 +1,7 @@
 <!-- РАБОЧИЙ СЛАЙДЕР БЕЗ ДЕКОДИРОВАНИЯ ЧЕРЕЗ КАНВУ -->
 <template>
   <main class="wrapper" @mousewheel.passive="changeSpeed">
+    <h1>{{ position }}</h1>
     <div
       id="canvas"
       ref="webgl"
@@ -10,8 +11,8 @@
       ref="plane"
       class="plane"
     >
-      <!-- <h1>{{ position }}</h1>
-      <h1>{{ position2 }}</h1> -->
+      <!-- <h1>{{ position }}</h1> -->
+
       <!-- <img
         ref="img1"
         alt
