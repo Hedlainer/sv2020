@@ -39,6 +39,8 @@
     "nuxt-webfontloader": "^1.1.0",
     "raw-loader": "^4.0.1",
     "serverless-http": "^2.5.0",
+    "split-html-to-chars": "^1.0.5",
+    "splitting": "^1.0.6",
     "vue-lazy-hydration": "^1.0.0-beta.12",
     "vue-observe-visibility": "^0.4.6"
   },

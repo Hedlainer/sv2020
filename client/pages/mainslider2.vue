@@ -1,3 +1,6 @@
+<!--  eslint-disable vue/singleline-html-element-content-newline -->
+<!--  eslint-disable vue/max-attributes-per-line -->
+<!--  eslint-disable vue/mustache-interpolation-spacing -->
 <!-- РАБОЧИЙ СЛАЙДЕР БЕЗ ДЕКОДИРОВАНИЯ ЧЕРЕЗ КАНВУ -->
 <template>
   <main
@@ -9,6 +12,24 @@
       id="canvas"
       ref="webgl"
     ></div>
+    <div class="grid">
+      <h2>{{ main[1].Title }}</h2>
+      <!-- eslint-disable-next-line vue/mustache-interpolation-spacing-->
+      <transition
+        :css:="false"
+        mode="out-in"
+        name="split"
+        @before-enter="beforeEnter"
+        @enter="enter"
+      >
+        <!-- <h3 v-if="snab === 0" :key="snab1" class="body">ttttttttttttttttttttt</h3>
+        <h3 v-if="snab === 1" :key="snab2" class="body">aaaaaaaaaaaaaaaaaaaaaaa</h3>
+        <h3 v-if="snab === 2" :key="snab3" class="body">xxxxxxxxxxxxxxxxxxxxxxxxx</h3> -->
+        <h3 :key="snab" ref="sab" class="body" data-splitting>
+          <span v-for="(letter,index) in SubTitle" :key="index" class="letter">{{` ${letter}`}}</span>
+        </h3>
+      </transition>
+    </div>
     <picture
       v-for="image in images"
       :key="image.src"
@@ -46,12 +67,15 @@
 </template>
 
 <script>
+import main from '~/static/db/main.json'
 import { Curtains } from 'curtainsjs'
-// import anime from 'animejs'
+import anime from 'animejs'
 import { vertex, fragment } from '~/assets/shadertest.js'
+
 export default {
   data () {
     return {
+      main,
       images:
         [{ src: '19-05-01-11-28-10' },
           { src: '19-08-24-17-09-02' },
@@ -88,11 +112,27 @@ export default {
       }
     }
   },
-
+  computed: {
+    // eslint-disable-next-line vue/return-in-computed-property
+    SubTitle () {
+      switch (this.snab) {
+        case 0: return main[0].Subtitle.split(' ')
+        case 1: return main[1].Subtitle.split(' ')
+        case 2: return main[2].Subtitle.split(' ')
+      }
+    }
+  },
   mounted () {
-    // console.log(this.$refs.images[0].children[1])
     this.setupCurtains()
     this.setupPlane()
+    // const els2 = document.querySelectorAll('.body')
+    // const els = this.$refs.sab
+    // console.log(els)
+    // console.log(els2);
+    // [].forEach.call(els2, function (el) {
+    //   // outerHTML, thats *important*, no direct text nodes should be in parsed HTML
+    //   el.outerHTML = Splitter(el.outerHTML, '<span class="letter">$</span>')
+    // })
 
     const canvas1 = this.$refs.c1
     const canvas2 = this.$refs.c2
@@ -147,10 +187,35 @@ export default {
       ctx2.drawImage(this.$refs.images[Math.floor(this.scrollPos / 1000) + 1].children[1], 0, 0)
 
       this.$refs.sc.scrollTo(0, this.scrollPos)
+      // console.log(this.snab)
+
       requestAnimationFrame(raf)
     }
   },
   methods: {
+    beforeEnter (el) {
+      // el.style.opacity = 0
+      // el.style.transformOrigin = 'left'
+    },
+    enter (el, done) {
+      const els = el.querySelectorAll('.letter')
+      anime({
+        targets: els,
+        translateY: ['-50%', '0%'],
+        opacity: [0, 1],
+        delay: anime.stagger(5, {
+          easing: 'easeOutSine'
+          // from: 50
+        }),
+        easing: 'linear',
+        changeComplete (anime) {
+          // console.log('animate!!!!')
+          // console.log(anime)
+          done()
+        }
+      })
+    //   done()
+    },
     getScrollPosition ($event) {
       this.scrollPos = $event.target.scrollTop
     },
@@ -174,11 +239,64 @@ export default {
       this.plane.userData.activeTex.setSource(this.plane.canvases[0])
       this.plane.userData.nextTex.setSource(this.plane.canvases[1])
     }
+  },
+  // watch: {
+  //   snab (newValue, oldValue) {
+  //     anime({
+  //       targets: '.body',
+  //       changeComplete (anime) {
+  //         console.log(anime)
+  //       }
+  //       // opacity: 0
+  //     })
+  //   }
+  // },
+  render (createElement) {
+    return createElement('h1', this.snab)
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.letter{
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+}
+.grid {
+  position: fixed;
+  height: 100vh;
+  width: 98vw;
+  grid-template-columns: auto 50vw;
+  grid-template-rows: 1fr 1fr;
+  align-self: end;
+  top: 0;
+  left: 0;
+  display: grid;
+
+  .body {
+    position: absolute;
+    // top: 0;
+    // left: 0;
+    margin: 20px;
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    justify-self: end;
+    align-self: end;
+
+  }
+h3 {
+      white-space: pre-wrap;
+      font-family: Roboto, sans-serif;
+      font-weight: 300;
+      color: white;
+      padding: 15px;
+      font-size: 26px;
+      background-color: rgba(0, 0, 0, 0.4);
+      max-width: 40vw;
+
+    }
+}
 img{
   display: none;
 }
