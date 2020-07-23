@@ -288,11 +288,11 @@ export default {
 h3 {
       white-space: pre-wrap;
       font-family: Roboto, sans-serif;
-      font-weight: 300;
+      font-weight: 400;
       color: white;
       padding: 15px;
-      font-size: 26px;
-      background-color: rgba(0, 0, 0, 0.4);
+      font-size: 24px;
+      background-color: rgba(0, 0, 0, 0.2);
       max-width: 40vw;
 
     }

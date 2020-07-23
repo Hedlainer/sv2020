@@ -31,6 +31,7 @@
     "dotenv": "^8.2.0",
     "glslify-loader": "^2.0.0",
     "gsap": "file:gsap-bonus.tgz",
+    "html2canvas": "^1.0.0-rc.5",
     "intersection-observer": "^0.10.0",
     "justified-layout": "^4.0.0",
     "minipass": "^3.1.3",
