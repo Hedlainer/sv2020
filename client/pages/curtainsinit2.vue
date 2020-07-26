@@ -206,7 +206,7 @@ body {
   font-size: 80px;
   color: red;
   z-index: -3;
-  // opacity: 0;
+  opacity: 0;
   // max-width: 30vw;
 }
 .plane {

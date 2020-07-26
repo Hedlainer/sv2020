@@ -6,29 +6,16 @@
   <main
     ref="sc"
     class="wrapper"
+    style=""
     @scroll.passive="getScrollPosition"
   >
     <div
       id="canvas"
       ref="webgl"
     ></div>
-    <div class="grid">
-      <h2>{{ main[1].Title }}</h2>
+    <div class="grid2">
+      <!-- <h2>{{ main[1].Title }}</h2> -->
       <!-- eslint-disable-next-line vue/mustache-interpolation-spacing-->
-      <transition
-        :css:="false"
-        mode="out-in"
-        name="split"
-        @before-enter="beforeEnter"
-        @enter="enter"
-      >
-        <!-- <h3 v-if="snab === 0" :key="snab1" class="body">ttttttttttttttttttttt</h3>
-        <h3 v-if="snab === 1" :key="snab2" class="body">aaaaaaaaaaaaaaaaaaaaaaa</h3>
-        <h3 v-if="snab === 2" :key="snab3" class="body">xxxxxxxxxxxxxxxxxxxxxxxxx</h3> -->
-        <h3 :key="snab" ref="sab" class="body" data-splitting>
-          <span v-for="(letter,index) in SubTitle" :key="index" class="letter">{{` ${letter}`}}</span>
-        </h3>
-      </transition>
     </div>
     <picture
       v-for="image in images"
@@ -51,13 +38,27 @@
     <div
       class="fixscroll"
     >
-      <div
-        ref="plane"
-        class="plane "
-      >
-        <canvas ref="c1"></canvas>
-        <canvas ref="c2"></canvas>
+      <div class="grid">
+        <transition
+          :css:="false"
+          mode="out-in"
+          name="split"
+          @before-enter="beforeEnter"
+          @enter="enter"
+        >
+          <h3 :key="snab" ref="sab" class="body" data-splitting>
+            <span v-for="(letter,index) in SubTitle" :key="index" class="letter">{{` ${letter}`}}</span>
+          </h3>
+        </transition>
+        <div
+          ref="plane"
+          class="plane "
+        >
+          <canvas ref="c1"></canvas>
+          <canvas ref="c2"></canvas>
+        </div>
       </div>
+
       <!-- <div class="scroller"> -->
     <!-- </div> -->
     </div>
@@ -116,7 +117,7 @@ export default {
     // eslint-disable-next-line vue/return-in-computed-property
     SubTitle () {
       switch (this.snab) {
-        case 0: return main[0].Subtitle.split(' ')
+        case 0: return main[0].Subtitle.split('\n')
         case 1: return main[1].Subtitle.split(' ')
         case 2: return main[2].Subtitle.split(' ')
       }
@@ -264,39 +265,52 @@ export default {
   overflow: hidden;
 }
 .grid {
-  position: fixed;
-  height: 100vh;
-  width: 98vw;
-  grid-template-columns: auto 50vw;
-  grid-template-rows: 1fr 1fr;
-  align-self: end;
-  top: 0;
-  left: 0;
+  position: sticky;
   display: grid;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  grid-template-rows: 1fr 1fr 2fr 4fr 2.66fr 5.33fr 5.33fr 4.33fr 2.83fr 3.5fr 3.5fr 2.83fr 4.33fr 5.33fr 5.33fr 2.66fr 4fr 2fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 2fr 4fr 2.66fr 5.33fr 5.33fr 4.33fr 2.83fr 3.5fr 3.5fr 2.83fr 4.33fr 5.33fr 5.33fr 2.66fr 4fr 2fr 1fr 1fr;
+  // background: url(/image/ggr.svg) left top / 100% 100% no-repeat;
+  .plane {
+    grid-column: 3 / 14;
+    grid-row: 4 / 18;
+    canvas {
+      display: none;
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+}
+  // align-self: end;
 
   .body {
-    position: absolute;
+    // position: absolute;
     // top: 0;
     // left: 0;
-    margin: 20px;
-    grid-column: 2 / 3;
-    grid-row: 2 / 3;
-    justify-self: end;
-    align-self: end;
+    // margin: 20px;
+    grid-column: 15 / 19;
+    grid-row: 7 / 15;
+    max-width: 100%;
+    // justify-self: end;
+    // align-self: end;
 
   }
 h3 {
+  margin: 0;
       white-space: pre-wrap;
       font-family: Roboto, sans-serif;
       font-weight: 400;
       color: white;
-      padding: 15px;
-      font-size: 24px;
-      background-color: rgba(0, 0, 0, 0.2);
-      max-width: 40vw;
+      // padding: 15px;
+      font-size: 20px;
+      background-color: rgba(0, 0, 0, 0.7);
+      // min-width: 70vw;
 
     }
-}
 img{
   display: none;
 }
@@ -305,6 +319,7 @@ h1{
   background-color: blanchedalmond;
 }
 .wrapper {
+
   position: relative;
   width: 100%;
   height: 100vh;
@@ -319,20 +334,23 @@ h1{
   display: block;
   // opacity: 0.5;
 }
-.plane {
-  position: sticky;
-  top: 0;
-  width: 80%;
-  height: 100vh;
-  margin: 0 auto;
-}
-.plane canvas {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: none;
-}
+// .plane {
+//   position: sticky;
+//   top: 5vh;
+//   left: 5vh;
+//   width: calc(90vh*1.5);
+//   height: 90vh;
+//   // margin: 0 auto;
+// }
+// .plane canvas {
+//   height: 100%;
+//   width: 100%;
+//   object-fit: cover;
+//   object-position: center;
+//   display: none;
+//   grid-column: 2 / 3;
+//     grid-row: 2 / 3;
+// }
 .fixscroll{
   height: 5000px;
 }

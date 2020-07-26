@@ -47,34 +47,34 @@ gl_FragColor = texture2D(uSampler0, textureCoord);
 
 export const Tvertex = `
 precision mediump float;
-        // default mandatory variables
-        attribute vec3 aVertexPosition;
-        attribute vec2 aTextureCoord;
-        uniform mat4 uMVMatrix;
-        uniform mat4 uPMatrix;
-        uniform mat4 planeTextureMatrix;
-        // custom varyings
-        varying vec3 vVertexPosition;
-        varying vec2 vTextureCoord;
-        void main() {
-            gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-            // varyings
-            vVertexPosition = aVertexPosition;
-            vTextureCoord = (planeTextureMatrix * vec4(aTextureCoord, 0.0, 1.0)).xy;
-        }
+// default mandatory variables
+attribute vec3 aVertexPosition;
+attribute vec2 aTextureCoord;
+uniform mat4 uMVMatrix;
+uniform mat4 uPMatrix;
+uniform mat4 planeTextureMatrix;
+// custom varyings
+varying vec3 vVertexPosition;
+varying vec2 vTextureCoord;
+void main() {
+    gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+    // varyings
+    vVertexPosition = aVertexPosition;
+    vTextureCoord = (planeTextureMatrix * vec4(aTextureCoord, 0.0, 1.0)).xy;
+}
 `
 
 export const Tfragment = `
 precision mediump float;
-        varying vec3 vVertexPosition;
-        varying vec2 vTextureCoord;
-        
-        uniform float uTime;
-        uniform sampler2D planeTexture;
-        void main() {
-            // just distort the text a bit
-            vec2 textureCoords = vTextureCoord;
-            textureCoords.x += sin(uTime / 30.0) / 100.0 * cos(textureCoords.y * 20.0);
-            gl_FragColor = texture2D(planeTexture, textureCoords);
-        }
+varying vec3 vVertexPosition;
+varying vec2 vTextureCoord;
+
+uniform float uTime;
+uniform sampler2D planeTexture;
+void main() {
+    // just distort the text a bit
+    vec2 textureCoords = vTextureCoord;
+    textureCoords.x += sin(uTime / 60.0) / 200.0 * cos(textureCoords.y * 10.0);
+    gl_FragColor = texture2D(planeTexture, textureCoords);
+}
 `
