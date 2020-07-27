@@ -1,16 +1,8 @@
 <!-- РАБОЧИЙ СЛАЙДЕР БЕЗ ДЕКОДИРОВАНИЯ ЧЕРЕЗ КАНВУ -->
 <template>
   <main class="wrapper" @mousewheel.passive="changeSpeed">
-    <div
-      id="canvas"
-      ref="webgl"
-      class="dot2"
-    ></div>
-    <div
-      ref="plane"
-      class="plane"
-      @load="eee"
-    >
+    <div id="canvas" ref="webgl" class="dot2"></div>
+    <div ref="plane" class="plane" @load="eee">
       <h1>{{ position }}</h1>
       <h1>{{ speed }}</h1>
       <!-- <img
@@ -41,11 +33,11 @@
 </template>
 
 <script>
-import { Curtains } from 'curtainsjs'
-import anime from 'animejs'
-import { vertex, fragment } from '~/assets/shadertest.js'
+import { Curtains } from "curtainsjs";
+import anime from "animejs";
+import { vertex, fragment } from "~/assets/shadertest.js";
 export default {
-  data () {
+  data() {
     return {
       animation: null,
       activeTextureIndex: 0,
@@ -62,132 +54,132 @@ export default {
         autoloadSources: false,
         uniforms: {
           progress: {
-            name: 'uProgress',
-            type: '1f',
-            value: 0
-          }
-        }
-      }
-    }
+            name: "uProgress",
+            type: "1f",
+            value: 0,
+          },
+        },
+      },
+    };
   },
 
-  mounted () {
-    this.setupCurtains()
-    this.setupPlane()
+  mounted() {
+    this.setupCurtains();
+    this.setupPlane();
 
     const animation = anime({
       autoplay: false,
-      targets: '.dot2',
-      easing: 'linear'
+      targets: ".dot2",
+      easing: "linear",
       // translateX: 750,
       // rotate: 45,
       // scale: 0.9
-    })
-    const canvas1 = this.$refs.c1
-    const canvas2 = this.$refs.c2
+    });
+    const canvas1 = this.$refs.c1;
+    const canvas2 = this.$refs.c2;
 
-    const ctx1 = canvas1.getContext('2d')
-    const ctx2 = canvas2.getContext('2d')
-    const images = []
+    const ctx1 = canvas1.getContext("2d");
+    const ctx2 = canvas2.getContext("2d");
+    const images = [];
 
     // const img1 = this.$refs.img1
     // const img2 = this.$refs.img2
     // const img3 = this.$refs.img3
-    const img1 = new Image()
-    img1.src = '/image/jpg/1024/19-03-02-21-06-25.jpg'
-    img1.decoding = 'async'
-    const img2 = new Image()
-    img2.src = '/image/jpg/1024/19-03-02-13-46-07.jpg'
-    img2.decoding = 'async'
-    const img3 = new Image()
-    img3.src = '/image/jpg/1024/19-03-02-21-55-28.jpg'
-    img3.decoding = 'async'
+    const img1 = new Image();
+    img1.src = "/image/jpg/1024/19-03-02-21-06-25.jpg";
+    img1.decoding = "async";
+    const img2 = new Image();
+    img2.src = "/image/jpg/1024/19-03-02-13-46-07.jpg";
+    img2.decoding = "async";
+    const img3 = new Image();
+    img3.src = "/image/jpg/1024/19-03-02-21-55-28.jpg";
+    img3.decoding = "async";
 
     img1.decode().then(() => {
-      console.log('decode1')
-      images.push(img1)
-      canvas1.width = img1.naturalWidth
-      canvas1.height = img1.naturalHeight
-      ctx1.drawImage(img1, 0, 0)
-      this.plane.loadCanvas(canvas1)
-      this.plane.userData.activeTex.setSource(canvas1)
-    })
+      console.log("decode1");
+      images.push(img1);
+      canvas1.width = img1.naturalWidth;
+      canvas1.height = img1.naturalHeight;
+      ctx1.drawImage(img1, 0, 0);
+      this.plane.loadCanvas(canvas1);
+      this.plane.userData.activeTex.setSource(canvas1);
+    });
 
     img2.decode().then(() => {
-      console.log('decode2')
-      images.push(img2)
-      canvas2.width = img2.naturalWidth
-      canvas2.height = img2.naturalHeight
-      ctx2.drawImage(img2, 0, 0)
-      this.plane.loadCanvas(canvas2)
-      this.plane.userData.nextTex.setSource(canvas2)
-    })
+      console.log("decode2");
+      images.push(img2);
+      canvas2.width = img2.naturalWidth;
+      canvas2.height = img2.naturalHeight;
+      ctx2.drawImage(img2, 0, 0);
+      this.plane.loadCanvas(canvas2);
+      this.plane.userData.nextTex.setSource(canvas2);
+    });
 
     img3.decode().then(() => {
-      console.log('decode3')
-      images.push(img3)
-      ctx2.drawImage(img3, 0, 0)
-      ctx1.drawImage(img3, 0, 0)
-    })
+      console.log("decode3");
+      images.push(img3);
+      ctx2.drawImage(img3, 0, 0);
+      ctx1.drawImage(img3, 0, 0);
+    });
     // console.log(images);
     Promise.all([img1.decode(), img2.decode(), img3.decode()]).then(() => {
       // this.curtains.enableDrawing();
       // this.setTexture();
-      raf()
-    })
+      raf();
+    });
 
     const raf = () => {
-      this.position += this.speed
+      this.position += this.speed;
       // чем меньше цифра тем больше нужно крутить колёсико типа расстояниея которое нужно прокрутить
-      this.speed *= 0.7
+      this.speed *= 0.7;
       // turget position round number Прилипчивость к половине так как округляем до целого
-      const i = Math.round(this.position)
+      const i = Math.round(this.position);
       // const dif = i - this.position
       // LERP!!!
       // i target position
       // this.position - current position
       // * 0,some number - coef lerp с какой скоростью бужет прилипать чем больше тем сильнее крутить
-      this.position += (i - this.position) * 0.037
+      this.position += (i - this.position) * 0.037;
 
       if (Math.abs(i - this.position) < 0.00001) {
-        this.position = i
+        this.position = i;
       }
-      this.position2 = this.position - Math.floor(this.position)
+      this.position2 = this.position - Math.floor(this.position);
 
-      animation.seek(animation.duration * this.position)
+      animation.seek(animation.duration * this.position);
 
       if (this.position > images.length - 1) {
-        this.position = 0
+        this.position = 0;
       }
-      this.plane.uniforms.progress.value = this.position
-      ctx1.drawImage(images[Math.floor(this.position)], 0, 0)
-      ctx2.drawImage(images[Math.floor(this.position) + 1], 0, 0)
+      this.plane.uniforms.progress.value = this.position;
+      ctx1.drawImage(images[Math.floor(this.position)], 0, 0);
+      ctx2.drawImage(images[Math.floor(this.position) + 1], 0, 0);
 
-      requestAnimationFrame(raf)
-    }
+      requestAnimationFrame(raf);
+    };
   },
   methods: {
-    eee () {
-      console.log('типа загрузилось')
+    eee() {
+      console.log("типа загрузилось");
     },
-    changeSpeed ($event) {
-      this.speed += $event.deltaY * 0.0002
+    changeSpeed($event) {
+      this.speed += $event.deltaY * 0.0002;
     },
-    setupCurtains () {
+    setupCurtains() {
       this.curtains = new Curtains({
         container: this.$refs.webgl,
-        pixelRatio: window.devicePixelRatio
-      })
+        pixelRatio: window.devicePixelRatio,
+      });
       // this.curtains.disableDrawing();
     },
 
-    setupPlane () {
-      this.plane = this.curtains.addPlane(this.$refs.plane, this.params)
+    setupPlane() {
+      this.plane = this.curtains.addPlane(this.$refs.plane, this.params);
       if (this.plane) {
         this.plane.userData = {
-          activeTex: this.plane.createTexture({ sampler: 'activeTex' }),
-          nextTex: this.plane.createTexture({ sampler: 'nextTex' })
-        }
+          activeTex: this.plane.createTexture({ sampler: "activeTex" }),
+          nextTex: this.plane.createTexture({ sampler: "nextTex" }),
+        };
         this.plane
           .onReady(() => {
             // this.plane.loadCanvases([this.$refs.c1, this.$refs.c2]);
@@ -195,16 +187,16 @@ export default {
           })
           .onRender(() => {
             // this.plane.uniforms.progress.value = this.position;
-          })
+          });
         //   .onLoading(() => console.log("I'm load"))
       }
     },
-    setTexture () {
-      this.plane.userData.activeTex.setSource(this.plane.canvases[0])
-      this.plane.userData.nextTex.setSource(this.plane.canvases[1])
-    }
-  }
-}
+    setTexture() {
+      this.plane.userData.activeTex.setSource(this.plane.canvases[0]);
+      this.plane.userData.nextTex.setSource(this.plane.canvases[1]);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

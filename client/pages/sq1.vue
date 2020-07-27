@@ -11,12 +11,12 @@
 
 <script>
 // eslint-disable-next-line no-unused-vars
-import anime from 'animejs'
+import anime from "animejs";
 export default {
   transition: {
-    name: 'parent',
+    name: "parent",
     // mode: 'out-in',
-    mode: 'in-out',
+    mode: "in-out",
     // mode: '',
     css: false,
     // beforeEnter (el) {
@@ -25,37 +25,39 @@ export default {
     //     scale: 0.9
     //   })
     // },
-    enter (el, done) {
+    enter(el, done) {
       // done()
       anime({
         targets: el,
         // translateY: '-50%',
         // scale: 0.9,
-        easing: 'linear',
-        changeComplete () {
-          done()
-        }
-      })
-    //   done()
+        easing: "linear",
+        changeComplete() {
+          done();
+        },
+      });
+      //   done()
     },
-    leave (el, done) {
+    leave(el, done) {
       anime({
         targets: el,
         // translateY: '-50%',
         scale: 3, // middle to down
-        easing: 'easeInOutQuad',
-        changeComplete () {
+        easing: "easeInOutQuad",
+        changeComplete() {
           // done()
           anime({
             targets: el,
             duration: 3000,
             opacity: 0,
-            easing: 'linear',
-            changeComplete () { done() }
-          })
-        }
-      })
-    }
+            easing: "linear",
+            changeComplete() {
+              done();
+            },
+          });
+        },
+      });
+    },
     // afterLeave (el) {
     //   anime({
     //     targets: el,
@@ -74,32 +76,31 @@ export default {
     //       })
     //     }
     //   },
-
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-.link{
-    padding: 20px;
-    background-color: white;
-    position: fixed;
-    left: 20px;
-    top: 20px;
+.link {
+  padding: 20px;
+  background-color: white;
+  position: fixed;
+  left: 20px;
+  top: 20px;
 }
-.wrap{
+.wrap {
   position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
-.square{
-width: 200px;
-height: 200px;
-background-color: rgb(255, 17, 0);
-display: flex;
-    align-items: center;
-    justify-content: center;
+.square {
+  width: 200px;
+  height: 200px;
+  background-color: rgb(255, 17, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

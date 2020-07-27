@@ -1,12 +1,8 @@
- <!-- РАБОЧИЙ ВАРИАНТ, НО ФОТКИ ОТКРЫВАЮТСЯ В НАЧАЛЕ!!!! СО СКРОЛЛТРИГЕРОМ И ПОДГРУЗКОЙ ПЛАНОВ ПРИ ЗАГРУЗКЕ ИЗОБРАЖЕНИЙ  -->
+<!-- РАБОЧИЙ ВАРИАНТ, НО ФОТКИ ОТКРЫВАЮТСЯ В НАЧАЛЕ!!!! СО СКРОЛЛТРИГЕРОМ И ПОДГРУЗКОЙ ПЛАНОВ ПРИ ЗАГРУЗКЕ ИЗОБРАЖЕНИЙ  -->
 <template>
-  <main
-    ref="container"
-  >
+  <main ref="container">
     <div id="webgl" ref="webgl"></div>
-    <div
-      class="seriya"
-    >
+    <div class="seriya">
       <lazypicture
         v-for="(seriya, index) in photoseries"
         :key="seriya.Id"
@@ -17,7 +13,6 @@
         :file="seriya.FileName"
         :full-screen-image="true"
         :my-index="index"
-
         @fulload="preparePlane"
         @myClick="activateAnimate"
       />
@@ -29,27 +24,27 @@
 // @mousewheel="value += $event.deltaY"
 //   :style="{transform: `translateX(-${value}.px)`}"
 
-import { Curtains } from 'curtainsjs'
-import anime from 'animejs'
-import photoseries from '~/static/db/Photoseries.json'
-import { vertex, fragment, fspass } from '~/assets/shaderPhotoseries.js'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
-import { CustomEase } from 'gsap/dist/CustomEase'
+import { Curtains } from "curtainsjs";
+import anime from "animejs";
+import photoseries from "~/static/db/Photoseries.json";
+import { vertex, fragment, fspass } from "~/assets/shaderPhotoseries.js";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import { CustomEase } from "gsap/dist/CustomEase";
 export default {
-  layout: 'series',
-  data () {
+  layout: "series",
+  data() {
     return {
       planesDeformation: 0,
       shaderPassParams: {
         fragmentShader: fspass, // we'll be using the lib default vertex shader
         uniforms: {
           displacement: {
-            name: 'uDisplacement',
-            type: '1f',
-            value: 0
-          }
-        }
+            name: "uDisplacement",
+            type: "1f",
+            value: 0,
+          },
+        },
       },
       value: 0,
       shaderPass: null,
@@ -69,145 +64,151 @@ export default {
         fov: 1,
         autoloadSources: false,
         uniforms: {
-          uViewSize: { name: 'uViewSize', type: '2f', value: [] },
-          uMouse: { name: 'uMouse', type: '2f', value: [] },
-          uPlanePosition: { name: 'uPlanePosition', type: '2f', value: [] },
-          uResolution: { name: 'uResolution', type: '2f', value: [] },
-          uProgress: { name: 'uProgress', type: '1f', value: 0 }
-        }
-      }
-    }
+          uViewSize: { name: "uViewSize", type: "2f", value: [] },
+          uMouse: { name: "uMouse", type: "2f", value: [] },
+          uPlanePosition: { name: "uPlanePosition", type: "2f", value: [] },
+          uResolution: { name: "uResolution", type: "2f", value: [] },
+          uProgress: { name: "uProgress", type: "1f", value: 0 },
+        },
+      },
+    };
   },
-  mounted () {
-    this.initCurtains()
+  mounted() {
+    this.initCurtains();
 
-    gsap.registerPlugin(ScrollTrigger, CustomEase)
+    gsap.registerPlugin(ScrollTrigger, CustomEase);
 
-    gsap.to('.seriya', {
-      x: -(document.querySelector('.seriya').offsetWidth - window.innerWidth),
-      ease: 'none',
+    gsap.to(".seriya", {
+      x: -(document.querySelector(".seriya").offsetWidth - window.innerWidth),
+      ease: "none",
       onUpdate: () => {
         for (const value of this.planes) {
-          value.setRelativePosition(gsap.getProperty('.seriya', 'x'), 0, 0)
+          value.setRelativePosition(gsap.getProperty(".seriya", "x"), 0, 0);
         }
-        this.curtains.updateScrollValues()
+        this.curtains.updateScrollValues();
         // debugger
         // console.log(gsap.getProperty('.seriya', 'x'))
         // setRelativePosition(gsap.getProperty('.seriya', 'x', 'px'),0,0)
       },
       scrollTrigger: {
-        trigger: '.seriya',
+        trigger: ".seriya",
         pin: true,
         scrub: 1,
-        end: () => '+=' + document.querySelector('.seriya').offsetWidth
-      }
-    })
+        end: () => "+=" + document.querySelector(".seriya").offsetWidth,
+      },
+    });
   },
   methods: {
-    horizontalScroll ($event) {
+    horizontalScroll($event) {
       if ($event.deltaY > 0) {
-        this.value += $event.deltaY
-        this.$refs.container.scrollLeft = this.value
+        this.value += $event.deltaY;
+        this.$refs.container.scrollLeft = this.value;
       }
-      this.$refs.container.scrollLeft += $event.deltaY
-      this.value = this.$refs.container.scrollLeft
+      this.$refs.container.scrollLeft += $event.deltaY;
+      this.value = this.$refs.container.scrollLeft;
     },
-    activateAnimate (ctx) {
-      this.toFullscreen(ctx)
+    activateAnimate(ctx) {
+      this.toFullscreen(ctx);
     },
-    preparePlane (ctx) {
-      const plane = this.planes[ctx.index]
-      plane.loadSources(ctx.img)
+    preparePlane(ctx) {
+      const plane = this.planes[ctx.index];
+      plane.loadSources(ctx.img);
       // считаем вестор для нормализации изображения в шейдере
-      let xNormalized, yNormalized
+      let xNormalized, yNormalized;
       if (window.innerHeight / window.innerWidth > ctx.aspect) {
-        xNormalized = (window.innerWidth / window.innerHeight) * ctx.aspect
-        yNormalized = 1
+        xNormalized = (window.innerWidth / window.innerHeight) * ctx.aspect;
+        yNormalized = 1;
       } else {
-        xNormalized = 1
-        yNormalized = window.innerHeight / window.innerWidth / ctx.aspect
+        xNormalized = 1;
+        yNormalized = window.innerHeight / window.innerWidth / ctx.aspect;
       }
-      plane.uniforms.uResolution.value = [xNormalized, yNormalized]
-      console.log(plane)//
-      this.getUnifors(ctx)
+      plane.uniforms.uResolution.value = [xNormalized, yNormalized];
+      console.log(plane); //
+      this.getUnifors(ctx);
     },
     // route (a) {
     //   this.$router.push(`photoseries/${a}`)
     // },
-    initCurtains () {
+    initCurtains() {
       this.curtains = new Curtains({
         container: this.$refs.webgl,
         pixelRatio: window.devicePixelRatio,
-        watchScroll: false
-      })
-      // eslint-disable-next-line no-loops/no-loops
+        watchScroll: false,
+      });
       for (const value of this.$refs.CurtainsPlanes) {
-        const plane = this.curtains.addPlane(value.$el, this.params)
-        this.planes.push(plane)
+        const plane = this.curtains.addPlane(value.$el, this.params);
+        this.planes.push(plane);
       }
     },
-    getUnifors (i) {
-      // eslint-disable-next-line security/detect-object-injection
-      const plane = this.planes[i.index]
-      const rectPlane = plane.getBoundingRect()
+    getUnifors(i) {
+      const plane = this.planes[i.index];
+      const rectPlane = plane.getBoundingRect();
       // ширина плана в условных еденицах
-      this.calcCords.w = (window.innerWidth / rectPlane.width) * this.curtains.pixelRatio
-      this.calcCords.h = (window.innerHeight / rectPlane.height) * this.curtains.pixelRatio
+      this.calcCords.w =
+        (window.innerWidth / rectPlane.width) * this.curtains.pixelRatio;
+      this.calcCords.h =
+        (window.innerHeight / rectPlane.height) * this.curtains.pixelRatio;
       // вектор для перемещения плана при увеличении до размера окна
-      this.calcCords.x = (rectPlane.left / rectPlane.width - this.calcCords.w / 2 + 0.5) * 2
-      this.calcCords.y = (-(rectPlane.top / rectPlane.height - this.calcCords.h / 2) - 0.5) * 2
-      this.calcCords.mouseX = (i.x / rectPlane.width) * this.curtains.pixelRatio
-      this.calcCords.mouseY = 1 - (i.y / rectPlane.height) * this.curtains.pixelRatio
-      plane.uniforms.uMouse.value = [this.calcCords.mouseX, this.calcCords.mouseY]
-      plane.uniforms.uViewSize.value = [this.calcCords.w, this.calcCords.h]
-      plane.uniforms.uPlanePosition.value = [this.calcCords.x, this.calcCords.y]
+      this.calcCords.x =
+        (rectPlane.left / rectPlane.width - this.calcCords.w / 2 + 0.5) * 2;
+      this.calcCords.y =
+        (-(rectPlane.top / rectPlane.height - this.calcCords.h / 2) - 0.5) * 2;
+      this.calcCords.mouseX =
+        (i.x / rectPlane.width) * this.curtains.pixelRatio;
+      this.calcCords.mouseY =
+        1 - (i.y / rectPlane.height) * this.curtains.pixelRatio;
+      plane.uniforms.uMouse.value = [
+        this.calcCords.mouseX,
+        this.calcCords.mouseY,
+      ];
+      plane.uniforms.uViewSize.value = [this.calcCords.w, this.calcCords.h];
+      plane.uniforms.uPlanePosition.value = [
+        this.calcCords.x,
+        this.calcCords.y,
+      ];
     },
-    toFullscreen (i) {
-      this.getUnifors(i)
-      // eslint-disable-next-line security/detect-object-injection
-      const plane = this.planes[i.index]
-      const tl = anime.timeline({ autoplay: false, easing: 'linear' })
+    toFullscreen(i) {
+      this.getUnifors(i);
+      const plane = this.planes[i.index];
+      const tl = anime.timeline({ autoplay: false, easing: "linear" });
       tl.add({
-        targets: '#webgl',
+        targets: "#webgl",
         zIndex: 2,
-        duration: 0
-      })
-        .add({
-          targets: plane.uniforms.uProgress,
-          value: 1,
-          duration: this.duration,
-          easing: 'cubicBezier(0.215, 0.61, 0.355, 1)',
-          complete: () => {
-            // this.$router.push(`photoseries/${this.photoseries[i.index].Route}`)
-          }
-        })
-        // .add(
-        //   {
-        //     targets: plane.uniforms.uProgress,
-        //     value: 0,
-        //     easing: 'cubicBezier(0.445, 0.05, 0.55, 0.95)',
-        //     duration: this.duration
-        //   }
-        //   // '+=1500'
-        // )
-      tl.play()
-    }
+        duration: 0,
+      }).add({
+        targets: plane.uniforms.uProgress,
+        value: 1,
+        duration: this.duration,
+        easing: "cubicBezier(0.215, 0.61, 0.355, 1)",
+        complete: () => {
+          // this.$router.push(`photoseries/${this.photoseries[i.index].Route}`)
+        },
+      });
+      // .add(
+      //   {
+      //     targets: plane.uniforms.uProgress,
+      //     value: 0,
+      //     easing: 'cubicBezier(0.445, 0.05, 0.55, 0.95)',
+      //     duration: this.duration
+      //   }
+      //   // '+=1500'
+      // )
+      tl.play();
+    },
     // updateScroll (event) {
     //   this.curtains.updateScrollValues(
     //     event.target.scrollTop,
     //     event.target.scrollLeft
     //   )
-    // eslint-disable-next-line no-loops/no-loops
     //   for (const val of this.curtains.planes) {
     //     val.updateScrollPosition()
     //   }
     // }
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-
 .seriya {
   position: absolute;
   z-index: 2;
@@ -220,14 +221,14 @@ export default {
     position: relative;
     margin: auto 3vw;
     text-align: center;
-      &:nth-child(odd) {
-        width: calc(65vh * 1.5);
-        height: 65vh;
-      }
-      &:nth-child(even) {
-        width: calc(67vh * 1.5);
-        height: 67vh;
-      }
+    &:nth-child(odd) {
+      width: calc(65vh * 1.5);
+      height: 65vh;
+    }
+    &:nth-child(even) {
+      width: calc(67vh * 1.5);
+      height: 67vh;
+    }
   }
 }
 #webgl {

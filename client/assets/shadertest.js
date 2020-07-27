@@ -36,7 +36,7 @@ vVertexPosition = aVertexPosition;
 vActiveTextureCoord = (activeTexMatrix * vec4(aTextureCoord, 0.0, 1.0)).xy;
 vNextTextureCoord = (nextTexMatrix * vec4(aTextureCoord, 0.0, 1.0)).xy;
 }
-`
+`;
 
 export const fragment = `
 #ifdef GL_ES
@@ -65,4 +65,4 @@ float p = fract(uProgress);
   gl_FragColor = mix(image1, image2, p);
 
 }
-`
+`;

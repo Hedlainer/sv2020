@@ -21,7 +21,7 @@ gl_Position = uPMatrix * uMVMatrix * vec4(vertexPosition, 1.0);
 vTextureCoord = (uTextureMatrix0 * vec4(aTextureCoord, 0.0, 1.0)).xy;
 vVertexPosition = vertexPosition;
 }
-`
+`;
 
 export const fragment = `
 #ifdef GL_ES
@@ -55,7 +55,7 @@ textureCoord.x += sin(textureCoord.y * 25.0) * cos(textureCoord.x * 25.0) * (cos
 // map our texture with the texture matrix coords
 gl_FragColor = texture;
 }
-`
+`;
 export const fspass = `
 #ifdef GL_ES
 precision mediump float;
@@ -88,4 +88,4 @@ textureCoord.x += sin(textureCoord.y * 25.0) * cos(textureCoord.x * 25.0) * (cos
 // map our texture with the texture matrix coords
 gl_FragColor = texture;
 }
-`
+`;

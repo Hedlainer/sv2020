@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="gallery"
-  >
+  <div class="gallery">
     <div class="preview">
       <picture class="lazy__fullscreen">
         <source
@@ -26,39 +24,37 @@
       :file="image.SeriesFileName"
       :full-screen-image="false"
       :my-index="index"
-      :style="layoutStyle (image)"
+      :style="layoutStyle(image)"
     />
   </div>
 </template>
 
 <script>
-/* eslint-disable security/detect-object-injection */
 // import apicture from '~/components/apicture.vue'
-import anime from 'animejs'
-import debounce from 'lodash/debounce'
-import justifiedLayout from 'justified-layout'
-let width, height, widthContainer
+import anime from "animejs";
+import debounce from "lodash/debounce";
+import justifiedLayout from "justified-layout";
+let width, height, widthContainer;
 if (process.browser) {
-  height = window.innerHeight
-  width = window.innerWidth
+  height = window.innerHeight;
+  width = window.innerWidth;
   if (width / height < 1) {
-    widthContainer = width * 0.03
+    widthContainer = width * 0.03;
   } else {
-    widthContainer = width * 0.125
+    widthContainer = width * 0.125;
   }
 }
 
 export default {
-  data () {
+  data() {
     return {
       width,
       height,
-      widthContainer
-    }
+      widthContainer,
+    };
   },
   computed: {
-    GetjustifiedLayout () {
-      // eslint-disable-next-line array-func/prefer-array-from
+    GetjustifiedLayout() {
       const layout = justifiedLayout([...this.$store.state.Series.Aspect], {
         fullWidthBreakoutRowCadence: 3,
         targetRowHeight: (this.height / 100) * 55,
@@ -67,75 +63,77 @@ export default {
           top: 10,
           right: this.widthContainer,
           bottom: 100,
-          left: this.widthContainer
+          left: this.widthContainer,
         },
         boxSpacing: {
           horizontal: this.width * 0.04,
-          vertical: this.height * 0.08
-        }
-      })
+          vertical: this.height * 0.08,
+        },
+      });
       layout.boxes.forEach((element, index) => {
-        element.SeriesFileName = this.$store.state.Series.ImageName[index]
-        element.SeriesSpec = this.$store.state.Series.Spec[index]
-      })
-      return layout
-    }
+        element.SeriesFileName = this.$store.state.Series.ImageName[index];
+        element.SeriesSpec = this.$store.state.Series.Spec[index];
+      });
+      return layout;
+    },
   },
-  mounted () {
+  mounted() {
     anime({
-      targets: '.anim',
-      easing: 'linear',
+      targets: ".anim",
+      easing: "linear",
       opacity: [0, 1],
-      translateX: () => anime.random(-window.innerWidth * 0.017, window.innerWidth * 0.017),
-      translateY: () => anime.random(-window.innerHeight * 0.03, window.innerHeight * 0.03)
-    })
+      translateX: () =>
+        anime.random(-window.innerWidth * 0.017, window.innerWidth * 0.017),
+      translateY: () =>
+        anime.random(-window.innerHeight * 0.03, window.innerHeight * 0.03),
+    });
     anime({
       duration: 2000,
-      targets: '.preview',
-      easing: 'linear',
+      targets: ".preview",
+      easing: "linear",
       opacity: [1, 0.2],
-      filter: 'grayscale(100%)'
+      filter: "grayscale(100%)",
       // update (anim) {
       //   anim.animatables[0].target.style.filter = 'blur(' + 20 * anim.progress / 100 + 'px)'
       //   console.log(anim)
       // }
       // translateX: () => anime.random(-window.innerWidth * 0.017, window.innerWidth * 0.017),
       // translateY: () => anime.random(-window.innerHeight * 0.03, window.innerHeight * 0.03)
-    })
+    });
   },
-  beforeMount () {
-    window.addEventListener('resize', debounce(this.resize, 400))
+  beforeMount() {
+    window.addEventListener("resize", debounce(this.resize, 400));
   },
-  beforeDestroy () {
-    window.removeEventListener('resize', this.resize)
+  beforeDestroy() {
+    window.removeEventListener("resize", this.resize);
   },
 
   methods: {
-    layoutStyle (image) {
+    layoutStyle(image) {
       return {
         left: `${image.left}px`,
         top: `${image.top}px`,
         width: `${image.width}px`,
-        height: `${image.height}px`
+        height: `${image.height}px`,
+      };
+    },
+    resize() {
+      this.width = window.innerWidth;
+      this.height = window.innerHeight;
+      if (this.width / this.height < 1) {
+        this.widthContainer = this.width * 0.03;
+      } else {
+        this.widthContainer = this.width * 0.125;
       }
     },
-    resize () {
-      this.width = window.innerWidth
-      this.height = window.innerHeight
-      if (this.width / this.height < 1) {
-        this.widthContainer = this.width * 0.03
-      } else {
-        this.widthContainer = this.width * 0.125
-      }
-    }
-  }
-}
+  },
+};
 </script>
 <style lang="scss">
-.anim{
+.anim {
   position: absolute;
 }
-.preview{
+.preview {
   position: fixed;
   top: 0;
   left: 0;

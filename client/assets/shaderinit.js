@@ -21,7 +21,7 @@ gl_Position = uPMatrix * uMVMatrix * vec4(vertexPosition, 1.0);
 vTextureCoord = (uTextureMatrix0 * vec4(aTextureCoord, 0.0, 1.0)).xy;
 vVertexPosition = vertexPosition;
 }
-`
+`;
 
 export const fragment = `
 #ifdef GL_ES
@@ -43,7 +43,7 @@ textureCoord.x += sin(textureCoord.y * 25.0) * cos(textureCoord.x * 25.0) * (cos
 // map our texture with the texture matrix coords
 gl_FragColor = texture2D(uSampler0, textureCoord);
 }
-`
+`;
 
 export const Tvertex = `
 precision mediump float;
@@ -62,7 +62,7 @@ void main() {
     vVertexPosition = aVertexPosition;
     vTextureCoord = (planeTextureMatrix * vec4(aTextureCoord, 0.0, 1.0)).xy;
 }
-`
+`;
 
 export const Tfragment = `
 precision mediump float;
@@ -77,4 +77,4 @@ void main() {
     textureCoords.x += sin(uTime / 60.0) / 200.0 * cos(textureCoords.y * 10.0);
     gl_FragColor = texture2D(planeTexture, textureCoords);
 }
-`
+`;

@@ -97,7 +97,7 @@ void main() {
   vTextureCoord0 = (uTextureMatrix0 * vec4(aTextureCoord, 0.0, 1.0)).xy;
   vTextureCoord1 = (uTextureMatrix1 * vec4(aTextureCoord, 0.0, 1.0)).xy;
 }
-`
+`;
 
 export const fragment = `
 #ifdef GL_ES
@@ -124,7 +124,7 @@ void main() {
   gl_FragColor = mix(tex1, tex2,vProgress);
   // gl_FragColor = texture2D(uSampler0, vTextureCoord0);;
 }
-`
+`;
 
 export const fspass = `
 #ifdef GL_ES
@@ -154,4 +154,4 @@ texScale.x += 0.15 * uDisplacement;
 
 gl_FragColor = texture;
 }
-`
+`;

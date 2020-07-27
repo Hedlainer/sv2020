@@ -12,21 +12,20 @@
 
 <script>
 // eslint-disable-next-line no-unused-vars
-import anime from 'animejs'
+import anime from "animejs";
 export default {
-//   transition: {
-//     name: 'page3',
-//     mode: 'out-in',
-//     // mode: 'in-out',
-//     // mode: '',
-//     css: false,
-//     beforeEnter (el) {
-//       anime({
-//         // duration: 3000,
-//         targets: el,
-//         // opacity: 0,
-//         translateX: ['0%', '-30%'],
-
+  //   transition: {
+  //     name: 'page3',
+  //     mode: 'out-in',
+  //     // mode: 'in-out',
+  //     // mode: '',
+  //     css: false,
+  //     beforeEnter (el) {
+  //       anime({
+  //         // duration: 3000,
+  //         targets: el,
+  //         // opacity: 0,
+  //         translateX: ['0%', '-30%'],
   //         easing: 'linear'
   //       })
   //     },
@@ -66,7 +65,6 @@ export default {
   //         easing: 'easeInOutQuad'
   //       })
   //     }
-
   //     //     beforeEnter (el) {
   //     //       anime({
   //     //         targets: el,
@@ -77,28 +75,27 @@ export default {
   //     //       })
   //     //     }
   //     //   },
-
-//   }
-}
+  //   }
+};
 </script>
 
 <style lang="scss" scoped>
-.link{
-    padding: 20px;
-    background-color: white;
-    position: relative;
-    left: 20px;
-    top: 20px;
+.link {
+  padding: 20px;
+  background-color: white;
+  position: relative;
+  left: 20px;
+  top: 20px;
 }
-.wrap{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
+.wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
-.square{
-width: 200px;
-height: 100px;
-background-color: yellow;
+.square {
+  width: 200px;
+  height: 100px;
+  background-color: yellow;
 }
 </style>

@@ -1,17 +1,11 @@
 <template>
   <div>
-    <div
-      v-for="m in main"
-      :key="m.id"
-      class="review"
-    >
+    <div v-for="m in main" :key="m.id" class="review">
       <div class="image__holder">
-        <img alt="" src="/image/jpg/1920/19-03-02-16-16-38.jpg" />
+        <img alt src="/image/jpg/1920/19-03-02-16-16-38.jpg" />
       </div>
       <div class="name__holder">
-        <h3 class="review__name">
-          {{ m.Title }}
-        </h3>
+        <h3 class="review__name">{{ m.Title }}</h3>
       </div>
       <div class="review__holder">
         <!-- eslint-disable-next-line vue/singleline-html-element-content-newline -->
@@ -22,32 +16,31 @@
 </template>
 
 <script>
-import main from '~/static/db/main.json'
+import main from "~/static/db/main.json";
 export default {
-  data () {
+  data() {
     return {
       main,
-      c: 1
-    }
+      c: 1,
+    };
   },
   computed: {
-    randommain () {
-      const c = Math.floor(this.main.length * Math.random())
-      // eslint-disable-next-line security/detect-object-injection
-      return this.main[c]
-    }
+    randommain() {
+      const c = Math.floor(this.main.length * Math.random());
+      return this.main[c];
+    },
   },
-  mounted () {
-    this.rmain()
+  mounted() {
+    this.rmain();
   },
   methods: {
-    rmain () {
+    rmain() {
       setInterval(() => {
-        this.c = Math.floor(this.main.length * Math.random())
-      }, 12000)
-    }
-  }
-}
+        this.c = Math.floor(this.main.length * Math.random());
+      }, 12000);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

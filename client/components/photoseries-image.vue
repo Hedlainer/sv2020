@@ -22,7 +22,7 @@
       <div
         v-if="show"
         class="name__wrapper"
-        :style="{transform: `translateY(${moveY-30}px)`}"
+        :style="{ transform: `translateY(${moveY - 30}px)` }"
       >
         <h2>{{ objectName.Name }}</h2>
       </div>
@@ -31,10 +31,10 @@
 </template>
 
 <script>
-let width, height
+let width, height;
 if (process.browser) {
-  height = window.innerHeight
-  width = window.innerWidth
+  height = window.innerHeight;
+  width = window.innerWidth;
 }
 export default {
   // components: {
@@ -43,19 +43,19 @@ export default {
   props: {
     objectName: {
       required: true,
-      type: Object
-    }
+      type: Object,
+    },
   },
-  data () {
+  data() {
     return {
       width,
       height,
       color: null,
       show: false,
-      moveY: 0
-    }
-  }
-}
+      moveY: 0,
+    };
+  },
+};
 </script>
 
 <style lang="scss">
@@ -95,18 +95,18 @@ export default {
   left: 50%;
   margin-left: -35vw;
 
-  >h2 {
-color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
-  background-size: cover;
-  background-repeat: no-repeat;
-  font-size: 8vh;
-  line-height: 8vh;
-  font-family: "Roboto", sans-serif;
-  font-weight: 700;
-  margin-top: 0px;
-  margin-bottom: 0px;
+  > h2 {
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    background-size: cover;
+    background-repeat: no-repeat;
+    font-size: 8vh;
+    line-height: 8vh;
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+    margin-top: 0px;
+    margin-bottom: 0px;
     // margin: 0;
     // font-size: 10vh;
     // color: #03a9f4;

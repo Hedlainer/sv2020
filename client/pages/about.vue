@@ -13,11 +13,7 @@
     </div> -->
     <div class="glide__track" data-glide-el="track">
       <ul class="glide__slides">
-        <li
-          v-for="seriya in photoseries"
-          :key="seriya.ID"
-          class="glide__slide"
-        >
+        <li v-for="seriya in photoseries" :key="seriya.ID" class="glide__slide">
           <img
             alt="SvobodinaPhoto"
             :src="`/image/jpg/1024/${seriya.FileName}.jpg`"
@@ -31,23 +27,21 @@
 <script>
 // eslint-disable-next-line no-unused-vars
 // import anime from 'animejs'
-import photoseries from '~/static/db/Photoseries.json'
+import photoseries from "~/static/db/Photoseries.json";
 // new Glide('.glide').mount({ Controls, Breakpoints })
 export default {
-  data () {
+  data() {
     return {
       photoseries,
-      glide: null
-    }
+      glide: null,
+    };
   },
-  mounted () {
-
-  }
-}
+  mounted() {},
+};
 </script>
 
 <style lang="scss">
-.glide{
+.glide {
   height: 100vh;
   background-color: #fff;
 }

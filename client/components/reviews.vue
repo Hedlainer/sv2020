@@ -14,20 +14,20 @@
 </template>
 
 <script>
-import reviews from '~/static/reviews.json'
+import reviews from "~/static/reviews.json";
 export default {
-  data () {
+  data() {
     return {
-      reviews
-    }
+      reviews,
+    };
   },
   computed: {
     withBrTags: function () {
-      const doc = this.reviews[3].body
-      return doc.replace(/(\\r)*\\n/g, '<br>')
-    }
-  }
-}
+      const doc = this.reviews[3].body;
+      return doc.replace(/(\\r)*\\n/g, "<br>");
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

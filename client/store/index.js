@@ -39,67 +39,73 @@ export const state = () => ({
   SeriesSpec: [],
   Series: {},
   hernya: [],
-  curtains: undefined
-})
+  curtains: undefined,
+});
 export const getters = {
   // aspect (ctx) {
   //   ctx.state.list.map(el => el.Aspect)
   // }
-}
+};
 export const mutations = {
-  HERNYA (state, payload) {
-    state.curtains = payload
+  HERNYA(state, payload) {
+    state.curtains = payload;
   },
-  AWS (state, payload) {
-    state.aspectJL = payload.map(el => el.Aspect)
-    state.nameJL = payload.map(el => el.Name)
+  AWS(state, payload) {
+    state.aspectJL = payload.map((el) => el.Aspect);
+    state.nameJL = payload.map((el) => el.Name);
   },
-  change_series (state, payload) {
-    state.Series = payload
-  }
-}
+  change_series(state, payload) {
+    state.Series = payload;
+  },
+};
 
 export const actions = {
-  async getAWS (ctx, payload) {
+  async getAWS(ctx, payload) {
     const imageData = await this.$axios.$get(
       `https://j4x5vclvh9.execute-api.eu-central-1.amazonaws.com/api/imagedata/${payload}`
-    )
+    );
     imageData.sort(function (a, b) {
-      const nameA = a.Name.toLowerCase()
-      const nameB = b.Name.toLowerCase()
-      if (nameA < nameB) { return -1 }
-    })
-    ctx.commit('AWS', imageData)
+      const nameA = a.Name.toLowerCase();
+      const nameB = b.Name.toLowerCase();
+      if (nameA < nameB) {
+        return -1;
+      }
+    });
+    ctx.commit("AWS", imageData);
   },
-  async getData (ctx, payload) {
-    const data = await this.$axios.$get('./data/472base.json')
-    const ph2 = await this.$axios.$get('./data/photoseries.json')
+  async getData(ctx, payload) {
+    const data = await this.$axios.$get("./data/472base.json");
+    const ph2 = await this.$axios.$get("./data/photoseries.json");
     data.sort(function (a, b) {
-      const nameA = a.FileName.toLowerCase()
-      const nameB = b.FileName.toLowerCase()
-      if (nameA < nameB) { return -1 }
-    })
+      const nameA = a.FileName.toLowerCase();
+      const nameB = b.FileName.toLowerCase();
+      if (nameA < nameB) {
+        return -1;
+      }
+    });
 
     ph2.forEach((el) => {
       el.JLName = data
-        .filter(image => image.Keywords.includes(el.Name))
-        .map(image => image.FileName.toString().slice(0, -4))
+        .filter((image) => image.Keywords.includes(el.Name))
+        .map((image) => image.FileName.toString().slice(0, -4));
       el.JLAspect = data
-        .filter(image => image.Keywords.includes(el.Name))
-        .map(image => image.ImageWidth / image.ImageHeight)
+        .filter((image) => image.Keywords.includes(el.Name))
+        .map((image) => image.ImageWidth / image.ImageHeight);
       el.FileName = data
-        .filter(image => image.Keywords.includes(el.Name))
-        .filter(image => image.Keywords.includes('cover'))
-        .map(e => e.FileName).toString().slice(0, -4)
-      el.ImagesPH = data.filter(image => image.Keywords.includes(el.Name))
-    })
+        .filter((image) => image.Keywords.includes(el.Name))
+        .filter((image) => image.Keywords.includes("cover"))
+        .map((e) => e.FileName)
+        .toString()
+        .slice(0, -4);
+      el.ImagesPH = data.filter((image) => image.Keywords.includes(el.Name));
+    });
 
-    const filter = ph2.find(el => el.Route === payload)
+    const filter = ph2.find((el) => el.Route === payload);
 
-    ctx.commit('filterPH2', filter)
+    ctx.commit("filterPH2", filter);
   },
-  async GET_SERIES (ctx, payload) {
-    const data = await this.$axios.$get(`./db/${payload}.json`)
-    ctx.commit('change_series', data)
-  }
-}
+  async GET_SERIES(ctx, payload) {
+    const data = await this.$axios.$get(`./db/${payload}.json`);
+    ctx.commit("change_series", data);
+  },
+};

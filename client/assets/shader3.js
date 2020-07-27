@@ -13,7 +13,7 @@ gl_Position = vec4(aVertexPosition, 1.0);
 vTextureCoord = aTextureCoord;
 vVertexPosition = aVertexPosition;
 }
-`
+`;
 
 export const fragmentPass = `
 precision mediump float;
@@ -26,7 +26,7 @@ void main() {
 // display our render texture, which contains our shader pass frame buffer object content
 gl_FragColor = texture2D(uRenderTexture, vTextureCoord);
 }
-`
+`;
 
 // const backgroundCoverUv = `
 // vec2 backgroundCoverUv(vec2 screenSize, vec2 imageSize, vec2 uv) {

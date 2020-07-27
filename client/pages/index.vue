@@ -7,33 +7,33 @@
 
 export default {
   components: {
-    mainz: () => import('~/components/main.vue')
-  }
-}
+    mainz: () => import("~/components/main.vue"),
+  },
+};
 </script>
 
 <style>
-.wrapper img{
+.wrapper img {
   height: 100%;
   width: 100%;
   object-fit: cover;
   object-position: 50% 50%;
 }
-.wrapper{
+.wrapper {
   position: absolute;
   top: 10vh;
-  left:10vw;
+  left: 10vw;
   width: 80%;
   height: 80vh;
 }
-.text{
+.text {
   position: absolute;
   width: 50vw;
   bottom: 0;
   right: 0;
   background-color: rgba(5, 5, 5, 0.711);
   padding: 20px;
-    overflow: hidden;
+  overflow: hidden;
   border-radius: 6px;
 }
 .container {
@@ -43,12 +43,12 @@ export default {
 }
 
 .title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   display: block;
   font-weight: 300;
   font-size: 100px;
-  color:#03a9f4;
+  color: #03a9f4;
   letter-spacing: 1px;
 }
 

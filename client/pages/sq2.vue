@@ -1,9 +1,6 @@
 <template>
   <div class="wrap">
-    <picture
-      v-if="isVisible"
-      class="lazy__original"
-    >
+    <picture v-if="isVisible" class="lazy__original">
       <source
         :srcset="`/image/webp/${ImageSize.currentImageWidth}/${file}.webp`"
         type="image/webp"
@@ -29,7 +26,7 @@
 
 <script>
 // eslint-disable-next-line no-unused-vars
-import anime from 'animejs'
+import anime from "animejs";
 export default {
   // transition: {
   //   name: 'child',
@@ -77,31 +74,30 @@ export default {
   //     })
   //   }
   // }
-
-}
+};
 </script>
 
 <style lang="scss" scoped>
-.link{
-    padding: 20px;
-    position: fixed;
-    left: 20px;
-    top: 20px;
-    background-color: white;
+.link {
+  padding: 20px;
+  position: fixed;
+  left: 20px;
+  top: 20px;
+  background-color: white;
 }
-.wrap{
+.wrap {
   position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
-.square{
-width: 200px;
-height: 200px;
-background-color: green;
- display: flex;
-    align-items: center;
-    justify-content: center;
+.square {
+  width: 200px;
+  height: 200px;
+  background-color: green;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

@@ -1,189 +1,176 @@
 <template>
   <main class="wrapper">
     <div id="canvas" ref="webgl"></div>
-    <div
-      v-for="image in images"
-      :key="image.src"
-      ref="plane"
-      class="plane"
-    >
-      <img
-        alt
-        crossorigin="anonymous"
-        :src="image.src"
-      />
-      <h2 ref="title" class="title">
-        {{ image.title }}
-      </h2>
+    <div v-for="image in images" :key="image.src" ref="plane" class="plane">
+      <img alt crossorigin="anonymous" :src="image.src" />
+      <h2 ref="title" class="title">{{ image.title }}</h2>
     </div>
   </main>
 </template>
 
 <script>
-import { Curtains } from 'curtainsjs'
-import { vertex, fragment, Tvertex, Tfragment } from '~/assets/shaderinit.js'
+import { Curtains } from "curtainsjs";
+import { vertex, fragment, Tvertex, Tfragment } from "~/assets/shaderinit.js";
 // import anime from 'animejs'
 export default {
-  data () {
+  data() {
     return {
       curtains: null,
       plane: null,
       title: null,
       planes: [],
-      images:
-        [{
-          src: '/image/jpg/1024/19-03-02-17-25-38.jpg',
-          title: 'Lorem ipsum \n dolor sit amet'
+      images: [
+        {
+          src: "/image/jpg/1024/19-03-02-17-25-38.jpg",
+          title: "Lorem ipsum \n dolor sit amet",
         },
         {
-          src: '/image/jpg/1024/19-03-02-13-46-07.jpg',
-          title: 'Lorem ipsum \n dolor sit amet'
+          src: "/image/jpg/1024/19-03-02-13-46-07.jpg",
+          title: "Lorem ipsum \n dolor sit amet",
         },
         {
-          src: '/image/jpg/1024/19-05-01-13-36-02.jpg',
-          title: 'Lorem ipsum \n dolor sit amet'
-        }],
+          src: "/image/jpg/1024/19-05-01-13-36-02.jpg",
+          title: "Lorem ipsum \n dolor sit amet",
+        },
+      ],
       TitleParams: {
         vertexShader: Tvertex,
         fragmentShader: Tfragment,
         uniforms: {
           time: {
-            name: 'uTime',
-            type: '1f',
-            value: 0
-          }
-        }
+            name: "uTime",
+            type: "1f",
+            value: 0,
+          },
+        },
       },
       params: {
         vertexShader: vertex,
         fragmentShader: fragment,
         uniforms: {
           time: {
-            name: 'uTime',
-            type: '1f',
-            value: 0
-          }
-        }
-      }
-    }
+            name: "uTime",
+            type: "1f",
+            value: 0,
+          },
+        },
+      },
+    };
   },
   computed: {},
-  mounted () {
-    this.setupCurtains()
-    this.setupPlane()
-    this.setupTitlePlane()
+  mounted() {
+    this.setupCurtains();
+    this.setupPlane();
+    this.setupTitlePlane();
     // console.log(this.$refs.title)
   },
   methods: {
-    writeText (plane, canvas) {
-      var htmlPlane = plane.htmlElement
-      var htmlPlaneStyle = window.getComputedStyle(htmlPlane)
+    writeText(plane, canvas) {
+      var htmlPlane = plane.htmlElement;
+      var htmlPlaneStyle = window.getComputedStyle(htmlPlane);
 
-      var planeBoundingRect = plane.getBoundingRect()
+      var planeBoundingRect = plane.getBoundingRect();
 
-      var htmlPlaneWidth = planeBoundingRect.width / this.curtains.pixelRatio
-      var htmlPlaneHeight = planeBoundingRect.height / this.curtains.pixelRatio
-      console.log(htmlPlaneWidth)
+      var htmlPlaneWidth = planeBoundingRect.width / this.curtains.pixelRatio;
+      var htmlPlaneHeight = planeBoundingRect.height / this.curtains.pixelRatio;
+      console.log(htmlPlaneWidth);
       // set sizes
-      canvas.width = htmlPlaneWidth
-      canvas.height = htmlPlaneHeight
-      var context = canvas.getContext('2d')
+      canvas.width = htmlPlaneWidth;
+      canvas.height = htmlPlaneHeight;
+      var context = canvas.getContext("2d");
 
-      context.width = htmlPlaneWidth
-      context.height = htmlPlaneHeight
+      context.width = htmlPlaneWidth;
+      context.height = htmlPlaneHeight;
 
       // draw our title with the original style
-      context.fillStyle = htmlPlaneStyle.color
-      context.font = htmlPlaneStyle.fontSize + ' ' + htmlPlaneStyle.fontFamily
-      context.fontStyle = htmlPlaneStyle.fontStyle
-      context.textAlign = htmlPlaneStyle.textAlign
+      context.fillStyle = htmlPlaneStyle.color;
+      context.font = htmlPlaneStyle.fontSize + " " + htmlPlaneStyle.fontFamily;
+      context.fontStyle = htmlPlaneStyle.fontStyle;
+      context.textAlign = htmlPlaneStyle.textAlign;
 
       // vertical alignment is a bit hacky
-      context.textBaseline = 'middle'
-      context.fillText(htmlPlane.innerText, 0, htmlPlaneHeight / 1.8)
+      context.textBaseline = "middle";
+      context.fillText(htmlPlane.innerText, 0, htmlPlaneHeight / 1.8);
 
       // update our canvas texture once on next draw call
       if (plane.textures.length > 0) {
         // we just changed the texture source sizes, we need to update its texture matrix
-        plane.textures[0].resize()
+        plane.textures[0].resize();
         // update the webgl texture on next draw call
-        plane.textures[0].needUpdate()
+        plane.textures[0].needUpdate();
       }
     },
 
-    setupCurtains () {
+    setupCurtains() {
       this.curtains = new Curtains({
         container: this.$refs.webgl,
         pixelRatio: window.devicePixelRatio,
-        premultipliedAlpha: true
-      })
+        premultipliedAlpha: true,
+      });
     },
-    setupPlane () {
-      // eslint-disable-next-line no-loops/no-loops
+    setupPlane() {
       for (const plane of this.$refs.plane) {
-        // eslint-disable-next-line security/detect-object-injection
-        this.plane = this.curtains.addPlane(plane, this.params)
+        this.plane = this.curtains.addPlane(plane, this.params);
         if (this.plane) {
-          this.planes.push(this.plane)
-          this.handlePlanes(this.plane)
+          this.planes.push(this.plane);
+          this.handlePlanes(this.plane);
         }
       }
     },
-    setupTitlePlane () {
-      // eslint-disable-next-line no-loops/no-loops
+    setupTitlePlane() {
       for (const t of this.$refs.title) {
-        // eslint-disable-next-line security/detect-object-injection
-        this.title = this.curtains.addPlane(t, this.TitleParams)
+        this.title = this.curtains.addPlane(t, this.TitleParams);
 
         if (this.title) {
-          const canvas = document.createElement('canvas')
+          const canvas = document.createElement("canvas");
           // then we add a data sampler attribute to our canvas
-          canvas.setAttribute('data-sampler', 'planeTexture')
+          canvas.setAttribute("data-sampler", "planeTexture");
           // canvas.style.display = 'none'
           // and load it into our plane
-          console.log(canvas)
+          console.log(canvas);
 
-          this.title.loadCanvas(canvas)
-          this.title.moveToFront()
-          this.handleTitlePlanes(this.title)
+          this.title.loadCanvas(canvas);
+          this.title.moveToFront();
+          this.handleTitlePlanes(this.title);
         }
       }
     },
-    handleTitlePlanes (plane) {
-      plane.onLoading(texture => {
-        // our canvas texture is ready
-        // debugger
-        texture.shouldUpdate = false
-        // we write our title in our canvas
-        if (document.fonts) {
-          document.fonts.ready.then(() => {
-            this.writeText(plane, texture.source)
-          })
-        } else {
-          setTimeout(function () {
-            this.writeText(plane, texture.source)
-          }, 750)
-        }
-        // this.writeText(plane, texture.source)
-      }).onRender(() => {
-        // update the time uniform
-        plane.uniforms.time.value++
-        // console.log(plane.uniforms.time.value)
-      }).onAfterResize(() => {
-        // update our canvas sizes and rewrite our title
-        this.writeText(plane, plane.textures[0].source)
-      })
+    handleTitlePlanes(plane) {
+      plane
+        .onLoading((texture) => {
+          // our canvas texture is ready
+          // debugger
+          texture.shouldUpdate = false;
+          // we write our title in our canvas
+          if (document.fonts) {
+            document.fonts.ready.then(() => {
+              this.writeText(plane, texture.source);
+            });
+          } else {
+            setTimeout(function () {
+              this.writeText(plane, texture.source);
+            }, 750);
+          }
+          // this.writeText(plane, texture.source)
+        })
+        .onRender(() => {
+          // update the time uniform
+          plane.uniforms.time.value++;
+          // console.log(plane.uniforms.time.value)
+        })
+        .onAfterResize(() => {
+          // update our canvas sizes and rewrite our title
+          this.writeText(plane, plane.textures[0].source);
+        });
     },
-    handlePlanes (plane) {
-      // eslint-disable-next-line security/detect-object-injection
+    handlePlanes(plane) {
       // const plane = this.planes[i]
       plane.onRender(() => {
-        plane.uniforms.time.value++ // update our time uniform value
-      })
-    }
-
-  }
-}
+        plane.uniforms.time.value++; // update our time uniform value
+      });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -202,7 +189,7 @@ body {
   height: 100vh;
   z-index: -2;
 }
-.title{
+.title {
   font-size: 80px;
   color: red;
   z-index: -3;

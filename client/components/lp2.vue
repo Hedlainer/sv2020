@@ -2,8 +2,8 @@
   <div
     v-observe-visibility="{
       callback: visibilityChanged,
-      throttle:500,
-      once: true
+      throttle: 500,
+      once: true,
     }"
     class="lazy"
     @mousedown="clickFullImg"
@@ -43,103 +43,105 @@
         :src="`/image/jpg/${ImageSize.currentImageWidth}/${file}.jpg`"
         @load="curentImageLoaded = true"
       />
-    </picture> -->
+    </picture>-->
   </div>
 </template>
 
 <script>
-let width, height
+let width, height;
 if (process.browser) {
-  height = window.innerHeight
-  width = window.innerWidth
+  height = window.innerHeight;
+  width = window.innerWidth;
 }
 // :style="{ backgroundImage: `url(/image/svg/${file}.svg)`}"
 
 export default {
-// :style="{ boxShadow: `inset 0px 0px 0px 1px ${hex2rgba(color, 1)}`,
-//               backgroundColor: hex2rgba(color, .3) }"
+  // :style="{ boxShadow: `inset 0px 0px 0px 1px ${hex2rgba(color, 1)}`,
+  //               backgroundColor: hex2rgba(color, .3) }"
   props: {
     fullScreenImage: { type: Boolean, default: false },
     file: { required: true, type: String },
     currentWidth: { required: true, type: Number },
     myIndex: { default: 0, type: Number },
-    color: { required: true, type: String }
+    color: { required: true, type: String },
   },
 
-  data () {
+  data() {
     return {
       height,
       curentImageLoaded: false,
       fullWidth: width,
       phVisible: true,
       opacity: 1,
-      isVisible: false
-    }
+      isVisible: false,
+    };
   },
   computed: {
-    ImageSize () {
+    ImageSize() {
       const ImageSize = (x) => {
         const w =
           x < 480
             ? 480
             : x < 720
-              ? 720
-              : x < 1024
-                ? 1024
-                : x < 1440
-                  ? 1440
-                  : x < 1920
-                    ? 1920
-                    : 2560
-        return w
-      }
+            ? 720
+            : x < 1024
+            ? 1024
+            : x < 1440
+            ? 1440
+            : x < 1920
+            ? 1920
+            : 2560;
+        return w;
+      };
       return {
         fullImageWidth: ImageSize(this.fullWidth),
-        currentImageWidth: ImageSize(this.currentWidth)
-      }
-    }
+        currentImageWidth: ImageSize(this.currentWidth),
+      };
+    },
   },
 
   methods: {
-    fullImageLoaded () {
-      this.$emit('fulload', {
+    fullImageLoaded() {
+      this.$emit("fulload", {
         img: [this.$refs.currentImage, this.$refs.fullImage],
         // aspect: this.$refs.fullImage.naturalHeight / this.$refs.fullImage.naturalWidth,
-        index: this.myIndex
-      })
+        index: this.myIndex,
+      });
     },
 
-    clickFullImg ($event) {
-      this.$emit('myClick', {
+    clickFullImg($event) {
+      this.$emit("myClick", {
         index: this.myIndex,
         x: $event.offsetX,
         y: $event.offsetY,
-        img: [this.$refs.currentImage, this.$refs.fullImage]
+        img: [this.$refs.currentImage, this.$refs.fullImage],
         // aspect: this.$refs.fullImage.naturalHeight / this.$refs.fullImage.naturalWidth
-      })
+      });
     },
 
-    hex2rgba (hex, alpha = 1) {
+    hex2rgba(hex, alpha = 1) {
       if (this.curentImageLoaded) {
-        return 'rgba(0,0,0,0)'
+        return "rgba(0,0,0,0)";
       } else {
-        const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16))
-        return `rgba(${r},${g},${b},${alpha})`
+        const [r, g, b] = hex.match(/\w\w/g).map((x) => parseInt(x, 16));
+        return `rgba(${r},${g},${b},${alpha})`;
       }
     },
 
-    visibilityChanged (isVisible, ev) {
-      this.isVisible = isVisible
+    visibilityChanged(isVisible) {
+      this.isVisible = isVisible;
       // console.log(ev)
-    }
-  }
-}
+    },
+  },
+};
 </script>
 <style>
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 2.5s;
 }
-.fade-enter, .fade-leave-to {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 </style>

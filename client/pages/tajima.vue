@@ -14,25 +14,24 @@
 </template>
 
 <script>
-import anime from 'animejs'
-import photoseries from '~/static/db/Photoseries.json'
+import anime from "animejs";
+import photoseries from "~/static/db/Photoseries.json";
 export default {
-  data () {
+  data() {
     return {
       photoseries,
       speed: 0,
       position: 0,
-      pos: 0
-
-    }
+      pos: 0,
+    };
   },
   computed: {
-    gallery () {
-      const map = this.photoseries.map(el => el.FileName)
-      return map
-    }
+    gallery() {
+      const map = this.photoseries.map((el) => el.FileName);
+      return map;
+    },
   },
-  mounted () {
+  mounted() {
     // this.raff()
     // window.requestAnimationFrame(this.changeSpeed);
     // this.changeSpeed();
@@ -76,42 +75,43 @@ export default {
     //   window.requestAnimationFrame(raf)
     // }
     // // console.log(position);
-    this.raf()
+    this.raf();
   },
   methods: {
-    changeSpeed ($event) {
-      this.speed += $event.deltaY * 0.00025
-    //   this.raf()
+    changeSpeed($event) {
+      this.speed += $event.deltaY * 0.00025;
+      //   this.raf()
     },
-    raf () {
-      this.position += this.speed
-      this.speed *= 0.85
+    raf() {
+      this.position += this.speed;
+      this.speed *= 0.85;
 
-      const i = Math.round(this.position)
-      const dif = i - this.position
+      const i = Math.round(this.position);
+      const dif = i - this.position;
 
-      this.position += dif * 0.155
+      this.position += dif * 0.155;
       if (Math.abs(i - this.position) < 0.001) {
-        this.position = i
+        this.position = i;
       }
 
-      const tl = anime.timeline()
+      const tl = anime.timeline();
       tl.add({
-        targets: '.dot',
-        translateY: this.position * 200
-      })
+        targets: ".dot",
+        translateY: this.position * 200,
+      });
 
       this.pos =
-        (Math.floor(this.position) - 1 + this.gallery.length) % this.gallery.length
-      window.requestAnimationFrame(this.raf)
-    }
-  }
-}
+        (Math.floor(this.position) - 1 + this.gallery.length) %
+        this.gallery.length;
+      window.requestAnimationFrame(this.raf);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-.holder{
-    height: 100vh;
+.holder {
+  height: 100vh;
 }
 // .qqq {
 //   /* height: 300vh; */

@@ -2,11 +2,7 @@
   <main class="wrapper" @mousewheel.passive="changeSpeed">
     <!-- <img crossorigin="anonymous" :src="`/image/jpg/1024/${gallery[activeTextureIndex]}.jpg`" alt> -->
     <div id="canvas" ref="webgl"></div>
-    <div
-      ref="plane"
-      class="plane"
-      @click="changeImage"
-    >
+    <div ref="plane" class="plane" @click="changeImage">
       <!-- <h1>{{ position }}</h1> -->
       <img
         alt
@@ -53,13 +49,13 @@
 </template>
 
 <script>
-import { Curtains } from 'curtainsjs'
-import anime from 'animejs'
-import photoseries from '~/static/db/Photoseries.json'
-import vertex from '~/assets/vertex.vert'
-import fragment from '~/assets/fragment.frag'
+import { Curtains } from "curtainsjs";
+import anime from "animejs";
+import photoseries from "~/static/db/Photoseries.json";
+import vertex from "~/assets/vertex.vert";
+import fragment from "~/assets/fragment.frag";
 export default {
-  data () {
+  data() {
     return {
       photoseries,
       activeTextureIndex: 2,
@@ -74,45 +70,45 @@ export default {
         fragmentShader: fragment,
         uniforms: {
           progress: {
-            name: 'uProgress',
-            type: '1f',
-            value: 0
-          }
-        }
-      }
-    }
+            name: "uProgress",
+            type: "1f",
+            value: 0,
+          },
+        },
+      },
+    };
   },
   computed: {
-    gallery () {
-      const map = this.photoseries.map(el => el.FileName)
-      return map
-    }
+    gallery() {
+      const map = this.photoseries.map((el) => el.FileName);
+      return map;
+    },
   },
-  mounted () {
-    this.setupCurtains()
-    this.setupPlane()
-    this.raf()
+  mounted() {
+    this.setupCurtains();
+    this.setupPlane();
+    this.raf();
   },
   methods: {
-    changeSpeed ($event) {
-      this.speed += $event.deltaY * 0.0006
+    changeSpeed($event) {
+      this.speed += $event.deltaY * 0.0006;
     },
-    raf () {
-    //   console.log(this.speed)
-      this.position += this.speed
-      this.speed *= 0.9
+    raf() {
+      //   console.log(this.speed)
+      this.position += this.speed;
+      this.speed *= 0.9;
       if (this.speed < 0.00001) {
-        this.speed = 0
+        this.speed = 0;
       }
       if (this.speed > -0.00001) {
-        this.speed = 0
+        this.speed = 0;
       }
-      const i = Math.round(this.position)
-      const dif = i - this.position
+      const i = Math.round(this.position);
+      const dif = i - this.position;
 
-      this.position += dif * 0.155
+      this.position += dif * 0.155;
       if (Math.abs(i - this.position) < 0.001) {
-        this.position = i
+        this.position = i;
       }
 
       //   const tl = anime.timeline()
@@ -123,10 +119,13 @@ export default {
       //   this.plane.uniforms.progress.value = this.position
 
       this.activeTextureIndex =
-        (Math.floor(this.position) - 1 + this.plane.images.length) % this.plane.images.length
+        (Math.floor(this.position) - 1 + this.plane.images.length) %
+        this.plane.images.length;
       this.nextTextureIndex =
-        (((Math.floor(this.position) + 1) % this.plane.images.length) - 1 + this.plane.images.length) %
-        this.plane.images.length
+        (((Math.floor(this.position) + 1) % this.plane.images.length) -
+          1 +
+          this.plane.images.length) %
+        this.plane.images.length;
 
       //   this.plane.userData.nextTex.setSource(
       //     this.plane.images[this.nextTextureIndex]
@@ -135,60 +134,62 @@ export default {
       //     this.plane.images[this.activeTextureIndex]
       //   )
 
-      requestAnimationFrame(this.raf)
+      requestAnimationFrame(this.raf);
     },
-    changeImage () {
-      const tl = anime.timeline()
+    changeImage() {
+      const tl = anime.timeline();
       tl.add({
         targets: this.plane.uniforms.progress,
         value: 1,
         delay: 0,
         duration: 2000,
-        easing: 'cubicBezier(0.215, 0.61, 0.355, 1)'
-      })
+        easing: "cubicBezier(0.215, 0.61, 0.355, 1)",
+      });
     },
-    setupCurtains () {
+    setupCurtains() {
       this.curtains = new Curtains({
         container: this.$refs.webgl,
-        pixelRatio: window.devicePixelRatio
-      })
+        pixelRatio: window.devicePixelRatio,
+      });
     },
-    setupPlane () {
-      this.plane = this.curtains.addPlane(this.$refs.plane, this.params)
+    setupPlane() {
+      this.plane = this.curtains.addPlane(this.$refs.plane, this.params);
       if (this.plane) {
         this.plane.userData = {
-          activeTex: this.plane.createTexture('activeTex'),
-          nextTex: this.plane.createTexture('nextTex')
-        }
-        this.plane.onReady(() => {
-        //   this.curtains.disableDrawing()
-          this.setTexture()
-        }).onRender(() => {
-          //   console.log("I'm render")
-          if ((this.position ^ 0) !== this.position) {
-            // console.log(this.curtains)
-            // this.curtains.enableDrawing()
-            this.plane.uniforms.progress.value = this.position
-            this.setTexture()
-          }
-        })
+          activeTex: this.plane.createTexture("activeTex"),
+          nextTex: this.plane.createTexture("nextTex"),
+        };
+        this.plane
+          .onReady(() => {
+            //   this.curtains.disableDrawing()
+            this.setTexture();
+          })
+          .onRender(() => {
+            //   console.log("I'm render")
+            if ((this.position ^ 0) !== this.position) {
+              // console.log(this.curtains)
+              // this.curtains.enableDrawing()
+              this.plane.uniforms.progress.value = this.position;
+              this.setTexture();
+            }
+          });
         //   .onLoading(() => console.log("I'm load"))
       }
     },
-    setTexture () {
+    setTexture() {
       this.plane.userData.activeTex.setSource(
         this.plane.images[this.activeTextureIndex]
-      )
+      );
       this.plane.userData.nextTex.setSource(
         this.plane.images[this.nextTextureIndex]
-      )
-    }
-  }
-}
+      );
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-.wrapper{
+.wrapper {
   position: relative;
   width: 100%;
   height: 100vh;

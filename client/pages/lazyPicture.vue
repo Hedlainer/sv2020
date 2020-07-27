@@ -3,15 +3,20 @@
     v-mouse="mouseEv"
     v-observe-visibility="{
       callback: visibilityChanged,
-      throttle:400,
-      once: true
+      throttle: 400,
+      once: true,
     }"
     class="lazy"
-    :style="{ boxShadow: `inset 0px 0px 0px 1px ${color}`,
-              backgroundColor: hex2rgba(color, .3) }"
+    :style="{
+      boxShadow: `inset 0px 0px 0px 1px ${color}`,
+      backgroundColor: hex2rgba(color, 0.3),
+    }"
     @mousedown="clickFullImg"
   >
-    <picture v-if="fullScreenImage&curentImageLoaded" class="lazy__fullscreen">
+    <picture
+      v-if="fullScreenImage & curentImageLoaded"
+      class="lazy__fullscreen"
+    >
       <source
         :srcset="`/image/webp/${ImageSize.fullImageWidth}/${file}.webp`"
         type="image/webp"
@@ -45,118 +50,129 @@
 </template>
 
 <script>
-let width, height
+let width, height;
 if (process.browser) {
-  height = window.innerHeight
-  width = window.innerWidth
+  height = window.innerHeight;
+  width = window.innerWidth;
 }
 export default {
   directives: {
     mouse: {
-    // определение директивы
-      inserted (el, binding) {
+      // определение директивы
+      inserted(el, binding) {
         const f = function (evt) {
           if (binding.value(evt, el)) {
-            el.removeEventListener('mousemove', f)
-            el.removeEventListener('touchmove', f)
+            el.removeEventListener("mousemove", f);
+            el.removeEventListener("touchmove", f);
           }
-        }
-        el.addEventListener('mousemove', f)
-        el.addEventListener('touchmove', f)
+        };
+        el.addEventListener("mousemove", f);
+        el.addEventListener("touchmove", f);
         // el.addEventListener('mousemove', e => this.mouseEv(e, i))
-      }
-    }
+      },
+    },
   },
   props: {
     fullScreenImage: { type: Boolean, default: false },
     file: { required: true, type: String },
     currentWidth: { required: true, type: Number },
     myIndex: { default: 0, type: Number },
-    color: { required: true, type: String }
+    color: { required: true, type: String },
   },
 
-  data () {
+  data() {
     return {
       height,
       curentImageLoaded: false,
       fullWidth: width,
       phVisible: true,
       opacity: 1,
-      isVisible: false
-    }
+      isVisible: false,
+    };
   },
   computed: {
-    ImageSize () {
+    ImageSize() {
       const ImageSize = (x) => {
         const w =
           x < 480
             ? 480
             : x < 720
-              ? 720
-              : x < 1024
-                ? 1024
-                : x < 1440
-                  ? 1440
-                  : x < 1920
-                    ? 1920
-                    : 2560
-        return w
-      }
+            ? 720
+            : x < 1024
+            ? 1024
+            : x < 1440
+            ? 1440
+            : x < 1920
+            ? 1920
+            : 2560;
+        return w;
+      };
       return {
         fullImageWidth: ImageSize(this.fullWidth),
-        currentImageWidth: ImageSize(this.currentWidth)
-      }
-    }
+        currentImageWidth: ImageSize(this.currentWidth),
+      };
+    },
   },
-  mounted () {
+  mounted() {
     // console.log(this.$refs.currentImage)
-
     // this.$refs.currentImage.addEventListener('mousemove', e => this.mouseEv(e))
     // this.$refs.currentImage.addEventListener('touchmove', e => this.mouseEv(e))
   },
   methods: {
-    e ($event) {
-      console.log($event)
+    e($event) {
+      console.log($event);
     },
-    mouseEv (event) {
+    mouseEv(event) {
       if (event.targetTouches) {
-        this.$emit('mousecord', { x: event.targetTouches[0].offsetX, y: event.targetTouches[0].offsetY })
+        this.$emit("mousecord", {
+          x: event.targetTouches[0].offsetX,
+          y: event.targetTouches[0].offsetY,
+        });
       } else {
-        this.$emit('mousecord', { x: event.offsetX, y: event.offsetY })
+        this.$emit("mousecord", { x: event.offsetX, y: event.offsetY });
       }
     },
-    handleMouse (evt, el) {
-      console.log(evt)
+    handleMouse(evt) {
+      console.log(evt);
     },
-    fullImageLoaded () {
-      this.$emit('fulload', { img: [this.$refs.currentImage, this.$refs.fullImage], index: this.myIndex })
+    fullImageLoaded() {
+      this.$emit("fulload", {
+        img: [this.$refs.currentImage, this.$refs.fullImage],
+        index: this.myIndex,
+      });
     },
-    hex2rgba (hex, alpha = 1) {
-      const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16))
-      return `rgba(${r},${g},${b},${alpha})`
+    hex2rgba(hex, alpha = 1) {
+      const [r, g, b] = hex.match(/\w\w/g).map((x) => parseInt(x, 16));
+      return `rgba(${r},${g},${b},${alpha})`;
     },
-    currentImageLoad () {
-      this.curentImageLoaded = true
+    currentImageLoad() {
+      this.curentImageLoaded = true;
       // console.log('current image', this.myIndex)
     },
-    clickFullImg ($event) {
-      this.$emit('myClick', { index: this.myIndex, x: $event.offsetX, y: $event.offsetY })
+    clickFullImg($event) {
+      this.$emit("myClick", {
+        index: this.myIndex,
+        x: $event.offsetX,
+        y: $event.offsetY,
+      });
       // console.log('click')
     },
-    visibilityChanged (isVisible, ev) {
-      this.isVisible = isVisible
+    visibilityChanged(isVisible) {
+      this.isVisible = isVisible;
     },
-    mousemove ($event) {
-      // console.log($event)
-    }
-  }
-}
+    mousemove($event) {
+      console.log($event);
+    },
+  },
+};
 </script>
 <style>
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 2.5s;
 }
-.fade-enter, .fade-leave-to {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 </style>

@@ -18,13 +18,12 @@
 </template>
 
 <script>
-import photoseries from '~/static/db/Photoseries.json'
+import photoseries from "~/static/db/Photoseries.json";
 export default {
   components: {
-    photoseriesImage: () =>
-      import('~/components/photoseries-image.vue')
+    photoseriesImage: () => import("~/components/photoseries-image.vue"),
   },
-  data () {
+  data() {
     return {
       photoseries,
       bgColor: null,
@@ -32,29 +31,29 @@ export default {
       minHour: 0,
       max: 8400,
       value: 1,
-      sm: null
-    }
+      sm: null,
+    };
   },
-  mounted () {
+  mounted() {
     // console.log(this.photoseries.map(el => el.Aspect))
   },
-  beforeMount () {
-    window.addEventListener('resize', this.resize)
+  beforeMount() {
+    window.addEventListener("resize", this.resize);
   },
-  beforeDestroy () {
-    window.removeEventListener('resize', this.resize)
+  beforeDestroy() {
+    window.removeEventListener("resize", this.resize);
   },
   methods: {
-    horizontalScroll ($event) {
+    horizontalScroll($event) {
       if ($event.deltaY > 0) {
-        this.value += $event.deltaY
-        this.$refs.container.scrollLeft = this.value
+        this.value += $event.deltaY;
+        this.$refs.container.scrollLeft = this.value;
       }
-      this.$refs.container.scrollLeft += $event.deltaY
-      this.value = this.$refs.container.scrollLeft
-    }
-  }
-}
+      this.$refs.container.scrollLeft += $event.deltaY;
+      this.value = this.$refs.container.scrollLeft;
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
