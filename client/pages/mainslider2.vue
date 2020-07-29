@@ -4,57 +4,32 @@
 <!-- РАБОЧИЙ СЛАЙДЕР БЕЗ ДЕКОДИРОВАНИЯ ЧЕРЕЗ КАНВУ -->
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <main
-    ref="sc"
-    class="wrapper"
-    style=""
-    @scroll.passive="getScrollPosition"
-  >
-    <div
-      id="canvas"
-      ref="webgl"
-    ></div>
+  <main ref="sc" class="wrapper" style="" @scroll.passive="getScrollPosition">
+    <div id="canvas" ref="webgl"></div>
     <div class="grid2">
       <!-- <h2>{{ main[1].Title }}</h2> -->
       <!-- eslint-disable-next-line vue/mustache-interpolation-spacing-->
     </div>
-    <picture
-      v-for="image in images"
-      :key="image.src"
-      ref="images"
-      class="lazy__original"
-    >
-      <source
-        :srcset="`/image/webp/1920/${image.src}.webp`"
-        type="image/webp"
-      />
-      <img
-        alt="SvobodinaPhoto"
-        crossorigin="anonimous"
-        decoding="async"
-        draggable="false"
-        :src="`/image/jpg/1920/${image.src}.jpg`"
-      />
+    <picture v-for="image in images" :key="image.src" ref="images" class="lazy__original">
+      <source :srcset="`/image/webp/1920/${image.src}.webp`" type="image/webp" />
+      <img alt="SvobodinaPhoto" crossorigin="anonimous" decoding="async" draggable="false"
+        :src="`/image/jpg/1920/${image.src}.jpg`" />
     </picture>
-    <div
-      class="fixscroll"
-    >
+    <div class="fixscroll">
       <div class="grid">
-        <transition
-          :css:="false"
-          mode="out-in"
-          name="split"
-          @before-enter="beforeEnter"
-          @enter="enter"
-        >
-          <h3 :key="snab" ref="sab" class="body" data-splitting>
+        <transition :css:="false" mode="out-in" name="split" @before-enter="beforeEnter" @enter="enter">
+          <!-- <h3 :key="snab" ref="sab" class="description">
             <span v-for="(letter,index) in SubTitle" :key="index" class="letter">{{` ${letter}`}}</span>
-          </h3>
+          </h3> -->
+          <svg class="description" fill="none"  width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <foreignObject width="100%" height="100%">
+                <h3 :key="snab" ref="sab" class="description">
+                  <span v-for="(letter,index) in SubTitle" :key="index" class="letter">{{` ${letter}`}}</span>
+                </h3>
+            </foreignObject>
+          </svg>
         </transition>
-        <div
-          ref="plane"
-          class="plane "
-        >
+        <div ref="plane" class="plane ">
           <canvas ref="c1"></canvas>
           <canvas ref="c2"></canvas>
         </div>
@@ -75,6 +50,13 @@ import anime from "animejs";
 import { vertex, fragment } from "~/assets/shadertest.js";
 
 export default {
+  // asyncData() {
+  //   return new Promise((resolve) => {
+  //     setTimeout(function () {
+  //       resolve({});
+  //     }, 3000);
+  //   });
+  // },
   data() {
     return {
       main,
@@ -129,9 +111,17 @@ export default {
     },
   },
   mounted() {
+    this.$nextTick(() => {
+      this.$nuxt.$loading.start();
+
+      setTimeout(() => {
+        // debugger;
+        this.$nuxt.$loading.finish();
+      }, 500);
+    });
     this.setupCurtains();
     this.setupPlane();
-    // const els2 = document.querySelectorAll('.body')
+    // const els2 = document.querySelectorAll('.description')
     // const els = this.$refs.sab
     // console.log(els)
     // console.log(els2);
@@ -260,7 +250,7 @@ export default {
   // watch: {
   //   snab (newValue, oldValue) {
   //     anime({
-  //       targets: '.body',
+  //       targets: '.description',
   //       changeComplete (anime) {
   //         console.log(anime)
   //       }
@@ -277,13 +267,12 @@ export default {
 <style lang="scss">
 .letter {
   display: inline-block;
-  // position: relative;
   overflow: hidden;
   margin-block-start: 0px;
   margin-block-end: 0px;
-  border-style: solid;
-  border-color: red;
-  border-width: 1px;
+  // border-style: solid;
+  // border-color: red;
+  // border-width: 1px;
 }
 .grid {
   position: sticky;
@@ -293,7 +282,7 @@ export default {
   width: 100%;
   grid-template-rows: 1fr 1fr 2fr 4fr 2.66fr 5.33fr 5.33fr 4.33fr 2.83fr 3.5fr 3.5fr 2.83fr 4.33fr 5.33fr 5.33fr 2.66fr 4fr 2fr 1fr 1fr;
   grid-template-columns: 1fr 1fr 2fr 4fr 2.66fr 5.33fr 5.33fr 4.33fr 2.83fr 3.5fr 3.5fr 2.83fr 4.33fr 5.33fr 5.33fr 2.66fr 4fr 2fr 1fr 1fr;
-  background: url(/image/ggr.svg) left top / 100% 100% no-repeat;
+  // background: url(/image/ggr.svg) left top / 100% 100% no-repeat;
   .plane {
     grid-column: 3 / 14;
     grid-row: 4 / 18;
@@ -306,29 +295,18 @@ export default {
     }
   }
 }
-// align-self: end;
 
-.body {
-  // position: absolute;
-  // top: 0;
-  // left: 0;
-  // margin: 20px;
+.description {
   grid-column: 15 / 19;
   grid-row: 7 / 15;
   max-width: 100%;
-  // justify-self: end;
-  // align-self: end;
-}
-h3 {
   margin: 0;
   white-space: pre-wrap;
   font-family: Roboto, sans-serif;
   font-weight: 400;
   color: white;
-  // padding: 15px;
   font-size: 20px;
   background-color: rgba(0, 0, 0, 0.7);
-  // min-width: 70vw;
 }
 img {
   display: none;
@@ -352,23 +330,6 @@ h1 {
   display: block;
   // opacity: 0.5;
 }
-// .plane {
-//   position: sticky;
-//   top: 5vh;
-//   left: 5vh;
-//   width: calc(90vh*1.5);
-//   height: 90vh;
-//   // margin: 0 auto;
-// }
-// .plane canvas {
-//   height: 100%;
-//   width: 100%;
-//   object-fit: cover;
-//   object-position: center;
-//   display: none;
-//   grid-column: 2 / 3;
-//     grid-row: 2 / 3;
-// }
 .fixscroll {
   height: 5000px;
 }

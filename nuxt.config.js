@@ -43,7 +43,9 @@ module.exports = {
    ** Customize the progress-bar color
    */
   loading: {
-    color: "#03a9f4",
+    loading: "~/components/loading.vue",
+    duration: 3000,
+    css: false,
   },
   /*
    ** Global CSS
@@ -86,11 +88,11 @@ module.exports = {
     "@nuxtjs/axios",
     // '@nuxtjs/pwa'
   ],
-  webfontloader: {
-    google: {
-      families: ["Roboto:100,400,700&display=swap"],
-    },
-  },
+  // webfontloader: {
+  //   google: {
+  //     families: ["Roboto:100,400,700&display=swap"],
+  //   },
+  // },
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options

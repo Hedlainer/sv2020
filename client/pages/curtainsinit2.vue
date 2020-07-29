@@ -3,8 +3,20 @@
     <div id="canvas" ref="webgl"></div>
     <div v-for="image in images" :key="image.src" ref="plane" class="plane">
       <img alt crossorigin="anonymous" :src="image.src" />
-      <h2 ref="title" class="title">{{ image.title }}</h2>
+      <!-- <svg
+        ref="title"
+        class="title"
+        fill="none"
+        width="100%"
+        height="100%"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <foreignObject width="100%" height="100%">
+          <h2 class="title">{{ image.title }}</h2>
+        </foreignObject>
+      </svg> -->
     </div>
+    <div ref="title"></div>
   </main>
 </template>
 
@@ -12,6 +24,7 @@
 import { Curtains } from "curtainsjs";
 import { vertex, fragment, Tvertex, Tfragment } from "~/assets/shaderinit.js";
 // import anime from 'animejs'
+
 export default {
   data() {
     return {
@@ -65,6 +78,32 @@ export default {
     // console.log(this.$refs.title)
   },
   methods: {
+    createText(canvas) {
+      // const canvas = document.createElement("canvas");
+      // canvas.setAttribute("data-sampler", "planeTexture");
+      const data = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50">
+        <foreignObject width="100%" height="100%">
+          <h2 class="title"> "Lorem ipsum dolor sit amet"</h2>
+          <style>
+          .title {
+            font-size: 80px;
+            color: red;
+          }
+          </style>
+        </foreignObject>
+      </svg>`;
+      var img = new Image();
+      var svg = new Blob([data], { type: "image/svg+xml;charset=utf-8" });
+      var url = URL.createObjectURL(svg);
+      var ctx = canvas.getContext("2d");
+      img.onload = function () {
+        ctx.drawImage(img, 0, 0);
+        URL.revokeObjectURL(url);
+      };
+
+      img.src = url;
+    },
     writeText(plane, canvas) {
       var htmlPlane = plane.htmlElement;
       var htmlPlaneStyle = window.getComputedStyle(htmlPlane);
@@ -118,22 +157,24 @@ export default {
       }
     },
     setupTitlePlane() {
-      for (const t of this.$refs.title) {
-        this.title = this.curtains.addPlane(t, this.TitleParams);
+      // for (const t of this.$refs.title) {
+      this.title = this.curtains.addPlane(this.$refs.title, this.TitleParams);
 
-        if (this.title) {
-          const canvas = document.createElement("canvas");
-          // then we add a data sampler attribute to our canvas
-          canvas.setAttribute("data-sampler", "planeTexture");
-          // canvas.style.display = 'none'
-          // and load it into our plane
-          console.log(canvas);
+      if (this.title) {
+        const canvas = document.createElement("canvas");
+        // const ctx = canvas.getContext("2d");
+        // ctx.drawImage(this.$refs.title, 0, 0);
+        // then we add a data sampler attribute to our canvas
+        canvas.setAttribute("data-sampler", "planeTexture");
+        // canvas.style.display = 'none'
+        // and load it into our plane
 
-          this.title.loadCanvas(canvas);
-          this.title.moveToFront();
-          this.handleTitlePlanes(this.title);
-        }
+        this.title.loadCanvas(canvas);
+        this.title.moveToFront();
+        console.log(this.title);
+        this.handleTitlePlanes(this.title);
       }
+      // }
     },
     handleTitlePlanes(plane) {
       plane
@@ -144,11 +185,11 @@ export default {
           // we write our title in our canvas
           if (document.fonts) {
             document.fonts.ready.then(() => {
-              this.writeText(plane, texture.source);
+              // this.writeText(plane, texture.source);
             });
           } else {
             setTimeout(function () {
-              this.writeText(plane, texture.source);
+              this.createText(texture.source);
             }, 750);
           }
           // this.writeText(plane, texture.source)
@@ -160,7 +201,7 @@ export default {
         })
         .onAfterResize(() => {
           // update our canvas sizes and rewrite our title
-          this.writeText(plane, plane.textures[0].source);
+          // this.writeText(plane, plane.textures[0].source);
         });
     },
     handlePlanes(plane) {
