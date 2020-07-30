@@ -98,7 +98,7 @@ module.exports = {
    ** See https://axios.nuxtjs.org/options
    */
   styleResources: {
-    scss: ["./assets/scss/global-variables.scss"], // alternative: scss
+    scss: ["./assets/scss/global-variables.scss", "./assets/scss/font.scss"], // alternative: scss
     less: [],
     stylus: [],
   },

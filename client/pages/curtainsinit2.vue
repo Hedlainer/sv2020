@@ -123,7 +123,7 @@ export default {
 
       // draw our title with the original style
       context.fillStyle = htmlPlaneStyle.color;
-      context.font = htmlPlaneStyle.fontSize + " " + htmlPlaneStyle.fontFamily;
+      context.font = `${htmlPlaneStyle.fontSize}" "${htmlPlaneStyle.fontFamily}`;
       context.fontStyle = htmlPlaneStyle.fontStyle;
       context.textAlign = htmlPlaneStyle.textAlign;
 

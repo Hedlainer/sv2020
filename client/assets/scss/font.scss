@@ -1,0 +1,60 @@
+/* roboto-slab-100 - cyrillic-ext_cyrillic_latin_latin-ext */
+@font-face {
+  font: {
+    style: normal;
+    family: "Roboto Slab";
+    display: swap;
+    weight: 100;
+  }
+  src: local("Roboto Slab Thin"), local("RobotoSlab-Thin"),
+    url("~static/fonts/roboto-slab-v8-cyrillic-ext_cyrillic_latin_latin-ext-100.woff2")
+      format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("~static/fonts/roboto-slab-v8-cyrillic-ext_cyrillic_latin_latin-ext-100.woff")
+      format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* roboto-slab-300 - cyrillic-ext_cyrillic_latin_latin-ext */
+@font-face {
+  font: {
+    style: normal;
+    family: "Roboto Slab";
+    display: swap;
+    weight: 300;
+  }
+  src: local("Roboto Slab Light"), local("RobotoSlab-Light"),
+    url("~static/fonts/roboto-slab-v8-cyrillic-ext_cyrillic_latin_latin-ext-300.woff2")
+      format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("~static/fonts/roboto-slab-v8-cyrillic-ext_cyrillic_latin_latin-ext-300.woff")
+      format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* roboto-slab-regular - cyrillic-ext_cyrillic_latin_latin-ext */
+@font-face {
+  font: {
+    style: normal;
+    family: "Roboto Slab";
+    display: swap;
+    weight: 400;
+  }
+  src: local("Roboto Slab Regular"), local("RobotoSlab-Regular"),
+    url("~static/fonts/roboto-slab-v8-cyrillic-ext_cyrillic_latin_latin-ext-regular.woff2")
+      format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("~static/fonts/roboto-slab-v8-cyrillic-ext_cyrillic_latin_latin-ext-regular.woff")
+      format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* roboto-slab-700 - cyrillic-ext_cyrillic_latin_latin-ext */
+@font-face {
+  font: {
+    style: normal;
+    family: "Roboto Slab";
+    display: swap;
+    weight: 700;
+  }
+  src: local("Roboto Slab Bold"), local("RobotoSlab-Bold"),
+    url("~static/fonts/roboto-slab-v8-cyrillic-ext_cyrillic_latin_latin-ext-700.woff2")
+      format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("~static/fonts/roboto-slab-v8-cyrillic-ext_cyrillic_latin_latin-ext-700.woff")
+      format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}

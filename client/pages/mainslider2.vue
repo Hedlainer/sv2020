@@ -8,7 +8,6 @@
     <div id="canvas" ref="webgl"></div>
     <div class="grid2">
       <!-- <h2>{{ main[1].Title }}</h2> -->
-      <!-- eslint-disable-next-line vue/mustache-interpolation-spacing-->
     </div>
     <picture v-for="image in images" :key="image.src" ref="images" class="lazy__original">
       <source :srcset="`/image/webp/1920/${image.src}.webp`" type="image/webp" />
@@ -17,29 +16,18 @@
     </picture>
     <div class="fixscroll">
       <div class="grid">
-        <transition :css:="false" mode="out-in" name="split" @before-enter="beforeEnter" @enter="enter">
-          <!-- <h3 :key="snab" ref="sab" class="description">
-            <span v-for="(letter,index) in SubTitle" :key="index" class="letter">{{` ${letter}`}}</span>
-          </h3> -->
-          <svg class="description" fill="none"  width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <foreignObject width="100%" height="100%">
-                <h3 :key="snab" ref="sab" class="description">
-                  <span v-for="(letter,index) in SubTitle" :key="index" class="letter">{{` ${letter}`}}</span>
-                </h3>
-            </foreignObject>
-          </svg>
-        </transition>
+        <!-- <transition :css:="false" mode="out-in" name="split" @before-enter="beforeEnter" @enter="enter"> -->
+          <p :key="snab" ref="sab" class="description">{{SubTitle}}
+            <!-- <span v-for="(letter,index) in SubTitle" :key="index" class="letter">{{`${letter}`}}</span> -->
+          </p>
+        <!-- </transition> -->
         <div ref="plane" class="plane ">
           <canvas ref="c1"></canvas>
           <canvas ref="c2"></canvas>
         </div>
       </div>
-
-      <!-- <div class="scroller"> -->
-      <!-- </div> -->
     </div>
     <reviews />
-    <!-- <h1>{{ position }}</h1> -->
   </main>
 </template>
 
@@ -67,18 +55,12 @@ export default {
         { src: "19-07-27-10-47-57" },
         { src: "19-05-10-17-43-45" },
       ],
-      lastPos: 0,
-      timer: 0,
-      delta: 0,
-      delay: 50,
-      animation: null,
       activeTextureIndex: 0,
       nextTextureIndex: 1,
       speed: 0,
       snab: 0,
       position: 0,
       position2: 0,
-      pos: 0,
       curtains: undefined,
       plane: undefined,
       scrollPos: 0,
@@ -102,11 +84,14 @@ export default {
     SubTitle() {
       switch (this.snab) {
         case 0:
-          return main[0].Subtitle.split("\n");
+          return main[0].Subtitle;
+        // .split("\n");
         case 1:
-          return main[1].Subtitle.split(" ");
+          return main[1].Subtitle;
+        // .split("\n");
         case 2:
-          return main[2].Subtitle.split(" ");
+          return main[2].Subtitle;
+        // .split("\n");
       }
     },
   },
@@ -115,20 +100,11 @@ export default {
       this.$nuxt.$loading.start();
 
       setTimeout(() => {
-        // debugger;
         this.$nuxt.$loading.finish();
       }, 500);
     });
     this.setupCurtains();
     this.setupPlane();
-    // const els2 = document.querySelectorAll('.description')
-    // const els = this.$refs.sab
-    // console.log(els)
-    // console.log(els2);
-    // [].forEach.call(els2, function (el) {
-    //   // outerHTML, thats *important*, no direct text nodes should be in parsed HTML
-    //   el.outerHTML = Splitter(el.outerHTML, '<span class="letter">$</span>')
-    // })
 
     const canvas1 = this.$refs.c1;
     const canvas2 = this.$refs.c2;
@@ -139,7 +115,6 @@ export default {
     for (const iterator of this.$refs.images) {
       images.push(iterator.children[1].decode());
     }
-    // const pr = Promise.all(images)
 
     const img1 = this.$refs.images[0].children[1];
     const img2 = this.$refs.images[1].children[1];
@@ -147,10 +122,6 @@ export default {
 
     const decode = async () => {
       await Promise.all(images);
-
-      // await img1.decode()
-      // await img2.decode()
-      // await img3.decode()
 
       canvas1.width = img1.naturalWidth;
       canvas1.height = img1.naturalHeight;
@@ -297,15 +268,15 @@ export default {
 }
 
 .description {
-  grid-column: 15 / 19;
-  grid-row: 7 / 15;
+  grid-column: 15 / 17;
+  grid-row: 8 / 15;
   max-width: 100%;
   margin: 0;
   white-space: pre-wrap;
-  font-family: Roboto, sans-serif;
-  font-weight: 400;
+  font-family: Roboto Slab, sans-serif;
+  font-weight: 300;
   color: white;
-  font-size: 20px;
+  font-size: 16px;
   background-color: rgba(0, 0, 0, 0.7);
 }
 img {
