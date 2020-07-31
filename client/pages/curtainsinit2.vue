@@ -3,9 +3,7 @@
     <div id="canvas" ref="webgl"></div>
     <div v-for="image in images" :key="image.src" ref="plane" class="plane">
       <img alt crossorigin="anonymous" :src="image.src" />
-      <h2 ref="title" class="title">
-        {{ image.title }}
-      </h2>
+      <div ref="title" class="title">{{ image.title }}</div>
     </div>
   </main>
 </template>
@@ -25,16 +23,17 @@ export default {
         {
           src: "/image/jpg/1024/19-03-02-17-25-38.jpg",
           title:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus dicta, quidem consectetur cumque dolorum, magni voluptate minima, ex laborum maxime dolor soluta perferendis eaque? Reprehenderit aspernatur obcaecati illo deserunt perspiciatis!",
+            "Реальная история вашего свадебного дня будет значить для вас намного больше, чем постановочная фотосессия. Имея большой опыт работы в репортажной фотографии, я работаю со спокойным и вдумчивым подходом. Продуманная композиция и понимание света создают красивые и содержательные фотографии настоящих моментов и эмоций.",
         },
-        {
-          src: "/image/jpg/1024/19-03-02-13-46-07.jpg",
-          title: "Lorem ipsum \n dolor sit amet",
-        },
-        {
-          src: "/image/jpg/1024/19-05-01-13-36-02.jpg",
-          title: "Lorem ipsum \n dolor sit amet",
-        },
+        // {
+        //   src: "/image/jpg/1024/19-03-02-13-46-07.jpg",
+        //   title:
+        //     "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus dicta, quidem consectetur cumque dolorum, magni voluptate minima, ex laborum",
+        // },
+        // {
+        //   src: "/image/jpg/1024/19-05-01-13-36-02.jpg",
+        //   title: "Lorem ipsum \n dolor sit amet",
+        // },
       ],
       TitleParams: {
         vertexShader: Tvertex,
@@ -68,59 +67,46 @@ export default {
     // console.log(this.$refs.title)
   },
   methods: {
-    wrapText(context, text, marginLeft, marginTop, maxWidth, lineHeight) {
-      var words = text.split(" ");
-      var countWords = words.length;
-      var line = "";
-      for (var n = 0; n < countWords; n++) {
-        var testLine = line + words[n] + " ";
-        var testWidth = context.measureText(testLine).width;
+    wrapText(ctx, text, mLeft, mTop, maxWidth, lineHeight) {
+      let words = text.split(" ");
+      let countWords = words.length;
+      let line = "";
+      for (let n = 0; n < countWords; n++) {
+        let testLine = line + words[n] + " ";
+        let testWidth = ctx.measureText(testLine).width;
         if (testWidth > maxWidth) {
-          context.fillText(line, marginLeft, marginTop);
+          ctx.fillText(line, mLeft, mTop);
           line = words[n] + " ";
-          marginTop += lineHeight;
+          mTop += lineHeight;
         } else {
           line = testLine;
         }
       }
-      context.fillText(line, marginLeft, marginTop);
+      ctx.fillText(line, mLeft, mTop);
     },
     writeText(plane, canvas) {
-      var htmlPlane = plane.htmlElement;
-      var htmlPlaneStyle = window.getComputedStyle(htmlPlane);
-
-      var planeBoundingRect = plane.getBoundingRect();
-
-      var htmlPlaneWidth = planeBoundingRect.width / this.curtains.pixelRatio;
-      var htmlPlaneHeight = planeBoundingRect.height / this.curtains.pixelRatio;
-      console.log(htmlPlaneWidth);
-      // set sizes
-      canvas.width = htmlPlaneWidth;
-      canvas.height = htmlPlaneHeight;
-      var context = canvas.getContext("2d");
-
-      context.width = htmlPlaneWidth;
-      context.height = htmlPlaneHeight;
+      const htmlPlane = plane.htmlElement;
+      const pStyle = window.getComputedStyle(htmlPlane);
+      const { width, height } = plane.getBoundingRect();
+      canvas.width = width / this.curtains.pixelRatio;
+      canvas.height = height / this.curtains.pixelRatio;
+      const ctx = canvas.getContext("2d");
 
       // draw our title with the original style
-      context.fillStyle = htmlPlaneStyle.color;
-      context.font = htmlPlaneStyle.fontSize + " " + htmlPlaneStyle.fontFamily;
-      context.fontStyle = htmlPlaneStyle.fontStyle;
-      context.textAlign = htmlPlaneStyle.textAlign;
-
-      // vertical alignment is a bit hacky
-      // context.textBaseline = "middle";
+      ctx.fillStyle = pStyle.color;
+      ctx.font = `${pStyle.fontWeight} ${pStyle.fontSize} ${pStyle.fontFamily}`;
+      ctx.fontStyle = pStyle.fontStyle;
+      ctx.textAlign = pStyle.textAlign;
+      ctx.textBaseline = "top";
 
       this.wrapText(
-        context,
+        ctx,
         htmlPlane.innerText,
-        0,
-        0,
-        htmlPlaneWidth,
-        htmlPlaneStyle.fontSize * 1.2
+        +pStyle.marginLeft.slice(0, -2),
+        +pStyle.marginTop.slice(0, -2),
+        canvas.width,
+        +pStyle.lineHeight.slice(0, -2)
       );
-
-      // context.fillText(htmlPlane.innerText, 0, htmlPlaneHeight / 1.8);
 
       // update our canvas texture once on next draw call
       if (plane.textures.length > 0) {
@@ -155,9 +141,9 @@ export default {
           const canvas = document.createElement("canvas");
           // then we add a data sampler attribute to our canvas
           canvas.setAttribute("data-sampler", "planeTexture");
-          // canvas.style.display = 'none'
+          canvas.style.display = "none";
           // and load it into our plane
-          console.log(canvas);
+          // console.log(canvas.width);
 
           this.title.loadCanvas(canvas);
           this.title.moveToFront();
@@ -219,17 +205,29 @@ body {
   height: 100vh;
   z-index: -2;
 }
+canvas {
+  display: block;
+  margin: 0;
+}
 .title {
-  font-size: 80px;
-  color: red;
-  z-index: -3;
+  // visibility: hidden;
+  vertical-align: baseline;
+  font-size: 30px;
+  // margin-left: 30px;
+  // line-height: 42px;
+  font-family: Roboto Slab, sans-serif;
+  font-weight: 700;
+  color: rgb(255, 255, 255);
+  // z-index: -3;
   opacity: 0;
-  // max-width: 30vw;
+  max-width: 50vw;
+  margin: 0;
+  display: inline-block;
 }
 .plane {
-  width: 80%;
-  height: 80vh;
-  margin: 10vh auto;
+  width: 100%;
+  height: 100vh;
+  // margin: 10vh auto;
 }
 .plane img {
   height: 100%;
