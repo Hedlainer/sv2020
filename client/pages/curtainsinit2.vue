@@ -78,31 +78,23 @@ export default {
     // console.log(this.$refs.title)
   },
   methods: {
-    createText(canvas) {
-      // const canvas = document.createElement("canvas");
-      // canvas.setAttribute("data-sampler", "planeTexture");
-      const data = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50">
-        <foreignObject width="100%" height="100%">
-          <h2 class="title"> "Lorem ipsum dolor sit amet"</h2>
-          <style>
-          .title {
-            font-size: 80px;
-            color: red;
-          }
-          </style>
-        </foreignObject>
-      </svg>`;
-      var img = new Image();
-      var svg = new Blob([data], { type: "image/svg+xml;charset=utf-8" });
-      var url = URL.createObjectURL(svg);
-      var ctx = canvas.getContext("2d");
-      img.onload = function () {
-        ctx.drawImage(img, 0, 0);
-        URL.revokeObjectURL(url);
-      };
+    wrapText(context, text, marginLeft, marginTop, maxWidth, lineHeight) {
+      var words = text.split(" ");
+      var countWords = words.length;
+      var line = "";
 
-      img.src = url;
+      for (var n = 0; n < countWords; n++) {
+        var testLine = line + words[n] + " ";
+        var testWidth = context.measureText(testLine).width;
+        if (testWidth > maxWidth) {
+          context.fillText(line, marginLeft, marginTop);
+          line = words[n] + " ";
+          marginTop += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      context.fillText(line, marginLeft, marginTop);
     },
     writeText(plane, canvas) {
       var htmlPlane = plane.htmlElement;
@@ -129,6 +121,16 @@ export default {
 
       // vertical alignment is a bit hacky
       context.textBaseline = "middle";
+
+      // this.wrapText(
+      //   context,
+      //   htmlPlane.innerText,
+      //   0,
+      //   0,
+      //   htmlPlaneWidth,
+      //   htmlPlaneStyle.fontSize * 1.2
+      // );
+
       context.fillText(htmlPlane.innerText, 0, htmlPlaneHeight / 1.8);
 
       // update our canvas texture once on next draw call
@@ -138,6 +140,32 @@ export default {
         // update the webgl texture on next draw call
         plane.textures[0].needUpdate();
       }
+    },
+    createText(canvas) {
+      // const canvas = document.createElement("canvas");
+      // canvas.setAttribute("data-sampler", "planeTexture");
+      const data = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50">
+        <foreignObject width="100%" height="100%">
+          <h2 class="title"> "Lorem ipsum dolor sit amet"</h2>
+          <style>
+          .title {
+            font-size: 80px;
+            color: red;
+          }
+          </style>
+        </foreignObject>
+      </svg>`;
+      var img = new Image();
+      var svg = new Blob([data], { type: "image/svg+xml;charset=utf-8" });
+      var url = URL.createObjectURL(svg);
+      var ctx = canvas.getContext("2d");
+      img.onload = function () {
+        ctx.drawImage(img, 0, 0);
+        URL.revokeObjectURL(url);
+      };
+
+      img.src = url;
     },
 
     setupCurtains() {
@@ -185,14 +213,14 @@ export default {
           // we write our title in our canvas
           if (document.fonts) {
             document.fonts.ready.then(() => {
-              // this.writeText(plane, texture.source);
+              this.writeText(plane, texture.source);
             });
           } else {
             setTimeout(function () {
-              this.createText(texture.source);
+              this.writeText(plane, texture.source);
             }, 750);
           }
-          // this.writeText(plane, texture.source)
+          this.writeText(plane, texture.source);
         })
         .onRender(() => {
           // update the time uniform

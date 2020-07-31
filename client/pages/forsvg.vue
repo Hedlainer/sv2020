@@ -49,16 +49,10 @@ export default {
           context.fillText(line, marginLeft, marginTop);
           line = words[n] + " ";
           marginTop += lineHeight;
-          if (words[n][words[n].length - 1] === ".") {
-            // line = words[n] + " ";
-            marginTop += lineHeight;
-          }
         } else {
           line = testLine;
         }
-        // }
       }
-
       context.fillText(line, marginLeft, marginTop);
     }
 
