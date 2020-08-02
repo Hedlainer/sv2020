@@ -3,20 +3,8 @@
     <div id="canvas" ref="webgl"></div>
     <div v-for="image in images" :key="image.src" ref="plane" class="plane">
       <img alt crossorigin="anonymous" :src="image.src" />
-      <!-- <svg
-        ref="title"
-        class="title"
-        fill="none"
-        width="100%"
-        height="100%"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <foreignObject width="100%" height="100%">
-          <h2 class="title">{{ image.title }}</h2>
-        </foreignObject>
-      </svg> -->
+      <div ref="title" class="title">{{ image.title }}</div>
     </div>
-    <div ref="title"></div>
   </main>
 </template>
 
@@ -24,7 +12,6 @@
 import { Curtains } from "curtainsjs";
 import { vertex, fragment, Tvertex, Tfragment } from "~/assets/shaderinit.js";
 // import anime from 'animejs'
-
 export default {
   data() {
     return {
@@ -35,16 +22,18 @@ export default {
       images: [
         {
           src: "/image/jpg/1024/19-03-02-17-25-38.jpg",
-          title: "Lorem ipsum \n dolor sit amet",
+          title:
+            "Реальная история вашего свадебного дня будет значить для вас намного больше, чем постановочная фотосессия. Имея большой опыт работы в репортажной фотографии, я работаю со спокойным и вдумчивым подходом. Продуманная композиция и понимание света создают красивые и содержательные фотографии настоящих моментов и эмоций.",
         },
-        {
-          src: "/image/jpg/1024/19-03-02-13-46-07.jpg",
-          title: "Lorem ipsum \n dolor sit amet",
-        },
-        {
-          src: "/image/jpg/1024/19-05-01-13-36-02.jpg",
-          title: "Lorem ipsum \n dolor sit amet",
-        },
+        // {
+        //   src: "/image/jpg/1024/19-03-02-13-46-07.jpg",
+        //   title:
+        //     "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus dicta, quidem consectetur cumque dolorum, magni voluptate minima, ex laborum",
+        // },
+        // {
+        //   src: "/image/jpg/1024/19-05-01-13-36-02.jpg",
+        //   title: "Lorem ipsum \n dolor sit amet",
+        // },
       ],
       TitleParams: {
         vertexShader: Tvertex,
@@ -78,58 +67,46 @@ export default {
     // console.log(this.$refs.title)
   },
   methods: {
-    createText(canvas) {
-      // const canvas = document.createElement("canvas");
-      // canvas.setAttribute("data-sampler", "planeTexture");
-      const data = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50">
-        <foreignObject width="100%" height="100%">
-          <h2 class="title"> "Lorem ipsum dolor sit amet"</h2>
-          <style>
-          .title {
-            font-size: 80px;
-            color: red;
-          }
-          </style>
-        </foreignObject>
-      </svg>`;
-      var img = new Image();
-      var svg = new Blob([data], { type: "image/svg+xml;charset=utf-8" });
-      var url = URL.createObjectURL(svg);
-      var ctx = canvas.getContext("2d");
-      img.onload = function () {
-        ctx.drawImage(img, 0, 0);
-        URL.revokeObjectURL(url);
-      };
-
-      img.src = url;
+    wrapText(ctx, text, mLeft, mTop, maxWidth, lineHeight) {
+      let words = text.split(" ");
+      let countWords = words.length;
+      let line = "";
+      for (let n = 0; n < countWords; n++) {
+        let testLine = line + words[n] + " ";
+        let testWidth = ctx.measureText(testLine).width;
+        if (testWidth > maxWidth) {
+          ctx.fillText(line, mLeft, mTop);
+          line = words[n] + " ";
+          mTop += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line, mLeft, mTop);
     },
     writeText(plane, canvas) {
-      var htmlPlane = plane.htmlElement;
-      var htmlPlaneStyle = window.getComputedStyle(htmlPlane);
-
-      var planeBoundingRect = plane.getBoundingRect();
-
-      var htmlPlaneWidth = planeBoundingRect.width / this.curtains.pixelRatio;
-      var htmlPlaneHeight = planeBoundingRect.height / this.curtains.pixelRatio;
-      console.log(htmlPlaneWidth);
-      // set sizes
-      canvas.width = htmlPlaneWidth;
-      canvas.height = htmlPlaneHeight;
-      var context = canvas.getContext("2d");
-
-      context.width = htmlPlaneWidth;
-      context.height = htmlPlaneHeight;
+      const htmlPlane = plane.htmlElement;
+      const pStyle = window.getComputedStyle(htmlPlane);
+      const { width, height } = plane.getBoundingRect();
+      canvas.width = width / this.curtains.pixelRatio;
+      canvas.height = height / this.curtains.pixelRatio;
+      const ctx = canvas.getContext("2d");
 
       // draw our title with the original style
-      context.fillStyle = htmlPlaneStyle.color;
-      context.font = `${htmlPlaneStyle.fontSize}" "${htmlPlaneStyle.fontFamily}`;
-      context.fontStyle = htmlPlaneStyle.fontStyle;
-      context.textAlign = htmlPlaneStyle.textAlign;
+      ctx.fillStyle = pStyle.color;
+      ctx.font = `${pStyle.fontWeight} ${pStyle.fontSize} ${pStyle.fontFamily}`;
+      ctx.fontStyle = pStyle.fontStyle;
+      ctx.textAlign = pStyle.textAlign;
+      ctx.textBaseline = "top";
 
-      // vertical alignment is a bit hacky
-      context.textBaseline = "middle";
-      context.fillText(htmlPlane.innerText, 0, htmlPlaneHeight / 1.8);
+      this.wrapText(
+        ctx,
+        htmlPlane.innerText,
+        +pStyle.marginLeft.slice(0, -2),
+        +pStyle.marginTop.slice(0, -2),
+        canvas.width,
+        +pStyle.lineHeight.slice(0, -2)
+      );
 
       // update our canvas texture once on next draw call
       if (plane.textures.length > 0) {
@@ -157,24 +134,22 @@ export default {
       }
     },
     setupTitlePlane() {
-      // for (const t of this.$refs.title) {
-      this.title = this.curtains.addPlane(this.$refs.title, this.TitleParams);
+      for (const t of this.$refs.title) {
+        this.title = this.curtains.addPlane(t, this.TitleParams);
 
-      if (this.title) {
-        const canvas = document.createElement("canvas");
-        // const ctx = canvas.getContext("2d");
-        // ctx.drawImage(this.$refs.title, 0, 0);
-        // then we add a data sampler attribute to our canvas
-        canvas.setAttribute("data-sampler", "planeTexture");
-        // canvas.style.display = 'none'
-        // and load it into our plane
+        if (this.title) {
+          const canvas = document.createElement("canvas");
+          // then we add a data sampler attribute to our canvas
+          canvas.setAttribute("data-sampler", "planeTexture");
+          canvas.style.display = "none";
+          // and load it into our plane
+          // console.log(canvas.width);
 
-        this.title.loadCanvas(canvas);
-        this.title.moveToFront();
-        console.log(this.title);
-        this.handleTitlePlanes(this.title);
+          this.title.loadCanvas(canvas);
+          this.title.moveToFront();
+          this.handleTitlePlanes(this.title);
+        }
       }
-      // }
     },
     handleTitlePlanes(plane) {
       plane
@@ -185,11 +160,11 @@ export default {
           // we write our title in our canvas
           if (document.fonts) {
             document.fonts.ready.then(() => {
-              // this.writeText(plane, texture.source);
+              this.writeText(plane, texture.source);
             });
           } else {
             setTimeout(function () {
-              this.createText(texture.source);
+              this.writeText(plane, texture.source);
             }, 750);
           }
           // this.writeText(plane, texture.source)
@@ -201,7 +176,7 @@ export default {
         })
         .onAfterResize(() => {
           // update our canvas sizes and rewrite our title
-          // this.writeText(plane, plane.textures[0].source);
+          this.writeText(plane, plane.textures[0].source);
         });
     },
     handlePlanes(plane) {
@@ -230,17 +205,29 @@ body {
   height: 100vh;
   z-index: -2;
 }
+canvas {
+  display: block;
+  margin: 0;
+}
 .title {
-  font-size: 80px;
-  color: red;
-  z-index: -3;
+  // visibility: hidden;
+  vertical-align: baseline;
+  font-size: 30px;
+  // margin-left: 30px;
+  // line-height: 42px;
+  font-family: Roboto Slab, sans-serif;
+  font-weight: 700;
+  color: rgb(255, 255, 255);
+  // z-index: -3;
   opacity: 0;
-  // max-width: 30vw;
+  max-width: 50vw;
+  margin: 0;
+  display: inline-block;
 }
 .plane {
-  width: 80%;
-  height: 80vh;
-  margin: 10vh auto;
+  width: 100%;
+  height: 100vh;
+  // margin: 10vh auto;
 }
 .plane img {
   height: 100%;

@@ -11,7 +11,7 @@
     </div>
     <picture v-for="image in images" :key="image.src" ref="images" class="lazy__original">
       <source :srcset="`/image/webp/1920/${image.src}.webp`" type="image/webp" />
-      <img alt="SvobodinaPhoto" crossorigin="anonimous" decoding="async" draggable="false"
+      <img ref="im" alt="SvobodinaPhoto" crossorigin="anonimous" decoding="async" draggable="false"
         :src="`/image/jpg/1920/${image.src}.jpg`" />
     </picture>
     <div class="fixscroll">
@@ -22,8 +22,6 @@
           </p>
         <!-- </transition> -->
         <div ref="plane" class="plane ">
-          <canvas ref="c1"></canvas>
-          <canvas ref="c2"></canvas>
         </div>
       </div>
     </div>
@@ -101,51 +99,50 @@ export default {
 
     //   setTimeout(() => {
     //     this.$nuxt.$loading.finish();
-    //   }, 5000);
+    //   }, 500);
     // });
     this.setupCurtains();
     this.setupPlane();
-
-    const canvas1 = this.$refs.c1;
-    const canvas2 = this.$refs.c2;
-
+    // create canvas
+    const canvas1 = document.createElement("canvas");
+    const canvas2 = document.createElement("canvas");
+    // get context
     const ctx1 = canvas1.getContext("2d");
     const ctx2 = canvas2.getContext("2d");
-    var images = [];
-    for (const iterator of this.$refs.images) {
-      images.push(iterator.children[1].decode());
+    const images = [];
+
+    const img1 = this.$refs.im[0];
+    const img2 = this.$refs.im[1];
+    for (const iterator of this.$refs.im) {
+      // debugger;
+      images.push(iterator.decode());
     }
-
-    const img1 = this.$refs.images[0].children[1];
-    const img2 = this.$refs.images[1].children[1];
-    // const img3 = this.$refs.images[2].children[1]
-
-    const decode = async () => {
-      await Promise.all(images);
-
-      canvas1.width = img1.naturalWidth;
-      canvas1.height = img1.naturalHeight;
-      canvas2.width = img2.naturalWidth;
-      canvas2.height = img2.naturalHeight;
+    // const decode = async () => {
+    // await
+    Promise.all(images).then(() => {
+      canvas1.width = this.$refs.im[0].naturalWidth;
+      canvas1.height = this.$refs.im[0].naturalHeight;
+      canvas2.width = this.$refs.im[1].naturalWidth;
+      canvas2.height = this.$refs.im[1].naturalHeight;
 
       ctx1.drawImage(img1, 0, 0);
-      this.plane.loadCanvas(canvas1);
-
       ctx2.drawImage(img2, 0, 0);
-      this.plane.loadCanvas(canvas2);
+      this.plane.loadCanvases([canvas1, canvas2]);
 
       this.setTexture();
 
       raf();
-    };
-    decode();
+    });
+
+    // };
+    // decode();
 
     const raf = () => {
       const scrollHeight =
         document.querySelector(".fixscroll").offsetHeight / 5;
       this.snab = Math.round(this.scrollPos / scrollHeight);
       this.scrollPos += (this.snab * scrollHeight - this.scrollPos) * 0.057;
-      // console.log(this.snab)
+
       if (Math.abs(this.snab - this.scrollPos / 1000) < 0.00001) {
         this.scrollPos = this.snab * 1000;
       }
@@ -163,7 +160,6 @@ export default {
       );
 
       this.$refs.sc.scrollTo(0, this.scrollPos);
-      // console.log(this.snab)
 
       requestAnimationFrame(raf);
     };
@@ -187,8 +183,6 @@ export default {
         easing: "linear",
         // eslint-disable-next-line no-unused-vars
         changeComplete(anime) {
-          // console.log('animate!!!!')
-          // console.log(anime)
           done();
         },
       });
@@ -229,9 +223,6 @@ export default {
   //     })
   //   }
   // },
-  render(createElement) {
-    return createElement("h1", this.snab);
-  },
 };
 </script>
 

@@ -74,7 +74,7 @@ uniform sampler2D planeTexture;
 void main() {
     // just distort the text a bit
     vec2 textureCoords = vTextureCoord;
-    textureCoords.x += sin(uTime / 60.0) / 200.0 * cos(textureCoords.y * 10.0);
+    textureCoords.x += sin(uTime / 60.0) / 200.0 * cos(textureCoords.y * 110.0);
     gl_FragColor = texture2D(planeTexture, textureCoords);
 }
 `;
