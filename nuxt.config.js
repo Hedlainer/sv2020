@@ -42,18 +42,22 @@ module.exports = {
   /*
    ** Customize the progress-bar color
    */
-  loading: {
-    loading: "~/components/loading.vue",
-    duration: 3000,
-    css: false,
-  },
+  // loading: {
+  //   loading: "./components/loading.vue",
+  //   duration: 3000,
+  //   css: false,
+  // },
   /*
    ** Global CSS
    */
   //  serverMiddleware: [
   //     '~/serverMiddleware/api'
   //   ],
-  css: ["normalize.css"],
+  css: [
+    "normalize.css",
+    "./assets/scss/global-variables.scss",
+    "./assets/scss/font.scss",
+  ],
   /*
    ** Plugins to load before mounting the App
    */
@@ -84,7 +88,7 @@ module.exports = {
     // 'nuxt-trailingslash-module',
     // "nuxt-webfontloader",
     // 'cookie-universal-nuxt',
-    "@nuxtjs/style-resources",
+    // "@nuxtjs/style-resources",
     "@nuxtjs/axios",
     // '@nuxtjs/pwa'
   ],
@@ -97,11 +101,6 @@ module.exports = {
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  styleResources: {
-    scss: ["./assets/scss/global-variables.scss", "./assets/scss/font.scss"], // alternative: scss
-    less: [],
-    stylus: [],
-  },
 
   axios: {},
   /*

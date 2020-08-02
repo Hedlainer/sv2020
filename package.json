@@ -21,16 +21,16 @@
     "lint": "eslint --fix --ext .js,.vue --ignore-path .gitignore ."
   },
   "dependencies": {
-    "@nuxtjs/axios": "^5.10.3",
+    "@nuxtjs/axios": "^5.12.0",
     "@nuxtjs/style-resources": "1.0.0",
     "animejs": "^3.2.0",
-    "curtainsjs": "^6.1.1",
+    "curtainsjs": "^6.2.2",
     "dotenv": "^8.2.0",
     "glslify-loader": "^2.0.0",
     "gsap": "file:gsap-bonus.tgz",
     "justified-layout": "^4.0.0",
     "normalize.css": "8.0.1",
-    "nuxt-start": "^2.13.2",
+    "nuxt-start": "^2.14.0",
     "raw-loader": "^4.0.1",
     "serverless-http": "^2.5.0",
     "splitting": "^1.0.6",
@@ -47,14 +47,14 @@
     "eslint-loader": "^4.0.2",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-vue": "^6.2.2",
-    "fastify": "^2.14.1",
+    "fastify": "^2.15.2",
     "node-sass": "^4.14.1",
     "nodemon": "^2.0.4",
-    "nuxt": "^2.13.2",
+    "nuxt": "^2.14.0",
     "nuxt-compress": "^2.0.0",
     "prettier": "^2.0.5",
     "sass-loader": "^8.0.2",
-    "serverless-offline": "^6.3.0",
-    "serverless-s3-sync": "^1.14.3"
+    "serverless-offline": "^6.5.0",
+    "serverless-s3-sync": "^1.14.4"
   }
 }
