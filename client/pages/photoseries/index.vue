@@ -14,10 +14,10 @@
         :my-index="index"
         @myClick="activateAnimate"
       >
-        <template v-slot:title>
+        <template #title>
           <span class="plane-title">{{ seriya.Title }}</span>
         </template>
-        <template v-slot:fullScreenImage>
+        <template #fullScreenImage>
           <picture class="lazy__fullscreen">
             <source
               :srcset="`/image/webp/1920/${seriya.FileName}.webp`"
@@ -26,13 +26,13 @@
             <img
               alt="SvobodinaPhoto"
               crossorigin="anonimous"
-              decode="async"
+              decoding="async"
               draggable="false"
               :src="`/image/jpg/1920/${seriya.FileName}.jpg`"
             />
           </picture>
         </template>
-        <template v-slot:currentImage>
+        <template #currentImage>
           <picture class="lazy__original">
             <source
               :srcset="`/image/webp/720/${seriya.FileName}.webp`"
@@ -42,7 +42,7 @@
               ref="currentImage"
               alt="SvobodinaPhoto"
               crossorigin="anonimous"
-              decode="async"
+              decoding="async"
               draggable="false"
               :src="`/image/jpg/720/${seriya.FileName}.jpg`"
             />
@@ -403,9 +403,9 @@ $scrollBarHeight: 1px;
   width: $scrollBarHeight;
   height: $scrollBarHeight;
 }
-img {
-  display: none;
-}
+// img {
+//   display: none;
+// }
 .seriya {
   position: absolute;
   will-change: transform;
@@ -448,6 +448,10 @@ img {
   -webkit-text-stroke: 0.5px white;
 
   transition: color 0.5s;
+}
+.lazy__original {
+  width: 100%;
+  height: 100%;
 }
 // @media screen and (orientation: portrait) {
 

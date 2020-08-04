@@ -44,7 +44,7 @@ html {
   background: black;
 }
 img {
-  display: none;
+  /* display: none; */
 }
 .main {
   /* height: 100vh; */
