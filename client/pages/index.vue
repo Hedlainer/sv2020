@@ -38,6 +38,7 @@ import anime from "animejs";
 import { vertex, fragment } from "~/assets/shadertest.js";
 
 export default {
+  loading: "~/components/loading.vue",
   // asyncData() {
   //   return new Promise((resolve) => {
   //     setTimeout(function () {

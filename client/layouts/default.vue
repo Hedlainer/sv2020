@@ -32,10 +32,10 @@ export default {
 };
 </script>
 <style lang="scss">
-.nuxt-progress {
-  width: 100%;
-  height: 100vh;
-}
+// .nuxt-progress {
+//   width: 100%;
+//   height: 100vh;
+// }
 html {
   background: black;
 }

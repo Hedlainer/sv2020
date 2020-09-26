@@ -1,6 +1,6 @@
 <template>
   <div v-if="loading" class="loading-page">
-    <p>Loading...</p>
+    <h2>SvobodinaPhoto</h2>
   </div>
 </template>
 
@@ -9,9 +9,6 @@ export default {
   data: () => ({
     loading: false,
   }),
-  mounted() {
-    alert("llllllllll");
-  },
   methods: {
     start() {
       this.loading = true;
@@ -26,15 +23,17 @@ export default {
 <style scoped>
 .loading-page {
   position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
-  background: rgba(255, 8, 8, 0.8);
+  height: 100%;
+  background: rgba(255, 255, 255, 1);
   text-align: center;
-  padding-top: 200px;
+  /* padding-top: 200px; */
   font-size: 30px;
   font-family: sans-serif;
-  z-index: 99;
 }
 </style>
